@@ -1,63 +1,25 @@
+import { useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import {
-  Avatar,
+  Alert,
   Box,
   Button,
   Card,
   CardContent,
+  CircularProgress,
   Grid,
-  IconButton,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemText,
+  Stack,
   Typography,
 } from '@mui/material'
-import TrendingUpIcon from '@mui/icons-material/TrendingUp'
-import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline'
-import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined'
-import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
+import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined'
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
+import AddIcon from '@mui/icons-material/Add'
 import VerticalLayout from '../../layouts/VerticalLayout'
 import { useAuth } from '../../context/AuthContext'
-
-const stats = [
-  { title: 'Sales', value: '245k', icon: <TrendingUpIcon />, color: '#8C57FF' },
-  { title: 'Users', value: '12.5k', icon: <PeopleOutlineIcon />, color: '#56CA00' },
-  { title: 'Products', value: '1.54k', icon: <Inventory2OutlinedIcon />, color: '#FFB400' },
-  { title: 'Revenue', value: '$88k', icon: <AccountBalanceWalletOutlinedIcon />, color: '#16B1FF' },
-]
-
-const activity = [
-  {
-    title: '12 Invoices have been paid',
-    time: '12 min ago',
-    color: '#FF4C51',
-    desc: 'Invoices have been paid to the company',
-    file: 'invoices.pdf',
-  },
-  {
-    title: 'Client Meeting',
-    time: '45 min ago',
-    color: '#8C57FF',
-    desc: 'Project meeting with john @10:15am',
-    avatar: '/images/avatars/2.png',
-  },
-  {
-    title: 'Create a new project for client',
-    time: '2 days ago',
-    color: '#16B1FF',
-    desc: '6 team members in a project',
-    avatars: ['/images/avatars/1.png', '/images/avatars/3.png', '/images/avatars/4.png'],
-  },
-]
-
-const upcoming = [
-  { day: '12', month: 'Jan', title: 'Design Review', meta: 'Business · 12:56 PM', color: '#8C57FF' },
-  { day: '20', month: 'Jan', title: "Doctor's Appointment", meta: 'Personal · 10:00 AM', color: '#FF4C51' },
-  { day: '22', month: 'Jan', title: 'Family Trip', meta: 'Holiday · All day', color: '#56CA00' },
-  { day: '25', month: 'Jan', title: 'Monthly Meetup', meta: 'ETC · All day', color: '#16B1FF' },
-]
+import { supabase } from '../../lib/supabase'
 
 function IconBox({ color, children }) {
   return (
@@ -81,247 +43,248 @@ function IconBox({ color, children }) {
 
 export default function Dashboard() {
   const { user } = useAuth()
+  const [company, setCompany] = useState(null)
+  const [projects, setProjects] = useState([])
+  const [projectCount, setProjectCount] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
   const displayName =
-    user?.user_metadata?.username ||
-    user?.email?.split('@')[0] ||
-    'John'
+    user?.user_metadata?.username || user?.email?.split('@')[0] || 'användare'
+
+  useEffect(() => {
+    let mounted = true
+
+    const load = async () => {
+      setLoading(true)
+      setError('')
+
+      const { data: companyData, error: companyError } = await supabase
+        .from('companies')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle()
+
+      if (!mounted) return
+
+      if (companyError) {
+        setError(companyError.message)
+        setCompany(null)
+        setProjects([])
+        setLoading(false)
+        return
+      }
+
+      setCompany(companyData)
+
+      if (!companyData) {
+        setProjects([])
+        setProjectCount(0)
+        setLoading(false)
+        return
+      }
+
+      const [listResult, countResult] = await Promise.all([
+        supabase
+          .from('projects')
+          .select('*')
+          .eq('company_id', companyData.id)
+          .order('created_at', { ascending: false })
+          .limit(5),
+        supabase
+          .from('projects')
+          .select('*', { count: 'exact', head: true })
+          .eq('company_id', companyData.id),
+      ])
+
+      if (!mounted) return
+
+      if (listResult.error) setError(listResult.error.message)
+      else setProjects(listResult.data || [])
+
+      if (countResult.error) setError(countResult.error.message)
+      else setProjectCount(countResult.count || 0)
+
+      setLoading(false)
+    }
+
+    if (user?.id) load()
+    return () => {
+      mounted = false
+    }
+  }, [user?.id])
 
   return (
     <VerticalLayout>
       <Grid container spacing={6}>
-        {/* Congratulations */}
-        <Grid item xs={12} md={4}>
-          <Card sx={{ height: '100%', position: 'relative', overflow: 'visible' }}>
-            <CardContent sx={{ pr: { sm: 18 }, pb: { xs: 14, sm: 5 }, pt: 5, pl: 5 }}>
-              <Typography variant="h5" sx={{ mb: 1 }}>
-                Congratulations {displayName}! 🎉
+        <Grid item xs={12}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 2, flexWrap: 'wrap' }}>
+            <Box>
+              <Typography variant="h4" sx={{ fontWeight: 600, mb: 0.5 }}>
+                Välkommen, {displayName}
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
-                Best seller of the month
+              <Typography color="text.secondary">
+                Översikt för KMA för bygg – företag och projekt
               </Typography>
-              <Typography variant="h4" color="primary.main" sx={{ mb: 0.5 }}>
-                $42.8k
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
-                78% of target 🚀
-              </Typography>
-              <Button variant="contained" size="small">
-                View Sales
+            </Box>
+            <Stack direction="row" spacing={1.5} flexWrap="wrap">
+              <Button
+                component={RouterLink}
+                to="/company"
+                variant="outlined"
+                startIcon={<BusinessOutlinedIcon />}
+              >
+                {company ? 'Redigera företag' : 'Skapa företag'}
               </Button>
-            </CardContent>
-            <Box
-              component="img"
-              src="/images/pages/trophy.png"
-              alt=""
-              sx={{
-                position: 'absolute',
-                right: 20,
-                bottom: 0,
-                height: 140,
-                pointerEvents: 'none',
-              }}
-            />
-          </Card>
+              <Button
+                component={RouterLink}
+                to="/projects"
+                variant="contained"
+                startIcon={<AddIcon />}
+                disabled={!company}
+              >
+                Nytt projekt
+              </Button>
+            </Stack>
+          </Box>
         </Grid>
 
-        {/* Transactions */}
-        <Grid item xs={12} md={8}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent sx={{ p: 5, '&:last-child': { pb: 5 } }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 6 }}>
-                <Box>
-                  <Typography variant="h5" sx={{ mb: 0.5 }}>
-                    Transactions
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Total 48.5% Growth 😎 this month
-                  </Typography>
-                </Box>
-                <IconButton size="small" sx={{ color: 'text.secondary', alignSelf: 'flex-start' }}>
-                  <MoreVertIcon fontSize="small" />
-                </IconButton>
-              </Box>
-              <Grid container spacing={4}>
-                {stats.map((s) => (
-                  <Grid item xs={6} sm={3} key={s.title}>
+        {error && (
+          <Grid item xs={12}>
+            <Alert severity="error">{error}</Alert>
+          </Grid>
+        )}
+
+        {loading ? (
+          <Grid item xs={12}>
+            <Box sx={{ py: 8, display: 'grid', placeItems: 'center' }}>
+              <CircularProgress />
+            </Box>
+          </Grid>
+        ) : (
+          <>
+            <Grid item xs={12} md={4}>
+              <Card sx={{ height: '100%' }}>
+                <CardContent sx={{ p: 5, '&:last-child': { pb: 5 } }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, mb: 4 }}>
+                    <IconBox color="#8C57FF">
+                      <BusinessOutlinedIcon />
+                    </IconBox>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Företag
+                      </Typography>
+                      <Typography variant="h5">{company?.name || 'Ej skapat'}</Typography>
+                    </Box>
+                  </Box>
+                  {company ? (
+                    <Stack spacing={1}>
+                      <Typography variant="body2" color="text.secondary">
+                        VD
+                      </Typography>
+                      <Typography variant="body1" fontWeight={500}>
+                        {company.ceo_name || '—'}
+                      </Typography>
+                      {(company.city || company.org_number) && (
+                        <Typography variant="body2" color="text.secondary" sx={{ pt: 1 }}>
+                          {[company.org_number, company.city].filter(Boolean).join(' · ')}
+                        </Typography>
+                      )}
+                      <Button component={RouterLink} to="/company" size="small" sx={{ alignSelf: 'flex-start', mt: 2 }}>
+                        Öppna företagskonto
+                      </Button>
+                    </Stack>
+                  ) : (
+                    <Stack spacing={2}>
+                      <Typography variant="body2" color="text.secondary">
+                        Skapa ditt företagskonto för att komma igång med projekt och KMA.
+                      </Typography>
+                      <Button component={RouterLink} to="/company" variant="contained" size="small">
+                        Skapa företag
+                      </Button>
+                    </Stack>
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid item xs={12} md={8}>
+              <Card sx={{ height: '100%' }}>
+                <CardContent sx={{ p: 5, '&:last-child': { pb: 5 } }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, gap: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-                      <IconBox color={s.color}>{s.icon}</IconBox>
+                      <IconBox color="#16B1FF">
+                        <FolderOutlinedIcon />
+                      </IconBox>
                       <Box>
                         <Typography variant="body2" color="text.secondary">
-                          {s.title}
+                          Projekt
                         </Typography>
-                        <Typography variant="h5">{s.value}</Typography>
+                        <Typography variant="h5">{projectCount} st</Typography>
                       </Box>
                     </Box>
-                  </Grid>
-                ))}
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
+                    <Button component={RouterLink} to="/projects" size="small" disabled={!company}>
+                      Visa alla
+                    </Button>
+                  </Box>
 
-        {/* Activity Timeline */}
-        <Grid item xs={12} md={6}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent sx={{ p: 5, '&:last-child': { pb: 5 } }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 5 }}>
-                <Typography variant="h5">Activity Timeline</Typography>
-                <IconButton size="small" sx={{ color: 'text.secondary' }}>
-                  <MoreVertIcon fontSize="small" />
-                </IconButton>
-              </Box>
-              <Box sx={{ position: 'relative', pl: 4 }}>
-                {activity.map((item, i) => (
-                  <Box key={item.title} sx={{ position: 'relative', pb: i === activity.length - 1 ? 0 : 5 }}>
-                    {i !== activity.length - 1 && (
-                      <Box
-                        sx={{
-                          position: 'absolute',
-                          left: -23,
-                          top: 12,
-                          bottom: -8,
-                          width: 2,
-                          bgcolor: 'divider',
-                        }}
-                      />
-                    )}
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        left: -28,
-                        top: 4,
-                        width: 12,
-                        height: 12,
-                        borderRadius: '50%',
-                        bgcolor: item.color,
-                        boxShadow: (t) => `0 0 0 4px ${t.palette.background.paper}`,
-                      }}
-                    />
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mb: 0.5 }}>
-                      <Typography variant="body1" fontWeight={500}>
-                        {item.title}
-                      </Typography>
-                      <Typography variant="caption" color="text.disabled" noWrap>
-                        {item.time}
-                      </Typography>
-                    </Box>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      {item.desc}
-                    </Typography>
-                    {item.file && (
-                      <Box
-                        sx={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 1.5,
-                          px: 2,
-                          py: 1,
-                          borderRadius: 1,
-                          bgcolor: 'action.hover',
-                        }}
+                  {!company ? (
+                    <Typography color="text.secondary">Skapa företag först för att lägga till projekt.</Typography>
+                  ) : projects.length === 0 ? (
+                    <Stack spacing={2}>
+                      <Typography color="text.secondary">Inga projekt ännu.</Typography>
+                      <Button
+                        component={RouterLink}
+                        to="/projects"
+                        variant="outlined"
+                        size="small"
+                        startIcon={<AddIcon />}
+                        sx={{ alignSelf: 'flex-start' }}
                       >
-                        <Box
+                        Skapa projekt
+                      </Button>
+                    </Stack>
+                  ) : (
+                    <List disablePadding>
+                      {projects.map((project) => (
+                        <ListItem
+                          key={project.id}
+                          component={RouterLink}
+                          to={`/projects/${project.id}`}
+                          disableGutters
                           sx={{
-                            width: 28,
-                            height: 28,
-                            borderRadius: 0.75,
-                            bgcolor: 'error.main',
-                            color: '#fff',
-                            display: 'grid',
-                            placeItems: 'center',
-                            fontSize: 11,
-                            fontWeight: 700,
+                            py: 2,
+                            px: 0,
+                            textDecoration: 'none',
+                            color: 'inherit',
+                            borderBottom: '1px solid',
+                            borderColor: 'divider',
+                            '&:last-of-type': { borderBottom: 0 },
+                            '&:hover': { bgcolor: 'action.hover' },
                           }}
                         >
-                          PDF
-                        </Box>
-                        <Typography variant="body2">{item.file}</Typography>
-                      </Box>
-                    )}
-                    {item.avatar && <Avatar src={item.avatar} sx={{ width: 32, height: 32 }} />}
-                    {item.avatars && (
-                      <Box sx={{ display: 'flex' }}>
-                        {item.avatars.map((src) => (
-                          <Avatar
-                            key={src}
-                            src={src}
-                            sx={{
-                              width: 32,
-                              height: 32,
-                              ml: -1,
-                              border: '2px solid',
-                              borderColor: 'background.paper',
-                              '&:first-of-type': { ml: 0 },
-                            }}
+                          <ListItemText
+                            primary={project.property_designation}
+                            secondary={
+                              [project.city, project.client_name, project.contract_form]
+                                .filter(Boolean)
+                                .join(' · ') || 'Ingen plats angiven'
+                            }
+                            primaryTypographyProps={{ variant: 'body1', fontWeight: 500 }}
+                            secondaryTypographyProps={{ variant: 'body2' }}
                           />
-                        ))}
-                      </Box>
-                    )}
-                  </Box>
-                ))}
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Calendar Overview */}
-        <Grid item xs={12} md={6}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent sx={{ p: 5, '&:last-child': { pb: 5 } }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-                <Typography variant="h5">Calendar Overview</Typography>
-                <Button component={RouterLink} to="/apps/calendar" size="small">
-                  View Calendar
-                </Button>
-              </Box>
-              <List disablePadding>
-                {upcoming.map((ev) => (
-                  <ListItem
-                    key={ev.title}
-                    disableGutters
-                    sx={{
-                      py: 2,
-                      px: 0,
-                      borderBottom: '1px solid',
-                      borderColor: 'divider',
-                      '&:last-of-type': { borderBottom: 0 },
-                    }}
-                  >
-                    <ListItemAvatar sx={{ minWidth: 64 }}>
-                      <Box
-                        sx={{
-                          width: 46,
-                          height: 50,
-                          borderRadius: 1.5,
-                          bgcolor: `${ev.color}1F`,
-                          color: ev.color,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          lineHeight: 1.15,
-                        }}
-                      >
-                        <Typography variant="caption" sx={{ fontWeight: 500, textTransform: 'uppercase' }}>
-                          {ev.month}
-                        </Typography>
-                        <Typography variant="h6" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
-                          {ev.day}
-                        </Typography>
-                      </Box>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={ev.title}
-                      secondary={ev.meta}
-                      primaryTypographyProps={{ variant: 'body1', fontWeight: 500 }}
-                      secondaryTypographyProps={{ variant: 'body2' }}
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            </CardContent>
-          </Card>
-        </Grid>
+                          <Typography variant="caption" color="text.disabled" noWrap>
+                            {new Date(project.created_at).toLocaleDateString('sv-SE')}
+                          </Typography>
+                        </ListItem>
+                      ))}
+                    </List>
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
+          </>
+        )}
       </Grid>
     </VerticalLayout>
   )

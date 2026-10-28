@@ -41,7 +41,9 @@ create policy "Users can delete own uppgifter"
   using (auth.uid() = user_id);
 ```
 
-5. Auth → Providers: Email aktiverat. För snabb lokal test kan du stänga av “Confirm email”.
+5. Kör även SQL för KMA-grund (`companies` + `projects`), se [`supabase/migrations/001_companies_projects.sql`](../supabase/migrations/001_companies_projects.sql) eller klistra in samma fil i SQL Editor.
+
+6. Auth → Providers: Email aktiverat. För snabb lokal test kan du stänga av “Confirm email”.
 
 ## 2. Vercel
 
@@ -68,9 +70,9 @@ npx vercel --prod
 ## 3. Efter deploy
 
 - Öppna appen → `/login`
-- Registrera användare → skapa en uppgift → verifiera i Supabase Table Editor
+- Registrera användare → skapa företag → skapa projekt → verifiera i Supabase Table Editor
 - Kontrollera ljus/mörk tema
-- Kontrollera att deep links fungerar (`/users`, `/apps/calendar`, `/uppgifter/...`)
+- Kontrollera att deep links fungerar (`/company`, `/projects`, `/projects/:id`)
 
 ## Felsökning
 

@@ -18,9 +18,8 @@ import {
 import { useTheme } from '@mui/material/styles'
 import MenuIcon from '@mui/icons-material/Menu'
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
-import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline'
-import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined'
-import TaskAltIcon from '@mui/icons-material/TaskAlt'
+import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined'
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -33,9 +32,8 @@ const drawerWidth = 260
 
 const menuItems = [
   { text: 'Dashboard', path: '/', icon: <DashboardOutlinedIcon /> },
-  { text: 'Användare', path: '/users', icon: <PeopleOutlineIcon /> },
-  { text: 'Kalender', path: '/apps/calendar', icon: <CalendarMonthOutlinedIcon /> },
-  { text: 'Uppgifter', path: '/uppgifter', icon: <TaskAltIcon /> },
+  { text: 'Företag', path: '/company', icon: <BusinessOutlinedIcon /> },
+  { text: 'Projekt', path: '/projects', icon: <FolderOutlinedIcon /> },
 ]
 
 export default function VerticalLayout({ children }) {
@@ -74,7 +72,7 @@ export default function VerticalLayout({ children }) {
           variant="overline"
           sx={{ px: 2, color: 'text.disabled', letterSpacing: '0.4px', display: 'block' }}
         >
-          Apps & Pages
+          KMA för bygg
         </Typography>
       </Box>
 
