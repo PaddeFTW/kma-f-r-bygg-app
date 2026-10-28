@@ -13,6 +13,9 @@ import ForgotPassword from './pages/auth/ForgotPassword'
 import ResetPassword from './pages/auth/ResetPassword'
 import UppgifterList from './pages/uppgifter/UppgifterList'
 import UppgiftDetail from './pages/uppgifter/UppgiftDetail'
+import CompanyPage from './pages/company/CompanyPage'
+import ProjectsList from './pages/projects/ProjectsList'
+import ProjectDetail from './pages/projects/ProjectDetail'
 
 export default function App() {
   return (
@@ -34,6 +37,31 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/company"
+                element={
+                  <ProtectedRoute>
+                    <CompanyPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/projects"
+                element={
+                  <ProtectedRoute>
+                    <ProjectsList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/projects/:id"
+                element={
+                  <ProtectedRoute>
+                    <ProjectDetail />
+                  </ProtectedRoute>
+                }
+              />
+              {/* Mallsidor behålls för referens, ej i sidebar */}
               <Route
                 path="/users"
                 element={

@@ -1,6 +1,6 @@
 # Vite + MUI Materio V3 – startmall
 
-Komplett startapp med Materio V3-design, ljus/mörk tema, Supabase-auth, Dashboard, Användare, Kalender och testmodulen **Uppgifter**.
+KMA för bygg – startapp med Materio V3-design, ljus/mörk tema, Supabase-auth, **Företagskonto**, **Projekt** (lista + detalj) och Dashboard-översikt.
 
 ## Teknik
 
@@ -35,11 +35,11 @@ VITE_SUPABASE_URL=https://xxxx.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJ...
 ```
 
-3. Kör SQL för tabellen `uppgifter` (se [`docs/DEPLOY.md`](docs/DEPLOY.md)).
+3. Kör SQL för `companies` + `projects` (se [`supabase/migrations/001_companies_projects.sql`](supabase/migrations/001_companies_projects.sql) och [`docs/DEPLOY.md`](docs/DEPLOY.md)).
 4. Starta om `npm run dev`.
 5. Gå till `/login`, registrera dig och logga in.
 
-Skyddade sidor (`/`, `/users`, `/apps/calendar`, `/uppgifter`) kräver inloggning.
+Skyddade sidor (`/`, `/company`, `/projects`) kräver inloggning.
 
 ## Deploya på Vercel
 
@@ -81,11 +81,12 @@ Detaljer: [`docs/KNOWLEDGE_BASE.md`](docs/KNOWLEDGE_BASE.md).
 ```text
 src/
   theme/              → Materio V3 light/dark
-  layouts/            → Sidebar + topbar
-  pages/              → Dashboard, users, calendar, auth, uppgifter
-  lib/supabase.ts     → Supabase-klient
+  layouts/            → Sidebar + topbar (Dashboard, Företag, Projekt)
+  pages/              → Dashboard, company, projects, auth (+ mallsidor)
+  lib/supabase.ts     → Supabase-klient + typer
   context/            → Auth, theme, users
   components/         → ProtectedRoute, auth UI
+supabase/migrations/  → companies + projects (RLS)
 public/               → logo.svg, favicon, illustrations
 docs/                 → Design, deploy, arbetsmodell, knowledge-base
 vercel.json           → SPA rewrites för Vercel
@@ -108,6 +109,8 @@ vercel.json           → SPA rewrites för Vercel
 - [ ] Cyan logotyp syns i sidebar, login och som favicon
 - [ ] Ljus/mörk tema går att växla
 - [ ] Login med Supabase fungerar
-- [ ] Uppgifter sparas och visas (lista + detalj)
+- [ ] Företagskonto sparas och visas
+- [ ] Projekt sparas och visas (lista + detalj)
+- [ ] Dashboard visar företag + projektöversikt
 - [ ] `vercel.json` finns och deep links fungerar efter deploy
 - [ ] `npm run build` går igenom
