@@ -24,6 +24,7 @@ import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined'
 import RecyclingOutlinedIcon from '@mui/icons-material/RecyclingOutlined'
 import HealthAndSafetyOutlinedIcon from '@mui/icons-material/HealthAndSafetyOutlined'
 import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined'
+import ConstructionOutlinedIcon from '@mui/icons-material/ConstructionOutlined'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -42,6 +43,7 @@ const menuItems = [
   { text: 'Miljöplan', path: '/miljoplan', icon: <RecyclingOutlinedIcon /> },
   { text: 'Arbetsmiljöplan', path: '/arbetsmiljoplan', icon: <HealthAndSafetyOutlinedIcon /> },
   { text: 'Miljöanalys', path: '/miljoanalys', icon: <AnalyticsOutlinedIcon /> },
+  { text: 'Rivningsplan', path: '/rivningsplan', icon: <ConstructionOutlinedIcon /> },
 ]
 
 export default function VerticalLayout({ children }) {

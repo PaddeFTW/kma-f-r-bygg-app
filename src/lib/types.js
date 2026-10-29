@@ -508,3 +508,152 @@ export function miljoanalysFormToPayload(form) {
     atgard_nodlagesberedskap: t(form.atgard_nodlagesberedskap) || null,
   }
 }
+
+/** Flik 9 – Rivningsplan */
+export const emptyFarligtAvfallRow = () => ({
+  avfallsslag: '',
+  fa: false,
+  mangd: '',
+  hantering: '',
+  transportor_mottagare: '',
+})
+
+export const emptyOvrigtAvfallRow = () => ({
+  fraktioner: '',
+  mangd: '',
+  transportor: '',
+  hantering_nr: '',
+  analys_bilaga: '',
+})
+
+export const emptyRivningsplanForm = {
+  fastighetsbeteckning_adress: '',
+  start_stoppdatum_rivning: '',
+  byggherre: '',
+  byggherre_kontakt: '',
+  entreprenor: '',
+  entreprenor_kontakt: '',
+  kvalitetsansvarig: '',
+  rivare: '',
+  bygganmalan_lamnas_till: '',
+  bygganmalan_kravs_inte: false,
+  materialinventering_utford: false,
+  materialinventering_ej_utford: false,
+  materialinventering_anteckningar: '',
+  byggnadstyp: '',
+  byggar: '',
+  ombyggnad_ar: '',
+  byggnadsyta: '',
+  antal_vaningar: '',
+  material_grund: '',
+  material_stomme: '',
+  material_tak: '',
+  nuvarande_anvandning: '',
+  nuvarande_anvandning_fran_ar: '',
+  tidigare_anvandning: '',
+  tidigare_anvandning_fran_ar: '',
+  rivning_omfattning: '',
+  rivning_byggnadsyta_m2: '',
+  bilagor: '',
+  farligt_avfall: [],
+  ovrigt_avfall: [],
+}
+
+export function rivningsplanToForm(row) {
+  if (!row) return { ...emptyRivningsplanForm, farligt_avfall: [], ovrigt_avfall: [] }
+  const farligt = Array.isArray(row.farligt_avfall) ? row.farligt_avfall : []
+  const ovrigt = Array.isArray(row.ovrigt_avfall) ? row.ovrigt_avfall : []
+  return {
+    fastighetsbeteckning_adress: row.fastighetsbeteckning_adress || '',
+    start_stoppdatum_rivning: row.start_stoppdatum_rivning || '',
+    byggherre: row.byggherre || '',
+    byggherre_kontakt: row.byggherre_kontakt || '',
+    entreprenor: row.entreprenor || '',
+    entreprenor_kontakt: row.entreprenor_kontakt || '',
+    kvalitetsansvarig: row.kvalitetsansvarig || '',
+    rivare: row.rivare || '',
+    bygganmalan_lamnas_till: row.bygganmalan_lamnas_till || '',
+    bygganmalan_kravs_inte: Boolean(row.bygganmalan_kravs_inte),
+    materialinventering_utford: Boolean(row.materialinventering_utford),
+    materialinventering_ej_utford: Boolean(row.materialinventering_ej_utford),
+    materialinventering_anteckningar: row.materialinventering_anteckningar || '',
+    byggnadstyp: row.byggnadstyp || '',
+    byggar: row.byggar || '',
+    ombyggnad_ar: row.ombyggnad_ar || '',
+    byggnadsyta: row.byggnadsyta || '',
+    antal_vaningar: row.antal_vaningar || '',
+    material_grund: row.material_grund || '',
+    material_stomme: row.material_stomme || '',
+    material_tak: row.material_tak || '',
+    nuvarande_anvandning: row.nuvarande_anvandning || '',
+    nuvarande_anvandning_fran_ar: row.nuvarande_anvandning_fran_ar || '',
+    tidigare_anvandning: row.tidigare_anvandning || '',
+    tidigare_anvandning_fran_ar: row.tidigare_anvandning_fran_ar || '',
+    rivning_omfattning: row.rivning_omfattning || '',
+    rivning_byggnadsyta_m2: row.rivning_byggnadsyta_m2 || '',
+    bilagor: row.bilagor || '',
+    farligt_avfall: farligt.map((r) => ({
+      avfallsslag: r.avfallsslag || '',
+      fa: Boolean(r.fa),
+      mangd: r.mangd || '',
+      hantering: r.hantering || '',
+      transportor_mottagare: r.transportor_mottagare || '',
+    })),
+    ovrigt_avfall: ovrigt.map((r) => ({
+      fraktioner: r.fraktioner || '',
+      mangd: r.mangd || '',
+      transportor: r.transportor || '',
+      hantering_nr: r.hantering_nr || '',
+      analys_bilaga: r.analys_bilaga || '',
+    })),
+  }
+}
+
+/** Payload för insert/update */
+export function rivningsplanFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    fastighetsbeteckning_adress: t(form.fastighetsbeteckning_adress) || null,
+    start_stoppdatum_rivning: t(form.start_stoppdatum_rivning) || null,
+    byggherre: t(form.byggherre) || null,
+    byggherre_kontakt: t(form.byggherre_kontakt) || null,
+    entreprenor: t(form.entreprenor) || null,
+    entreprenor_kontakt: t(form.entreprenor_kontakt) || null,
+    kvalitetsansvarig: t(form.kvalitetsansvarig) || null,
+    rivare: t(form.rivare) || null,
+    bygganmalan_lamnas_till: t(form.bygganmalan_lamnas_till) || null,
+    bygganmalan_kravs_inte: Boolean(form.bygganmalan_kravs_inte),
+    materialinventering_utford: Boolean(form.materialinventering_utford),
+    materialinventering_ej_utford: Boolean(form.materialinventering_ej_utford),
+    materialinventering_anteckningar: t(form.materialinventering_anteckningar) || null,
+    byggnadstyp: t(form.byggnadstyp) || null,
+    byggar: t(form.byggar) || null,
+    ombyggnad_ar: t(form.ombyggnad_ar) || null,
+    byggnadsyta: t(form.byggnadsyta) || null,
+    antal_vaningar: t(form.antal_vaningar) || null,
+    material_grund: t(form.material_grund) || null,
+    material_stomme: t(form.material_stomme) || null,
+    material_tak: t(form.material_tak) || null,
+    nuvarande_anvandning: t(form.nuvarande_anvandning) || null,
+    nuvarande_anvandning_fran_ar: t(form.nuvarande_anvandning_fran_ar) || null,
+    tidigare_anvandning: t(form.tidigare_anvandning) || null,
+    tidigare_anvandning_fran_ar: t(form.tidigare_anvandning_fran_ar) || null,
+    rivning_omfattning: t(form.rivning_omfattning) || null,
+    rivning_byggnadsyta_m2: t(form.rivning_byggnadsyta_m2) || null,
+    bilagor: t(form.bilagor) || null,
+    farligt_avfall: (form.farligt_avfall || []).map((r) => ({
+      avfallsslag: t(r.avfallsslag) || '',
+      fa: Boolean(r.fa),
+      mangd: t(r.mangd) || '',
+      hantering: t(r.hantering) || '',
+      transportor_mottagare: t(r.transportor_mottagare) || '',
+    })),
+    ovrigt_avfall: (form.ovrigt_avfall || []).map((r) => ({
+      fraktioner: t(r.fraktioner) || '',
+      mangd: t(r.mangd) || '',
+      transportor: t(r.transportor) || '',
+      hantering_nr: t(r.hantering_nr) || '',
+      analys_bilaga: t(r.analys_bilaga) || '',
+    })),
+  }
+}

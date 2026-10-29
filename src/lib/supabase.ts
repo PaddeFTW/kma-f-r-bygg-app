@@ -219,3 +219,61 @@ export type Miljoanalys = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 9 – Farligt avfall (tabellrad) */
+export type FarligtAvfallRow = {
+  avfallsslag: string
+  fa: boolean
+  mangd: string
+  hantering: string
+  transportor_mottagare: string
+}
+
+/** Flik 9 – Övrigt avfall (fraktion) */
+export type OvrigtAvfallRow = {
+  fraktioner: string
+  mangd: string
+  transportor: string
+  hantering_nr: string
+  analys_bilaga: string
+}
+
+/** Flik 9 – Rivningsplan */
+export type Rivningsplan = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  fastighetsbeteckning_adress: string | null
+  start_stoppdatum_rivning: string | null
+  byggherre: string | null
+  byggherre_kontakt: string | null
+  entreprenor: string | null
+  entreprenor_kontakt: string | null
+  kvalitetsansvarig: string | null
+  rivare: string | null
+  bygganmalan_lamnas_till: string | null
+  bygganmalan_kravs_inte: boolean
+  materialinventering_utford: boolean
+  materialinventering_ej_utford: boolean
+  materialinventering_anteckningar: string | null
+  byggnadstyp: string | null
+  byggar: string | null
+  ombyggnad_ar: string | null
+  byggnadsyta: string | null
+  antal_vaningar: string | null
+  material_grund: string | null
+  material_stomme: string | null
+  material_tak: string | null
+  nuvarande_anvandning: string | null
+  nuvarande_anvandning_fran_ar: string | null
+  tidigare_anvandning: string | null
+  tidigare_anvandning_fran_ar: string | null
+  rivning_omfattning: string | null
+  rivning_byggnadsyta_m2: string | null
+  bilagor: string | null
+  farligt_avfall: FarligtAvfallRow[]
+  ovrigt_avfall: OvrigtAvfallRow[]
+  created_at: string
+  updated_at: string
+}
