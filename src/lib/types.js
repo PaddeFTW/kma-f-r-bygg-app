@@ -657,3 +657,58 @@ export function rivningsplanFormToPayload(form) {
     })),
   }
 }
+
+/** Flik 10 – Protokoll byggmöte */
+export const emptyProtokollForm = {
+  projektnr: '',
+  namn: '',
+  mote_nr: '',
+  datum: '',
+  plats: '',
+  narvarande_entreprenor: '',
+  narvarande_bestallare: '',
+  narvarande_underentreprenor: '',
+  dagordning_kvalitet: '',
+  dagordning_miljo: '',
+  dagordning_arbetsmiljo: '',
+  dagordning_ovrigt: '',
+  beslut: '',
+}
+
+export function protokollToForm(row) {
+  if (!row) return { ...emptyProtokollForm }
+  return {
+    projektnr: row.projektnr || '',
+    namn: row.namn || '',
+    mote_nr: row.mote_nr || '',
+    datum: row.datum || '',
+    plats: row.plats || '',
+    narvarande_entreprenor: row.narvarande_entreprenor || '',
+    narvarande_bestallare: row.narvarande_bestallare || '',
+    narvarande_underentreprenor: row.narvarande_underentreprenor || '',
+    dagordning_kvalitet: row.dagordning_kvalitet || '',
+    dagordning_miljo: row.dagordning_miljo || '',
+    dagordning_arbetsmiljo: row.dagordning_arbetsmiljo || '',
+    dagordning_ovrigt: row.dagordning_ovrigt || '',
+    beslut: row.beslut || '',
+  }
+}
+
+export function protokollFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    projektnr: t(form.projektnr) || null,
+    namn: t(form.namn) || null,
+    mote_nr: t(form.mote_nr) || null,
+    datum: t(form.datum) || null,
+    plats: t(form.plats) || null,
+    narvarande_entreprenor: t(form.narvarande_entreprenor) || null,
+    narvarande_bestallare: t(form.narvarande_bestallare) || null,
+    narvarande_underentreprenor: t(form.narvarande_underentreprenor) || null,
+    dagordning_kvalitet: t(form.dagordning_kvalitet) || null,
+    dagordning_miljo: t(form.dagordning_miljo) || null,
+    dagordning_arbetsmiljo: t(form.dagordning_arbetsmiljo) || null,
+    dagordning_ovrigt: t(form.dagordning_ovrigt) || null,
+    beslut: t(form.beslut) || null,
+  }
+}
