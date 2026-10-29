@@ -352,3 +352,68 @@ export function kvalitetsplanFormToPayload(form) {
     distributionsforteckning: t(form.distributionsforteckning) || null,
   }
 }
+
+/** Flik 6 – Miljöplan (avsnitt enligt underlaget) */
+export const emptyMiljoplanForm = {
+  miljopolicy: '',
+  aspekt_transporter: false,
+  aspekt_byggavfall: false,
+  aspekt_kemikalier: false,
+  aspekt_farligt_avfall: false,
+  aspekt_el: false,
+  aspekt_kallsortering: false,
+  miljoaspekter_anteckningar: '',
+  kallsortering_kemikalier_sdb: '',
+  lagar_krav: '',
+  ansvar: '',
+  utbildning: '',
+  kommunikation: '',
+  egenkontroll_miljo: '',
+  avvikelser: '',
+  nodlage: '',
+}
+
+export function miljoplanToForm(row) {
+  if (!row) return { ...emptyMiljoplanForm }
+  return {
+    miljopolicy: row.miljopolicy || '',
+    aspekt_transporter: Boolean(row.aspekt_transporter),
+    aspekt_byggavfall: Boolean(row.aspekt_byggavfall),
+    aspekt_kemikalier: Boolean(row.aspekt_kemikalier),
+    aspekt_farligt_avfall: Boolean(row.aspekt_farligt_avfall),
+    aspekt_el: Boolean(row.aspekt_el),
+    aspekt_kallsortering: Boolean(row.aspekt_kallsortering),
+    miljoaspekter_anteckningar: row.miljoaspekter_anteckningar || '',
+    kallsortering_kemikalier_sdb: row.kallsortering_kemikalier_sdb || '',
+    lagar_krav: row.lagar_krav || '',
+    ansvar: row.ansvar || '',
+    utbildning: row.utbildning || '',
+    kommunikation: row.kommunikation || '',
+    egenkontroll_miljo: row.egenkontroll_miljo || '',
+    avvikelser: row.avvikelser || '',
+    nodlage: row.nodlage || '',
+  }
+}
+
+/** Payload för insert/update – null för tomma textfält */
+export function miljoplanFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    miljopolicy: t(form.miljopolicy) || null,
+    aspekt_transporter: Boolean(form.aspekt_transporter),
+    aspekt_byggavfall: Boolean(form.aspekt_byggavfall),
+    aspekt_kemikalier: Boolean(form.aspekt_kemikalier),
+    aspekt_farligt_avfall: Boolean(form.aspekt_farligt_avfall),
+    aspekt_el: Boolean(form.aspekt_el),
+    aspekt_kallsortering: Boolean(form.aspekt_kallsortering),
+    miljoaspekter_anteckningar: t(form.miljoaspekter_anteckningar) || null,
+    kallsortering_kemikalier_sdb: t(form.kallsortering_kemikalier_sdb) || null,
+    lagar_krav: t(form.lagar_krav) || null,
+    ansvar: t(form.ansvar) || null,
+    utbildning: t(form.utbildning) || null,
+    kommunikation: t(form.kommunikation) || null,
+    egenkontroll_miljo: t(form.egenkontroll_miljo) || null,
+    avvikelser: t(form.avvikelser) || null,
+    nodlage: t(form.nodlage) || null,
+  }
+}
