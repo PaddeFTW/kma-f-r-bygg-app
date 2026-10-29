@@ -124,3 +124,33 @@ export type ProjectClient = {
 export type ProjectSubcontractor = ProjectClient & {
   purchasing_manager: string | null
 }
+
+/** Flik 5 – Kvalitetsplan */
+export type Kvalitetsplan = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  kvalitetspolicy: string | null
+  orientering_allman_info: string | null
+  orientering_entreprenadform: string | null
+  orientering_art: string | null
+  orientering_tidplan: string | null
+  organisation: string | null
+  projektgenomgang_byggmote: string | null
+  projektgenomgang_andringar: string | null
+  projektgenomgang_protokoll: string | null
+  projektering_kontrollplan: string | null
+  produktion_egenkontroll: string | null
+  produktion_dagbok: string | null
+  produktion_ata: string | null
+  produktion_personalliggare: string | null
+  produktion_avvikelser: string | null
+  montage_matutrustning: string | null
+  avslutning_provning: string | null
+  avslutning_besiktning: string | null
+  dokumentstyrning: string | null
+  distributionsforteckning: string | null
+  created_at: string
+  updated_at: string
+}

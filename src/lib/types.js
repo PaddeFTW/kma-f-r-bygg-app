@@ -275,3 +275,80 @@ export function orgContactFormToPayload(form, { includePurchasing = false } = {}
   }
   return payload
 }
+
+/** Flik 5 – Kvalitetsplan (avsnitt enligt underlaget) */
+export const emptyKvalitetsplanForm = {
+  kvalitetspolicy: '',
+  orientering_allman_info: '',
+  orientering_entreprenadform: '',
+  orientering_art: '',
+  orientering_tidplan: '',
+  organisation: '',
+  projektgenomgang_byggmote: '',
+  projektgenomgang_andringar: '',
+  projektgenomgang_protokoll: '',
+  projektering_kontrollplan: '',
+  produktion_egenkontroll: '',
+  produktion_dagbok: '',
+  produktion_ata: '',
+  produktion_personalliggare: '',
+  produktion_avvikelser: '',
+  montage_matutrustning: '',
+  avslutning_provning: '',
+  avslutning_besiktning: '',
+  dokumentstyrning: '',
+  distributionsforteckning: '',
+}
+
+export function kvalitetsplanToForm(row) {
+  if (!row) return { ...emptyKvalitetsplanForm }
+  return {
+    kvalitetspolicy: row.kvalitetspolicy || '',
+    orientering_allman_info: row.orientering_allman_info || '',
+    orientering_entreprenadform: row.orientering_entreprenadform || '',
+    orientering_art: row.orientering_art || '',
+    orientering_tidplan: row.orientering_tidplan || '',
+    organisation: row.organisation || '',
+    projektgenomgang_byggmote: row.projektgenomgang_byggmote || '',
+    projektgenomgang_andringar: row.projektgenomgang_andringar || '',
+    projektgenomgang_protokoll: row.projektgenomgang_protokoll || '',
+    projektering_kontrollplan: row.projektering_kontrollplan || '',
+    produktion_egenkontroll: row.produktion_egenkontroll || '',
+    produktion_dagbok: row.produktion_dagbok || '',
+    produktion_ata: row.produktion_ata || '',
+    produktion_personalliggare: row.produktion_personalliggare || '',
+    produktion_avvikelser: row.produktion_avvikelser || '',
+    montage_matutrustning: row.montage_matutrustning || '',
+    avslutning_provning: row.avslutning_provning || '',
+    avslutning_besiktning: row.avslutning_besiktning || '',
+    dokumentstyrning: row.dokumentstyrning || '',
+    distributionsforteckning: row.distributionsforteckning || '',
+  }
+}
+
+/** Payload för insert/update – null för tomma fält */
+export function kvalitetsplanFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    kvalitetspolicy: t(form.kvalitetspolicy) || null,
+    orientering_allman_info: t(form.orientering_allman_info) || null,
+    orientering_entreprenadform: t(form.orientering_entreprenadform) || null,
+    orientering_art: t(form.orientering_art) || null,
+    orientering_tidplan: t(form.orientering_tidplan) || null,
+    organisation: t(form.organisation) || null,
+    projektgenomgang_byggmote: t(form.projektgenomgang_byggmote) || null,
+    projektgenomgang_andringar: t(form.projektgenomgang_andringar) || null,
+    projektgenomgang_protokoll: t(form.projektgenomgang_protokoll) || null,
+    projektering_kontrollplan: t(form.projektering_kontrollplan) || null,
+    produktion_egenkontroll: t(form.produktion_egenkontroll) || null,
+    produktion_dagbok: t(form.produktion_dagbok) || null,
+    produktion_ata: t(form.produktion_ata) || null,
+    produktion_personalliggare: t(form.produktion_personalliggare) || null,
+    produktion_avvikelser: t(form.produktion_avvikelser) || null,
+    montage_matutrustning: t(form.montage_matutrustning) || null,
+    avslutning_provning: t(form.avslutning_provning) || null,
+    avslutning_besiktning: t(form.avslutning_besiktning) || null,
+    dokumentstyrning: t(form.dokumentstyrning) || null,
+    distributionsforteckning: t(form.distributionsforteckning) || null,
+  }
+}
