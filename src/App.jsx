@@ -20,6 +20,8 @@ import KvalitetsplanerList from './pages/kvalitetsplan/KvalitetsplanerList'
 import KvalitetsplanDetail from './pages/kvalitetsplan/KvalitetsplanDetail'
 import MiljoplanerList from './pages/miljoplan/MiljoplanerList'
 import MiljoplanDetail from './pages/miljoplan/MiljoplanDetail'
+import ArbetsmiljoplanerList from './pages/arbetsmiljoplan/ArbetsmiljoplanerList'
+import ArbetsmiljoplanDetail from './pages/arbetsmiljoplan/ArbetsmiljoplanDetail'
 
 export default function App() {
   return (
@@ -94,6 +96,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <MiljoplanDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/arbetsmiljoplan"
+                element={
+                  <ProtectedRoute>
+                    <ArbetsmiljoplanerList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/arbetsmiljoplan/:id"
+                element={
+                  <ProtectedRoute>
+                    <ArbetsmiljoplanDetail />
                   </ProtectedRoute>
                 }
               />
