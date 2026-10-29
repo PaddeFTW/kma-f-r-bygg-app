@@ -41,7 +41,7 @@ create policy "Users can delete own uppgifter"
   using (auth.uid() = user_id);
 ```
 
-5. Kör även SQL för KMA-grund (`companies` + `projects`), se [`supabase/migrations/001_companies_projects.sql`](../supabase/migrations/001_companies_projects.sql) eller klistra in samma fil i SQL Editor.
+5. Kör även SQL för KMA-grund (`companies` + `projects`), se [`supabase/migrations/001_companies_projects.sql`](../supabase/migrations/001_companies_projects.sql), och därefter projektstart Flik 1–2 [`supabase/migrations/002_projektstart_flik1_2.sql`](../supabase/migrations/002_projektstart_flik1_2.sql) (utökade projektfält + `project_roles` med RLS).
 
 6. Auth → Providers: Email aktiverat. För snabb lokal test kan du stänga av “Confirm email”.
 

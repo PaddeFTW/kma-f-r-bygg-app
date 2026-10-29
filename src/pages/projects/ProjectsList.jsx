@@ -11,16 +11,13 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid,
   IconButton,
-  MenuItem,
   Stack,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  TextField,
   Typography,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
@@ -28,7 +25,12 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import VerticalLayout from '../../layouts/VerticalLayout'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
-import { contractForms, emptyProjectForm } from '../../lib/types'
+import {
+  emptyProjectForm,
+  isProjectFormValid,
+  projectFormToPayload,
+} from '../../lib/types'
+import ProjectFormFields from './ProjectFormFields'
 
 export default function ProjectsList() {
   const { user } = useAuth()
@@ -88,7 +90,7 @@ export default function ProjectsList() {
 
   const handleCreate = async (event) => {
     event.preventDefault()
-    if (!company?.id || !form.property_designation.trim()) return
+    if (!company?.id || !isProjectFormValid(form)) return
 
     setSaving(true)
     setError('')
@@ -98,17 +100,7 @@ export default function ProjectsList() {
       .insert({
         user_id: user.id,
         company_id: company.id,
-        property_designation: form.property_designation.trim(),
-        address: form.address.trim() || null,
-        postal_code: form.postal_code.trim() || null,
-        city: form.city.trim() || null,
-        contact_name: form.contact_name.trim() || null,
-        phone: form.phone.trim() || null,
-        email: form.email.trim() || null,
-        client_name: form.client_name.trim() || null,
-        contractor_name: form.contractor_name.trim() || null,
-        contract_form: form.contract_form.trim() || null,
-        description: form.description.trim() || null,
+        ...projectFormToPayload(form),
         guided_answers: {},
       })
       .select()
@@ -134,26 +126,39 @@ export default function ProjectsList() {
   }
 
   const locationLabel = (item) => {
-    const parts = [item.address, [item.postal_code, item.city].filter(Boolean).join(' ')].filter(Boolean)
+    const parts = [item.address, [item.postal_code, item.city].filter(Boolean).join(' ')].filter(
+      Boolean,
+    )
     return parts.join(', ') || '—'
   }
 
   return (
     <VerticalLayout>
       <Stack spacing={3}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 2,
+            flexWrap: 'wrap',
+          }}
+        >
           <Box>
             <Typography variant="h4" sx={{ fontWeight: 600 }}>
               Projekt
             </Typography>
             <Typography color="text.secondary">
-              Lista och detalj för byggprojekt kopplade till ditt företag
+              Projektstart enligt Flik 1 och roller enligt Flik 2, kopplat till ditt företag
             </Typography>
           </Box>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => setOpen(true)}
+            onClick={() => {
+              setForm({ ...emptyProjectForm })
+              setOpen(true)
+            }}
             disabled={!company}
           >
             Nytt projekt
@@ -184,7 +189,9 @@ export default function ProjectsList() {
             ) : items.length === 0 ? (
               <Box sx={{ py: 6, textAlign: 'center' }}>
                 <Typography color="text.secondary">
-                  {company ? 'Inga projekt ännu. Skapa det första.' : 'Inga projekt – skapa först ett företag.'}
+                  {company
+                    ? 'Inga projekt ännu. Skapa det första.'
+                    : 'Inga projekt – skapa först ett företag.'}
                 </Typography>
               </Box>
             ) : (
@@ -194,6 +201,7 @@ export default function ProjectsList() {
                     <TableCell>Fastighetsbeteckning</TableCell>
                     <TableCell>Plats</TableCell>
                     <TableCell>Byggherre</TableCell>
+                    <TableCell>Entreprenör</TableCell>
                     <TableCell>Entreprenadform</TableCell>
                     <TableCell>Skapad</TableCell>
                     <TableCell align="right">Åtgärder</TableCell>
@@ -210,13 +218,19 @@ export default function ProjectsList() {
                       <TableCell>
                         <Typography fontWeight={500}>{item.property_designation}</Typography>
                         {item.description && (
-                          <Typography variant="body2" color="text.secondary" noWrap sx={{ maxWidth: 280 }}>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            noWrap
+                            sx={{ maxWidth: 280 }}
+                          >
                             {item.description}
                           </Typography>
                         )}
                       </TableCell>
                       <TableCell>{locationLabel(item)}</TableCell>
                       <TableCell>{item.client_name || '—'}</TableCell>
+                      <TableCell>{item.contractor_name || '—'}</TableCell>
                       <TableCell>{item.contract_form || '—'}</TableCell>
                       <TableCell>{new Date(item.created_at).toLocaleString('sv-SE')}</TableCell>
                       <TableCell align="right" onClick={(e) => e.stopPropagation()}>
@@ -243,109 +257,19 @@ export default function ProjectsList() {
 
       <Dialog open={open} onClose={() => !saving && setOpen(false)} fullWidth maxWidth="md">
         <Box component="form" onSubmit={handleCreate}>
-          <DialogTitle>Nytt projekt</DialogTitle>
+          <DialogTitle>Nytt projekt – Flik 1 Projektbeskrivning</DialogTitle>
           <DialogContent>
-            <Grid container spacing={2} sx={{ pt: 1 }}>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  label="Fastighetsbeteckning"
-                  value={form.property_designation}
-                  onChange={handleChange('property_designation')}
-                  required
-                  fullWidth
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  label="Adress"
-                  value={form.address}
-                  onChange={handleChange('address')}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  label="Postnr"
-                  value={form.postal_code}
-                  onChange={handleChange('postal_code')}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} sm={8}>
-                <TextField label="Ort" value={form.city} onChange={handleChange('city')} fullWidth />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  label="Kontaktperson"
-                  value={form.contact_name}
-                  onChange={handleChange('contact_name')}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField label="Mobil" value={form.phone} onChange={handleChange('phone')} fullWidth />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <TextField
-                  label="E-post"
-                  type="email"
-                  value={form.email}
-                  onChange={handleChange('email')}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  label="Byggherre"
-                  value={form.client_name}
-                  onChange={handleChange('client_name')}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  label="Entreprenör"
-                  value={form.contractor_name}
-                  onChange={handleChange('contractor_name')}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  select
-                  label="Entreprenadform"
-                  value={form.contract_form}
-                  onChange={handleChange('contract_form')}
-                  fullWidth
-                >
-                  <MenuItem value="">
-                    <em>Välj…</em>
-                  </MenuItem>
-                  {contractForms.map((value) => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Projektbeskrivning"
-                  value={form.description}
-                  onChange={handleChange('description')}
-                  fullWidth
-                  multiline
-                  minRows={3}
-                />
-              </Grid>
-            </Grid>
+            <Typography color="text.secondary" sx={{ mb: 2 }}>
+              Fyll i grunddata. Kontaktfält för huvudparter är obligatoriska. Roller läggs till i
+              nästa steg.
+            </Typography>
+            <ProjectFormFields form={form} onChange={handleChange} />
           </DialogContent>
           <DialogActions sx={{ px: 3, pb: 2 }}>
             <Button onClick={() => setOpen(false)} disabled={saving}>
               Avbryt
             </Button>
-            <Button type="submit" variant="contained" disabled={saving || !form.property_designation.trim()}>
+            <Button type="submit" variant="contained" disabled={saving || !isProjectFormValid(form)}>
               {saving ? <CircularProgress size={20} color="inherit" /> : 'Skapa'}
             </Button>
           </DialogActions>
