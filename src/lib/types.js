@@ -417,3 +417,53 @@ export function miljoplanFormToPayload(form) {
     nodlage: t(form.nodlage) || null,
   }
 }
+
+/** Flik 7 – Arbetsmiljöplan (avsnitt enligt underlaget) */
+export const emptyArbetsmiljoplanForm = {
+  arbetsmiljopolicy: '',
+  uppfoljning_skyddsronder: '',
+  regel_skyddsutrustning: false,
+  regel_heta_arbeten: false,
+  regel_tillfallig_el: false,
+  regel_buller: false,
+  regel_droger: false,
+  ordningsregler_anteckningar: '',
+  samordning_ue: '',
+  skyddsrond_anteckningar: '',
+  riskbedomning_anteckningar: '',
+}
+
+export function arbetsmiljoplanToForm(row) {
+  if (!row) return { ...emptyArbetsmiljoplanForm }
+  return {
+    arbetsmiljopolicy: row.arbetsmiljopolicy || '',
+    uppfoljning_skyddsronder: row.uppfoljning_skyddsronder || '',
+    regel_skyddsutrustning: Boolean(row.regel_skyddsutrustning),
+    regel_heta_arbeten: Boolean(row.regel_heta_arbeten),
+    regel_tillfallig_el: Boolean(row.regel_tillfallig_el),
+    regel_buller: Boolean(row.regel_buller),
+    regel_droger: Boolean(row.regel_droger),
+    ordningsregler_anteckningar: row.ordningsregler_anteckningar || '',
+    samordning_ue: row.samordning_ue || '',
+    skyddsrond_anteckningar: row.skyddsrond_anteckningar || '',
+    riskbedomning_anteckningar: row.riskbedomning_anteckningar || '',
+  }
+}
+
+/** Payload för insert/update – null för tomma textfält */
+export function arbetsmiljoplanFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    arbetsmiljopolicy: t(form.arbetsmiljopolicy) || null,
+    uppfoljning_skyddsronder: t(form.uppfoljning_skyddsronder) || null,
+    regel_skyddsutrustning: Boolean(form.regel_skyddsutrustning),
+    regel_heta_arbeten: Boolean(form.regel_heta_arbeten),
+    regel_tillfallig_el: Boolean(form.regel_tillfallig_el),
+    regel_buller: Boolean(form.regel_buller),
+    regel_droger: Boolean(form.regel_droger),
+    ordningsregler_anteckningar: t(form.ordningsregler_anteckningar) || null,
+    samordning_ue: t(form.samordning_ue) || null,
+    skyddsrond_anteckningar: t(form.skyddsrond_anteckningar) || null,
+    riskbedomning_anteckningar: t(form.riskbedomning_anteckningar) || null,
+  }
+}
