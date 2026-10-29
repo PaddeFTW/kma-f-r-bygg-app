@@ -4,9 +4,11 @@ import {
   FormControlLabel,
   FormGroup,
   Grid,
+  Link,
   TextField,
   Typography,
 } from '@mui/material'
+import { Link as RouterLink } from 'react-router-dom'
 
 function SectionTitle({ children, helper }) {
   return (
@@ -56,7 +58,20 @@ export default function MiljoplanFormFields({ form, onChange, onCheckboxChange }
       </SectionTitle>
       <Grid item xs={12}>
         <Alert severity="info" sx={{ mb: 1 }}>
-          Miljöaspekter kopplas till Flik 8 (miljöanalys) när den finns.
+          Miljöaspekter kopplas till Flik 8 (miljöanalys)
+          {projectId ? (
+            <>
+              {' – '}
+              <Link
+                component={RouterLink}
+                to={`/miljoanalys?project=${projectId}`}
+                underline="hover"
+              >
+                öppna miljöanalyser för projektet
+              </Link>
+            </>
+          ) : null}
+          .
         </Alert>
         <FormGroup>
           {MILJOASPEKTER.map(({ field, label }) => (

@@ -201,3 +201,21 @@ export type Arbetsmiljoplan = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 8 – Miljöanalys */
+export type Miljoanalys = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  atgard_transporter: string | null
+  atgard_tomgang: string | null
+  atgard_damm: string | null
+  atgard_buller: string | null
+  atgard_materialhantering: string | null
+  atgard_kallsortering: string | null
+  atgard_byggavfall: string | null
+  atgard_nodlagesberedskap: string | null
+  created_at: string
+  updated_at: string
+}
