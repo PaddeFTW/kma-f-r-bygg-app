@@ -16,6 +16,8 @@ import UppgiftDetail from './pages/uppgifter/UppgiftDetail'
 import CompanyPage from './pages/company/CompanyPage'
 import ProjectsList from './pages/projects/ProjectsList'
 import ProjectDetail from './pages/projects/ProjectDetail'
+import KvalitetsplanerList from './pages/kvalitetsplan/KvalitetsplanerList'
+import KvalitetsplanDetail from './pages/kvalitetsplan/KvalitetsplanDetail'
 
 export default function App() {
   return (
@@ -58,6 +60,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <ProjectDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/kvalitetsplan"
+                element={
+                  <ProtectedRoute>
+                    <KvalitetsplanerList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/kvalitetsplan/:id"
+                element={
+                  <ProtectedRoute>
+                    <KvalitetsplanDetail />
                   </ProtectedRoute>
                 }
               />
