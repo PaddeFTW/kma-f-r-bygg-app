@@ -96,3 +96,31 @@ export type ProjectRole = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 3 – Beställarens organisation */
+export type ProjectClient = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  ceo_name: string | null
+  contact_name: string | null
+  address: string | null
+  postal_code: string | null
+  city: string | null
+  phone: string | null
+  email: string | null
+  website: string | null
+  project_manager: string | null
+  quality_manager: string | null
+  environmental_manager: string | null
+  work_environment_manager: string | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 4 – Underleverantör */
+export type ProjectSubcontractor = ProjectClient & {
+  purchasing_manager: string | null
+}

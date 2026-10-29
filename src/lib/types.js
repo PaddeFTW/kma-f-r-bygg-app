@@ -184,3 +184,94 @@ export function isProjectFormValid(form) {
   ]
   return required.every((v) => typeof v === 'string' && v.trim().length > 0)
 }
+
+/** Flik 3 – Beställarens organisation (fält enligt underlaget) */
+export const emptyProjectClientForm = {
+  ceo_name: '',
+  contact_name: '',
+  address: '',
+  postal_code: '',
+  city: '',
+  phone: '',
+  email: '',
+  website: '',
+  project_manager: '',
+  quality_manager: '',
+  environmental_manager: '',
+  work_environment_manager: '',
+  notes: '',
+}
+
+/** Flik 4 – Underleverantör (fält enligt underlaget, inkl. inköpsansvarig) */
+export const emptyProjectSubcontractorForm = {
+  ...emptyProjectClientForm,
+  purchasing_manager: '',
+}
+
+export function projectClientToForm(row) {
+  if (!row) return { ...emptyProjectClientForm }
+  return {
+    ceo_name: row.ceo_name || '',
+    contact_name: row.contact_name || '',
+    address: row.address || '',
+    postal_code: row.postal_code || '',
+    city: row.city || '',
+    phone: row.phone || '',
+    email: row.email || '',
+    website: row.website || '',
+    project_manager: row.project_manager || '',
+    quality_manager: row.quality_manager || '',
+    environmental_manager: row.environmental_manager || '',
+    work_environment_manager: row.work_environment_manager || '',
+    notes: row.notes || '',
+  }
+}
+
+export function projectSubcontractorToForm(row) {
+  if (!row) return { ...emptyProjectSubcontractorForm }
+  return {
+    ...projectClientToForm(row),
+    purchasing_manager: row.purchasing_manager || '',
+  }
+}
+
+/**
+ * Obligatoriska kontaktfält för huvudparter enligt underlaget (Flik 3/4).
+ * VD, Kontaktperson, Adress, Postnr/Ort, Mobil, E-post.
+ */
+export function isOrgContactFormValid(form) {
+  const required = [
+    form.ceo_name,
+    form.contact_name,
+    form.address,
+    form.postal_code,
+    form.city,
+    form.phone,
+    form.email,
+  ]
+  return required.every((v) => typeof v === 'string' && v.trim().length > 0)
+}
+
+/** Payload för insert/update – null för tomma valfria fält */
+export function orgContactFormToPayload(form, { includePurchasing = false } = {}) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  const payload = {
+    ceo_name: t(form.ceo_name) || null,
+    contact_name: t(form.contact_name) || null,
+    address: t(form.address) || null,
+    postal_code: t(form.postal_code) || null,
+    city: t(form.city) || null,
+    phone: t(form.phone) || null,
+    email: t(form.email) || null,
+    website: t(form.website) || null,
+    project_manager: t(form.project_manager) || null,
+    quality_manager: t(form.quality_manager) || null,
+    environmental_manager: t(form.environmental_manager) || null,
+    work_environment_manager: t(form.work_environment_manager) || null,
+    notes: t(form.notes) || null,
+  }
+  if (includePurchasing) {
+    payload.purchasing_manager = t(form.purchasing_manager) || null
+  }
+  return payload
+}

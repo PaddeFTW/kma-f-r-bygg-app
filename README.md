@@ -35,7 +35,7 @@ VITE_SUPABASE_URL=https://xxxx.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJ...
 ```
 
-3. Kör SQL för `companies` + `projects` + projektstart (se [`supabase/migrations/001_companies_projects.sql`](supabase/migrations/001_companies_projects.sql), [`supabase/migrations/002_projektstart_flik1_2.sql`](supabase/migrations/002_projektstart_flik1_2.sql) och [`docs/DEPLOY.md`](docs/DEPLOY.md)).
+3. Kör SQL för `companies` + `projects` + projektstart Flik 1–4 (se [`supabase/migrations/001_companies_projects.sql`](supabase/migrations/001_companies_projects.sql), [`supabase/migrations/002_projektstart_flik1_2.sql`](supabase/migrations/002_projektstart_flik1_2.sql), [`supabase/migrations/003_flik3_4_organisation.sql`](supabase/migrations/003_flik3_4_organisation.sql) och [`docs/DEPLOY.md`](docs/DEPLOY.md)).
 4. Starta om `npm run dev`.
 5. Gå till `/login`, registrera dig och logga in.
 
