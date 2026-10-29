@@ -22,6 +22,8 @@ import MiljoplanerList from './pages/miljoplan/MiljoplanerList'
 import MiljoplanDetail from './pages/miljoplan/MiljoplanDetail'
 import ArbetsmiljoplanerList from './pages/arbetsmiljoplan/ArbetsmiljoplanerList'
 import ArbetsmiljoplanDetail from './pages/arbetsmiljoplan/ArbetsmiljoplanDetail'
+import MiljoanalyserList from './pages/miljoanalys/MiljoanalyserList'
+import MiljoanalysDetail from './pages/miljoanalys/MiljoanalysDetail'
 
 export default function App() {
   return (
@@ -112,6 +114,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <ArbetsmiljoplanDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/miljoanalys"
+                element={
+                  <ProtectedRoute>
+                    <MiljoanalyserList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/miljoanalys/:id"
+                element={
+                  <ProtectedRoute>
+                    <MiljoanalysDetail />
                   </ProtectedRoute>
                 }
               />
