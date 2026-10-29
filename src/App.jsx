@@ -26,6 +26,8 @@ import MiljoanalyserList from './pages/miljoanalys/MiljoanalyserList'
 import MiljoanalysDetail from './pages/miljoanalys/MiljoanalysDetail'
 import RivningsplanerList from './pages/rivningsplan/RivningsplanerList'
 import RivningsplanDetail from './pages/rivningsplan/RivningsplanDetail'
+import ProtokollList from './pages/protokoll/ProtokollList'
+import ProtokollDetail from './pages/protokoll/ProtokollDetail'
 
 export default function App() {
   return (
@@ -148,6 +150,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <RivningsplanDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/protokoll"
+                element={
+                  <ProtectedRoute>
+                    <ProtokollList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/protokoll/:id"
+                element={
+                  <ProtectedRoute>
+                    <ProtokollDetail />
                   </ProtectedRoute>
                 }
               />
