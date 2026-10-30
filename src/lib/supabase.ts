@@ -180,3 +180,24 @@ export type Miljoplan = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 7 – Arbetsmiljöplan */
+export type Arbetsmiljoplan = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  arbetsmiljopolicy: string | null
+  uppfoljning_skyddsronder: string | null
+  regel_skyddsutrustning: boolean
+  regel_heta_arbeten: boolean
+  regel_tillfallig_el: boolean
+  regel_buller: boolean
+  regel_droger: boolean
+  ordningsregler_anteckningar: string | null
+  samordning_ue: string | null
+  skyddsrond_anteckningar: string | null
+  riskbedomning_anteckningar: string | null
+  created_at: string
+  updated_at: string
+}
