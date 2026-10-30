@@ -219,3 +219,38 @@ export type Bygghandling = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 12 – Kontrollplan enligt PBL */
+export type KontrollplanUtforAv = 'S' | 'E'
+
+export type Kontrollplan = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  objektinfo: string | null
+  kontrollansvarig: string | null
+  byggherre: string | null
+  entreprenor: string | null
+  underlag: string | null
+  signatur_kontrollansvarig: string | null
+  signatur_byggherre: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type KontrollplanRad = {
+  id: string
+  kontrollplan_id: string
+  sort_order: number
+  kontroll_avser: string | null
+  utfor_av: KontrollplanUtforAv | string | null
+  metod: string | null
+  underlag: string | null
+  anmarkning: string | null
+  atgard: string | null
+  datum: string | null
+  sign: string | null
+  created_at: string
+  updated_at: string
+}

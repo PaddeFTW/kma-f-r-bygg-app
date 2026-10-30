@@ -508,3 +508,89 @@ export function bygghandlingFormToPayload(form) {
     file_url: t(form.file_url) || null,
   }
 }
+
+/** Flik 12 – Kontrollplan enligt PBL */
+export const KONTROLLPLAN_UTFOR_AV_OPTIONS = [
+  { value: 'S', label: 'S (sakkunnig)' },
+  { value: 'E', label: 'E (entreprenör)' },
+]
+
+export const emptyKontrollplanRad = () => ({
+  _key: `new-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  id: null,
+  kontroll_avser: '',
+  utfor_av: '',
+  metod: '',
+  underlag: '',
+  anmarkning: '',
+  atgard: '',
+  datum: '',
+  sign: '',
+})
+
+export const emptyKontrollplanForm = {
+  objektinfo: '',
+  kontrollansvarig: '',
+  byggherre: '',
+  entreprenor: '',
+  underlag: '',
+  signatur_kontrollansvarig: '',
+  signatur_byggherre: '',
+  rader: [],
+}
+
+export function kontrollplanToForm(row, rader = []) {
+  if (!row) return { ...emptyKontrollplanForm, rader: [] }
+  return {
+    objektinfo: row.objektinfo || '',
+    kontrollansvarig: row.kontrollansvarig || '',
+    byggherre: row.byggherre || '',
+    entreprenor: row.entreprenor || '',
+    underlag: row.underlag || '',
+    signatur_kontrollansvarig: row.signatur_kontrollansvarig || '',
+    signatur_byggherre: row.signatur_byggherre || '',
+    rader: (rader || []).map((r, index) => ({
+      _key: r.id || `row-${index}`,
+      id: r.id || null,
+      kontroll_avser: r.kontroll_avser || '',
+      utfor_av: r.utfor_av || '',
+      metod: r.metod || '',
+      underlag: r.underlag || '',
+      anmarkning: r.anmarkning || '',
+      atgard: r.atgard || '',
+      datum: r.datum || '',
+      sign: r.sign || '',
+    })),
+  }
+}
+
+/** Payload för plan (utan rader) */
+export function kontrollplanFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    objektinfo: t(form.objektinfo) || null,
+    kontrollansvarig: t(form.kontrollansvarig) || null,
+    byggherre: t(form.byggherre) || null,
+    entreprenor: t(form.entreprenor) || null,
+    underlag: t(form.underlag) || null,
+    signatur_kontrollansvarig: t(form.signatur_kontrollansvarig) || null,
+    signatur_byggherre: t(form.signatur_byggherre) || null,
+  }
+}
+
+/** Payload för rader som ska insertas */
+export function kontrollplanRaderToPayload(kontrollplanId, rader) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (rader || []).map((r, index) => ({
+    kontrollplan_id: kontrollplanId,
+    sort_order: index,
+    kontroll_avser: t(r.kontroll_avser) || null,
+    utfor_av: t(r.utfor_av) || null,
+    metod: t(r.metod) || null,
+    underlag: t(r.underlag) || null,
+    anmarkning: t(r.anmarkning) || null,
+    atgard: t(r.atgard) || null,
+    datum: t(r.datum) || null,
+    sign: t(r.sign) || null,
+  }))
+}
