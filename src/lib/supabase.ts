@@ -365,3 +365,17 @@ export type AtaLista = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 17 – Säkerhetsdatablad */
+export type Sakerhetsdatablad = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  produkt: string
+  sakerhetsdatablad: boolean | null
+  ansvarig: string | null
+  datum: string | null
+  created_at: string
+  updated_at: string
+}

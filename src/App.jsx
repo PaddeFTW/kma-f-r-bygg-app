@@ -36,6 +36,8 @@ import AtaList from './pages/ata/AtaList'
 import AvvikelseDetail from './pages/ata/AvvikelseDetail'
 import AtaDetail from './pages/ata/AtaDetail'
 import AtaListaDetail from './pages/ata/AtaListaDetail'
+import SakerhetsdatabladList from './pages/sakerhetsdatablad/SakerhetsdatabladList'
+import SakerhetsdatabladDetail from './pages/sakerhetsdatablad/SakerhetsdatabladDetail'
 
 export default function App() {
   return (
@@ -238,6 +240,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <AtaListaDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/sakerhetsdatablad"
+                element={
+                  <ProtectedRoute>
+                    <SakerhetsdatabladList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/sakerhetsdatablad/:id"
+                element={
+                  <ProtectedRoute>
+                    <SakerhetsdatabladDetail />
                   </ProtectedRoute>
                 }
               />

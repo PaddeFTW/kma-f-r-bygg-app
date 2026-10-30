@@ -915,3 +915,36 @@ export function ataListaFormToPayload(form) {
     fakturerad: toBool(form.fakturerad),
   }
 }
+
+/** Flik 17 – Säkerhetsdatablad */
+export const emptySakerhetsdatabladForm = {
+  produkt: '',
+  sakerhetsdatablad: '',
+  ansvarig: '',
+  datum: '',
+}
+
+export function sakerhetsdatabladToForm(row) {
+  if (!row) return { ...emptySakerhetsdatabladForm }
+  return {
+    produkt: row.produkt || '',
+    sakerhetsdatablad: row.sakerhetsdatablad == null ? '' : row.sakerhetsdatablad ? 'ja' : 'nej',
+    ansvarig: row.ansvarig || '',
+    datum: row.datum || '',
+  }
+}
+
+export function sakerhetsdatabladFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  const toBool = (v) => {
+    if (v === 'ja') return true
+    if (v === 'nej') return false
+    return null
+  }
+  return {
+    produkt: t(form.produkt),
+    sakerhetsdatablad: toBool(form.sakerhetsdatablad),
+    ansvarig: t(form.ansvarig) || null,
+    datum: t(form.datum) || null,
+  }
+}
