@@ -154,3 +154,29 @@ export type Kvalitetsplan = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 6 – Miljöplan */
+export type Miljoplan = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  miljopolicy: string | null
+  aspekt_transporter: boolean
+  aspekt_byggavfall: boolean
+  aspekt_kemikalier: boolean
+  aspekt_farligt_avfall: boolean
+  aspekt_el: boolean
+  aspekt_kallsortering: boolean
+  miljoaspekter_anteckningar: string | null
+  kallsortering_kemikalier_sdb: string | null
+  lagar_krav: string | null
+  ansvar: string | null
+  utbildning: string | null
+  kommunikation: string | null
+  egenkontroll_miljo: string | null
+  avvikelser: string | null
+  nodlage: string | null
+  created_at: string
+  updated_at: string
+}
