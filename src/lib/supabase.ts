@@ -201,3 +201,21 @@ export type Arbetsmiljoplan = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 11 – Bygghandlingar / relationsritningar */
+export type BygghandlingTyp = 'ritning' | 'relationsritning' | 'handling'
+
+export type Bygghandling = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  namn: string
+  beskrivning: string | null
+  typ: BygghandlingTyp | string | null
+  file_url: string | null
+  file_path: string | null
+  file_name: string | null
+  created_at: string
+  updated_at: string
+}

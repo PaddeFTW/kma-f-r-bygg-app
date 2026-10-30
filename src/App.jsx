@@ -22,6 +22,8 @@ import MiljoplanerList from './pages/miljoplan/MiljoplanerList'
 import MiljoplanDetail from './pages/miljoplan/MiljoplanDetail'
 import ArbetsmiljoplanerList from './pages/arbetsmiljoplan/ArbetsmiljoplanerList'
 import ArbetsmiljoplanDetail from './pages/arbetsmiljoplan/ArbetsmiljoplanDetail'
+import BygghandlingarList from './pages/bygghandlingar/BygghandlingarList'
+import BygghandlingDetail from './pages/bygghandlingar/BygghandlingDetail'
 
 export default function App() {
   return (
@@ -112,6 +114,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <ArbetsmiljoplanDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/bygghandlingar"
+                element={
+                  <ProtectedRoute>
+                    <BygghandlingarList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/bygghandlingar/:id"
+                element={
+                  <ProtectedRoute>
+                    <BygghandlingDetail />
                   </ProtectedRoute>
                 }
               />

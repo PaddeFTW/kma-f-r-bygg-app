@@ -467,3 +467,44 @@ export function arbetsmiljoplanFormToPayload(form) {
     riskbedomning_anteckningar: t(form.riskbedomning_anteckningar) || null,
   }
 }
+
+/** Flik 11 – Bygghandlingar / relationsritningar (dokumentarkiv) */
+export const BYGGHANDLING_TYP_OPTIONS = [
+  { value: 'ritning', label: 'Ritning' },
+  { value: 'relationsritning', label: 'Relationsritning' },
+  { value: 'handling', label: 'Handling' },
+]
+
+export const BYGGHANDLING_TYP_LABELS = Object.fromEntries(
+  BYGGHANDLING_TYP_OPTIONS.map((o) => [o.value, o.label]),
+)
+
+export const emptyBygghandlingForm = {
+  namn: '',
+  beskrivning: '',
+  typ: '',
+  file_url: '',
+  file_name: '',
+}
+
+export function bygghandlingToForm(row) {
+  if (!row) return { ...emptyBygghandlingForm }
+  return {
+    namn: row.namn || '',
+    beskrivning: row.beskrivning || '',
+    typ: row.typ || '',
+    file_url: row.file_url || '',
+    file_name: row.file_name || '',
+  }
+}
+
+/** Payload för insert/update – null för tomma fält (filmetadata sätts separat vid uppladdning) */
+export function bygghandlingFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    namn: t(form.namn),
+    beskrivning: t(form.beskrivning) || null,
+    typ: t(form.typ) || null,
+    file_url: t(form.file_url) || null,
+  }
+}
