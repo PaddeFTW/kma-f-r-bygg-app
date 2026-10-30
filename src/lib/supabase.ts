@@ -277,3 +277,26 @@ export type Rivningsplan = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 10 – Protokoll byggmöte */
+export type Protokoll = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  projektnr: string | null
+  namn: string | null
+  mote_nr: string | null
+  datum: string | null
+  plats: string | null
+  narvarande_entreprenor: string | null
+  narvarande_bestallare: string | null
+  narvarande_underentreprenor: string | null
+  dagordning_kvalitet: string | null
+  dagordning_miljo: string | null
+  dagordning_arbetsmiljo: string | null
+  dagordning_ovrigt: string | null
+  beslut: string | null
+  created_at: string
+  updated_at: string
+}
