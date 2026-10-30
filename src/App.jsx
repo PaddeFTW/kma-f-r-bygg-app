@@ -24,6 +24,8 @@ import ArbetsmiljoplanerList from './pages/arbetsmiljoplan/ArbetsmiljoplanerList
 import ArbetsmiljoplanDetail from './pages/arbetsmiljoplan/ArbetsmiljoplanDetail'
 import BygghandlingarList from './pages/bygghandlingar/BygghandlingarList'
 import BygghandlingDetail from './pages/bygghandlingar/BygghandlingDetail'
+import KontrollplanerList from './pages/kontrollplan/KontrollplanerList'
+import KontrollplanDetail from './pages/kontrollplan/KontrollplanDetail'
 
 export default function App() {
   return (
@@ -130,6 +132,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <BygghandlingDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/kontrollplan"
+                element={
+                  <ProtectedRoute>
+                    <KontrollplanerList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/kontrollplan/:id"
+                element={
+                  <ProtectedRoute>
+                    <KontrollplanDetail />
                   </ProtectedRoute>
                 }
               />
