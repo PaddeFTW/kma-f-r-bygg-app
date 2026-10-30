@@ -594,3 +594,410 @@ export function kontrollplanRaderToPayload(kontrollplanId, rader) {
     sign: t(r.sign) || null,
   }))
 }
+
+/** Flik 13 – Egenkontroll (mall + varianter från underlaget) */
+export const EGENKONTROLL_STATUS_OPTIONS = [
+  { value: '1', label: '1 – Kontrollerat och godkänt' },
+  { value: '2', label: '2 – Kontrollerat och ej godkänt' },
+  { value: '3', label: '3 – Ej kontrollerat' },
+]
+
+export const EGENKONTROLL_STATUS_LABELS = Object.fromEntries(
+  EGENKONTROLL_STATUS_OPTIONS.map((o) => [o.value, o.label]),
+)
+
+/** Kontrollmoment per typ – endast namngivna i underlaget (flikar-13-16). */
+export const EGENKONTROLL_TYP_TEMPLATES = {
+  administration: {
+    label: 'Administration',
+    moments: ['Bygglov', 'Ekonomi', 'Ritningar', 'Projektplan', 'Material', 'Myndigheter'],
+  },
+  kvalitetsplan: {
+    label: 'Kvalitetsplan',
+    moments: [
+      'Plan upprättad',
+      'Info till medarbetare',
+      'Kalibrering',
+      'Dagbok',
+      'ÄTA',
+      'Personalliggare',
+    ],
+  },
+  miljoplan: {
+    label: 'Miljöplan',
+    moments: [
+      'Miljöaspekter',
+      'Lagar',
+      'SDB',
+      'Källsortering',
+      'Farligt avfall',
+      'Utbildning',
+    ],
+  },
+  arbetsmiljoplan: {
+    label: 'Arbetsmiljöplan',
+    moments: [
+      'Organisation',
+      'UE informerade',
+      'Anhöriglista',
+      'Ordningsregler',
+      'Skyddsrond',
+    ],
+  },
+  personal: {
+    label: 'Personal',
+    moments: ['Identifikation', 'Behörighet', 'Utbildning', 'Källsortering'],
+  },
+  uppfoljning_arbetsmiljo_kvalitet: {
+    label: 'Uppföljning arbetsmiljö/kvalitet',
+    moments: [],
+  },
+  ankommande_gods: {
+    label: 'Ankommande gods',
+    moments: [],
+  },
+}
+
+export const EGENKONTROLL_TYP_OPTIONS = Object.entries(EGENKONTROLL_TYP_TEMPLATES).map(
+  ([value, meta]) => ({ value, label: meta.label }),
+)
+
+export const EGENKONTROLL_TYP_LABELS = Object.fromEntries(
+  EGENKONTROLL_TYP_OPTIONS.map((o) => [o.value, o.label]),
+)
+
+export const emptyEgenkontrollRad = (kontrollmoment = '') => ({
+  _key: `new-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  id: null,
+  kontrollmoment,
+  status: '',
+  datum: '',
+  signatur: '',
+})
+
+export function egenkontrollRaderFromTyp(typ) {
+  const moments = EGENKONTROLL_TYP_TEMPLATES[typ]?.moments || []
+  return moments.map((m) => emptyEgenkontrollRad(m))
+}
+
+export const emptyEgenkontrollForm = {
+  typ: '',
+  bestallare: '',
+  entreprenor: '',
+  objekt: '',
+  projektnr: '',
+  referens: '',
+  ovriga_anteckningar: '',
+  kontrollansvarig: '',
+  rader: [],
+}
+
+export function egenkontrollToForm(row, rader = []) {
+  if (!row) return { ...emptyEgenkontrollForm, rader: [] }
+  return {
+    typ: row.typ || '',
+    bestallare: row.bestallare || '',
+    entreprenor: row.entreprenor || '',
+    objekt: row.objekt || '',
+    projektnr: row.projektnr || '',
+    referens: row.referens || '',
+    ovriga_anteckningar: row.ovriga_anteckningar || '',
+    kontrollansvarig: row.kontrollansvarig || '',
+    rader: (rader || []).map((r, index) => ({
+      _key: r.id || `row-${index}`,
+      id: r.id || null,
+      kontrollmoment: r.kontrollmoment || '',
+      status: r.status || '',
+      datum: r.datum || '',
+      signatur: r.signatur || '',
+    })),
+  }
+}
+
+export function egenkontrollFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    typ: t(form.typ) || null,
+    bestallare: t(form.bestallare) || null,
+    entreprenor: t(form.entreprenor) || null,
+    objekt: t(form.objekt) || null,
+    projektnr: t(form.projektnr) || null,
+    referens: t(form.referens) || null,
+    ovriga_anteckningar: t(form.ovriga_anteckningar) || null,
+    kontrollansvarig: t(form.kontrollansvarig) || null,
+  }
+}
+
+export function egenkontrollRaderToPayload(egenkontrollId, rader) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (rader || []).map((r, index) => ({
+    egenkontroll_id: egenkontrollId,
+    sort_order: index,
+    kontrollmoment: t(r.kontrollmoment) || null,
+    status: t(r.status) || null,
+    datum: t(r.datum) || null,
+    signatur: t(r.signatur) || null,
+  }))
+}
+
+/** Flik 14 – Egenkontroller från UE */
+export const emptyEgenkontrollUeForm = {
+  underleverantor: '',
+  egenkontroll: '',
+  datum: '',
+}
+
+export function egenkontrollUeToForm(row) {
+  if (!row) return { ...emptyEgenkontrollUeForm }
+  return {
+    underleverantor: row.underleverantor || '',
+    egenkontroll: row.egenkontroll || '',
+    datum: row.datum || '',
+  }
+}
+
+export function egenkontrollUeFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    underleverantor: t(form.underleverantor),
+    egenkontroll: t(form.egenkontroll) || null,
+    datum: t(form.datum) || null,
+  }
+}
+
+/** Flik 15 – Inventering av maskiner för UE */
+export const emptyMaskinUeForm = {
+  underleverantor: '',
+  maskiner: '',
+  datum: '',
+}
+
+export function maskinUeToForm(row) {
+  if (!row) return { ...emptyMaskinUeForm }
+  return {
+    underleverantor: row.underleverantor || '',
+    maskiner: row.maskiner || '',
+    datum: row.datum || '',
+  }
+}
+
+export function maskinUeFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    underleverantor: t(form.underleverantor),
+    maskiner: t(form.maskiner) || null,
+    datum: t(form.datum) || null,
+  }
+}
+
+/** Flik 16 – Avvikelserapport */
+export const emptyAvvikelseForm = {
+  ordernr: '',
+  datum: '',
+  inlamnat_av: '',
+  beskrivning: '',
+  korrigerande_atgard: '',
+  grundorsak: '',
+  kostnad: '',
+  forebyggande_atgard: '',
+  uppfoljning: '',
+}
+
+export function avvikelseToForm(row) {
+  if (!row) return { ...emptyAvvikelseForm }
+  return {
+    ordernr: row.ordernr || '',
+    datum: row.datum || '',
+    inlamnat_av: row.inlamnat_av || '',
+    beskrivning: row.beskrivning || '',
+    korrigerande_atgard: row.korrigerande_atgard || '',
+    grundorsak: row.grundorsak || '',
+    kostnad: row.kostnad != null ? String(row.kostnad) : '',
+    forebyggande_atgard: row.forebyggande_atgard || '',
+    uppfoljning: row.uppfoljning || '',
+  }
+}
+
+export function avvikelseFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  const kostnadRaw = t(form.kostnad)
+  const kostnadNum = kostnadRaw === '' ? null : Number(kostnadRaw.replace(',', '.'))
+  return {
+    ordernr: t(form.ordernr) || null,
+    datum: t(form.datum) || null,
+    inlamnat_av: t(form.inlamnat_av) || null,
+    beskrivning: t(form.beskrivning) || null,
+    korrigerande_atgard: t(form.korrigerande_atgard) || null,
+    grundorsak: t(form.grundorsak) || null,
+    kostnad: Number.isFinite(kostnadNum) ? kostnadNum : null,
+    forebyggande_atgard: t(form.forebyggande_atgard) || null,
+    uppfoljning: t(form.uppfoljning) || null,
+  }
+}
+
+/** Flik 16 – ÄTA */
+export const emptyAtaForm = {
+  ordernr: '',
+  objekt: '',
+  beskrivning: '',
+  rapportor: '',
+  orsak: '',
+  hanvisning: '',
+  pris_modell: '',
+  signatur: '',
+}
+
+export function ataToForm(row) {
+  if (!row) return { ...emptyAtaForm }
+  return {
+    ordernr: row.ordernr || '',
+    objekt: row.objekt || '',
+    beskrivning: row.beskrivning || '',
+    rapportor: row.rapportor || '',
+    orsak: row.orsak || '',
+    hanvisning: row.hanvisning || '',
+    pris_modell: row.pris_modell || '',
+    signatur: row.signatur || '',
+  }
+}
+
+export function ataFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    ordernr: t(form.ordernr) || null,
+    objekt: t(form.objekt) || null,
+    beskrivning: t(form.beskrivning) || null,
+    rapportor: t(form.rapportor) || null,
+    orsak: t(form.orsak) || null,
+    hanvisning: t(form.hanvisning) || null,
+    pris_modell: t(form.pris_modell) || null,
+    signatur: t(form.signatur) || null,
+  }
+}
+
+/** Flik 16 – ÄTA-lista */
+export const emptyAtaListaForm = {
+  nr: '',
+  datum: '',
+  beskrivning: '',
+  bestalld: '',
+  summa: '',
+  fakturerad: '',
+}
+
+export function ataListaToForm(row) {
+  if (!row) return { ...emptyAtaListaForm }
+  return {
+    nr: row.nr || '',
+    datum: row.datum || '',
+    beskrivning: row.beskrivning || '',
+    bestalld: row.bestalld == null ? '' : row.bestalld ? 'ja' : 'nej',
+    summa: row.summa != null ? String(row.summa) : '',
+    fakturerad: row.fakturerad == null ? '' : row.fakturerad ? 'ja' : 'nej',
+  }
+}
+
+export function ataListaFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  const summaRaw = t(form.summa)
+  const summaNum = summaRaw === '' ? null : Number(summaRaw.replace(',', '.'))
+  const toBool = (v) => {
+    if (v === 'ja') return true
+    if (v === 'nej') return false
+    return null
+  }
+  return {
+    nr: t(form.nr) || null,
+    datum: t(form.datum) || null,
+    beskrivning: t(form.beskrivning) || null,
+    bestalld: toBool(form.bestalld),
+    summa: Number.isFinite(summaNum) ? summaNum : null,
+    fakturerad: toBool(form.fakturerad),
+  }
+}
+
+/** Flik 17 – Säkerhetsdatablad */
+export const emptySakerhetsdatabladForm = {
+  produkt: '',
+  sakerhetsdatablad: '',
+  ansvarig: '',
+  datum: '',
+}
+
+export function sakerhetsdatabladToForm(row) {
+  if (!row) return { ...emptySakerhetsdatabladForm }
+  return {
+    produkt: row.produkt || '',
+    sakerhetsdatablad: row.sakerhetsdatablad == null ? '' : row.sakerhetsdatablad ? 'ja' : 'nej',
+    ansvarig: row.ansvarig || '',
+    datum: row.datum || '',
+  }
+}
+
+export function sakerhetsdatabladFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  const toBool = (v) => {
+    if (v === 'ja') return true
+    if (v === 'nej') return false
+    return null
+  }
+  return {
+    produkt: t(form.produkt),
+    sakerhetsdatablad: toBool(form.sakerhetsdatablad),
+    ansvarig: t(form.ansvarig) || null,
+    datum: t(form.datum) || null,
+  }
+}
+
+/** Flik 18 – Nödlägesberedskap */
+export const emptyNodlageOrgRad = () => ({
+  _key: `new-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  befattning: '',
+  namn: '',
+  telefon: '',
+})
+
+export const emptyNodlageForm = {
+  raddningshjalp: '',
+  larmrutin_miljoolycka: '',
+  larmrutin_personskada: '',
+  information_narboende: '',
+  organisation: [],
+}
+
+export function nodlageToForm(row, organisation = []) {
+  if (!row) return { ...emptyNodlageForm, organisation: [] }
+  return {
+    raddningshjalp: row.raddningshjalp || '',
+    larmrutin_miljoolycka: row.larmrutin_miljoolycka || '',
+    larmrutin_personskada: row.larmrutin_personskada || '',
+    information_narboende: row.information_narboende || '',
+    organisation: (organisation || []).map((rad, index) => ({
+      _key: rad.id || `rad-${index}`,
+      befattning: rad.befattning || '',
+      namn: rad.namn || '',
+      telefon: rad.telefon || '',
+    })),
+  }
+}
+
+export function nodlageFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    raddningshjalp: t(form.raddningshjalp) || null,
+    larmrutin_miljoolycka: t(form.larmrutin_miljoolycka) || null,
+    larmrutin_personskada: t(form.larmrutin_personskada) || null,
+    information_narboende: t(form.information_narboende) || null,
+  }
+}
+
+export function nodlageOrganisationToPayload(nodlageId, organisation) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (organisation || []).map((rad, index) => ({
+    nodlage_id: nodlageId,
+    sort_order: index,
+    befattning: t(rad.befattning) || null,
+    namn: t(rad.namn) || null,
+    telefon: t(rad.telefon) || null,
+  }))
+}
