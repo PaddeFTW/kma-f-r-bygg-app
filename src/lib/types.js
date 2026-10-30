@@ -739,3 +739,28 @@ export function egenkontrollRaderToPayload(egenkontrollId, rader) {
     signatur: t(r.signatur) || null,
   }))
 }
+
+/** Flik 14 – Egenkontroller från UE */
+export const emptyEgenkontrollUeForm = {
+  underleverantor: '',
+  egenkontroll: '',
+  datum: '',
+}
+
+export function egenkontrollUeToForm(row) {
+  if (!row) return { ...emptyEgenkontrollUeForm }
+  return {
+    underleverantor: row.underleverantor || '',
+    egenkontroll: row.egenkontroll || '',
+    datum: row.datum || '',
+  }
+}
+
+export function egenkontrollUeFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    underleverantor: t(form.underleverantor),
+    egenkontroll: t(form.egenkontroll) || null,
+    datum: t(form.datum) || null,
+  }
+}

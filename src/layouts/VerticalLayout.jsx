@@ -26,6 +26,7 @@ import HealthAndSafetyOutlinedIcon from '@mui/icons-material/HealthAndSafetyOutl
 import ArchitectureOutlinedIcon from '@mui/icons-material/ArchitectureOutlined'
 import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined'
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined'
+import AssignmentTurnedInOutlinedIcon from '@mui/icons-material/AssignmentTurnedInOutlined'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -46,6 +47,7 @@ const menuItems = [
   { text: 'Bygghandlingar', path: '/bygghandlingar', icon: <ArchitectureOutlinedIcon /> },
   { text: 'Kontrollplan', path: '/kontrollplan', icon: <FactCheckOutlinedIcon /> },
   { text: 'Egenkontroll', path: '/egenkontroll', icon: <ChecklistOutlinedIcon /> },
+  { text: 'Egenkontroll UE', path: '/egenkontroll-ue', icon: <AssignmentTurnedInOutlinedIcon /> },
 ]
 
 export default function VerticalLayout({ children }) {

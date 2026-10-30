@@ -28,6 +28,8 @@ import KontrollplanerList from './pages/kontrollplan/KontrollplanerList'
 import KontrollplanDetail from './pages/kontrollplan/KontrollplanDetail'
 import EgenkontrollerList from './pages/egenkontroll/EgenkontrollerList'
 import EgenkontrollDetail from './pages/egenkontroll/EgenkontrollDetail'
+import EgenkontrollerUeList from './pages/egenkontroll-ue/EgenkontrollerUeList'
+import EgenkontrollUeDetail from './pages/egenkontroll-ue/EgenkontrollUeDetail'
 
 export default function App() {
   return (
@@ -166,6 +168,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <EgenkontrollDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/egenkontroll-ue"
+                element={
+                  <ProtectedRoute>
+                    <EgenkontrollerUeList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/egenkontroll-ue/:id"
+                element={
+                  <ProtectedRoute>
+                    <EgenkontrollUeDetail />
                   </ProtectedRoute>
                 }
               />

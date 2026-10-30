@@ -286,3 +286,16 @@ export type EgenkontrollRad = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 14 – Egenkontroller från UE */
+export type EgenkontrollUe = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  underleverantor: string
+  egenkontroll: string | null
+  datum: string | null
+  created_at: string
+  updated_at: string
+}
