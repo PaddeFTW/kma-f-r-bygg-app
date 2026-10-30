@@ -467,3 +467,44 @@ export function arbetsmiljoplanFormToPayload(form) {
     riskbedomning_anteckningar: t(form.riskbedomning_anteckningar) || null,
   }
 }
+
+/** Flik 8 – Miljöanalys (miljöaspekter + åtgärder enligt underlaget) */
+export const emptyMiljoanalysForm = {
+  atgard_transporter: '',
+  atgard_tomgang: '',
+  atgard_damm: '',
+  atgard_buller: '',
+  atgard_materialhantering: '',
+  atgard_kallsortering: '',
+  atgard_byggavfall: '',
+  atgard_nodlagesberedskap: '',
+}
+
+export function miljoanalysToForm(row) {
+  if (!row) return { ...emptyMiljoanalysForm }
+  return {
+    atgard_transporter: row.atgard_transporter || '',
+    atgard_tomgang: row.atgard_tomgang || '',
+    atgard_damm: row.atgard_damm || '',
+    atgard_buller: row.atgard_buller || '',
+    atgard_materialhantering: row.atgard_materialhantering || '',
+    atgard_kallsortering: row.atgard_kallsortering || '',
+    atgard_byggavfall: row.atgard_byggavfall || '',
+    atgard_nodlagesberedskap: row.atgard_nodlagesberedskap || '',
+  }
+}
+
+/** Payload för insert/update – null för tomma textfält */
+export function miljoanalysFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    atgard_transporter: t(form.atgard_transporter) || null,
+    atgard_tomgang: t(form.atgard_tomgang) || null,
+    atgard_damm: t(form.atgard_damm) || null,
+    atgard_buller: t(form.atgard_buller) || null,
+    atgard_materialhantering: t(form.atgard_materialhantering) || null,
+    atgard_kallsortering: t(form.atgard_kallsortering) || null,
+    atgard_byggavfall: t(form.atgard_byggavfall) || null,
+    atgard_nodlagesberedskap: t(form.atgard_nodlagesberedskap) || null,
+  }
+}
