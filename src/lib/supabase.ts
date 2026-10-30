@@ -254,3 +254,35 @@ export type KontrollplanRad = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 13 – Egenkontroll */
+export type EgenkontrollStatus = '1' | '2' | '3'
+
+export type Egenkontroll = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  typ: string | null
+  bestallare: string | null
+  entreprenor: string | null
+  objekt: string | null
+  projektnr: string | null
+  referens: string | null
+  ovriga_anteckningar: string | null
+  kontrollansvarig: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type EgenkontrollRad = {
+  id: string
+  egenkontroll_id: string
+  sort_order: number
+  kontrollmoment: string | null
+  status: EgenkontrollStatus | string | null
+  datum: string | null
+  signatur: string | null
+  created_at: string
+  updated_at: string
+}

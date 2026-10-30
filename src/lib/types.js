@@ -594,3 +594,148 @@ export function kontrollplanRaderToPayload(kontrollplanId, rader) {
     sign: t(r.sign) || null,
   }))
 }
+
+/** Flik 13 – Egenkontroll (mall + varianter från underlaget) */
+export const EGENKONTROLL_STATUS_OPTIONS = [
+  { value: '1', label: '1 – Kontrollerat och godkänt' },
+  { value: '2', label: '2 – Kontrollerat och ej godkänt' },
+  { value: '3', label: '3 – Ej kontrollerat' },
+]
+
+export const EGENKONTROLL_STATUS_LABELS = Object.fromEntries(
+  EGENKONTROLL_STATUS_OPTIONS.map((o) => [o.value, o.label]),
+)
+
+/** Kontrollmoment per typ – endast namngivna i underlaget (flikar-13-16). */
+export const EGENKONTROLL_TYP_TEMPLATES = {
+  administration: {
+    label: 'Administration',
+    moments: ['Bygglov', 'Ekonomi', 'Ritningar', 'Projektplan', 'Material', 'Myndigheter'],
+  },
+  kvalitetsplan: {
+    label: 'Kvalitetsplan',
+    moments: [
+      'Plan upprättad',
+      'Info till medarbetare',
+      'Kalibrering',
+      'Dagbok',
+      'ÄTA',
+      'Personalliggare',
+    ],
+  },
+  miljoplan: {
+    label: 'Miljöplan',
+    moments: [
+      'Miljöaspekter',
+      'Lagar',
+      'SDB',
+      'Källsortering',
+      'Farligt avfall',
+      'Utbildning',
+    ],
+  },
+  arbetsmiljoplan: {
+    label: 'Arbetsmiljöplan',
+    moments: [
+      'Organisation',
+      'UE informerade',
+      'Anhöriglista',
+      'Ordningsregler',
+      'Skyddsrond',
+    ],
+  },
+  personal: {
+    label: 'Personal',
+    moments: ['Identifikation', 'Behörighet', 'Utbildning', 'Källsortering'],
+  },
+  uppfoljning_arbetsmiljo_kvalitet: {
+    label: 'Uppföljning arbetsmiljö/kvalitet',
+    moments: [],
+  },
+  ankommande_gods: {
+    label: 'Ankommande gods',
+    moments: [],
+  },
+}
+
+export const EGENKONTROLL_TYP_OPTIONS = Object.entries(EGENKONTROLL_TYP_TEMPLATES).map(
+  ([value, meta]) => ({ value, label: meta.label }),
+)
+
+export const EGENKONTROLL_TYP_LABELS = Object.fromEntries(
+  EGENKONTROLL_TYP_OPTIONS.map((o) => [o.value, o.label]),
+)
+
+export const emptyEgenkontrollRad = (kontrollmoment = '') => ({
+  _key: `new-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  id: null,
+  kontrollmoment,
+  status: '',
+  datum: '',
+  signatur: '',
+})
+
+export function egenkontrollRaderFromTyp(typ) {
+  const moments = EGENKONTROLL_TYP_TEMPLATES[typ]?.moments || []
+  return moments.map((m) => emptyEgenkontrollRad(m))
+}
+
+export const emptyEgenkontrollForm = {
+  typ: '',
+  bestallare: '',
+  entreprenor: '',
+  objekt: '',
+  projektnr: '',
+  referens: '',
+  ovriga_anteckningar: '',
+  kontrollansvarig: '',
+  rader: [],
+}
+
+export function egenkontrollToForm(row, rader = []) {
+  if (!row) return { ...emptyEgenkontrollForm, rader: [] }
+  return {
+    typ: row.typ || '',
+    bestallare: row.bestallare || '',
+    entreprenor: row.entreprenor || '',
+    objekt: row.objekt || '',
+    projektnr: row.projektnr || '',
+    referens: row.referens || '',
+    ovriga_anteckningar: row.ovriga_anteckningar || '',
+    kontrollansvarig: row.kontrollansvarig || '',
+    rader: (rader || []).map((r, index) => ({
+      _key: r.id || `row-${index}`,
+      id: r.id || null,
+      kontrollmoment: r.kontrollmoment || '',
+      status: r.status || '',
+      datum: r.datum || '',
+      signatur: r.signatur || '',
+    })),
+  }
+}
+
+export function egenkontrollFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    typ: t(form.typ) || null,
+    bestallare: t(form.bestallare) || null,
+    entreprenor: t(form.entreprenor) || null,
+    objekt: t(form.objekt) || null,
+    projektnr: t(form.projektnr) || null,
+    referens: t(form.referens) || null,
+    ovriga_anteckningar: t(form.ovriga_anteckningar) || null,
+    kontrollansvarig: t(form.kontrollansvarig) || null,
+  }
+}
+
+export function egenkontrollRaderToPayload(egenkontrollId, rader) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (rader || []).map((r, index) => ({
+    egenkontroll_id: egenkontrollId,
+    sort_order: index,
+    kontrollmoment: t(r.kontrollmoment) || null,
+    status: t(r.status) || null,
+    datum: t(r.datum) || null,
+    signatur: t(r.signatur) || null,
+  }))
+}

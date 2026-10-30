@@ -26,6 +26,8 @@ import BygghandlingarList from './pages/bygghandlingar/BygghandlingarList'
 import BygghandlingDetail from './pages/bygghandlingar/BygghandlingDetail'
 import KontrollplanerList from './pages/kontrollplan/KontrollplanerList'
 import KontrollplanDetail from './pages/kontrollplan/KontrollplanDetail'
+import EgenkontrollerList from './pages/egenkontroll/EgenkontrollerList'
+import EgenkontrollDetail from './pages/egenkontroll/EgenkontrollDetail'
 
 export default function App() {
   return (
@@ -148,6 +150,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <KontrollplanDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/egenkontroll"
+                element={
+                  <ProtectedRoute>
+                    <EgenkontrollerList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/egenkontroll/:id"
+                element={
+                  <ProtectedRoute>
+                    <EgenkontrollDetail />
                   </ProtectedRoute>
                 }
               />
