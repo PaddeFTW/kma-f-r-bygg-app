@@ -38,6 +38,8 @@ import AtaDetail from './pages/ata/AtaDetail'
 import AtaListaDetail from './pages/ata/AtaListaDetail'
 import SakerhetsdatabladList from './pages/sakerhetsdatablad/SakerhetsdatabladList'
 import SakerhetsdatabladDetail from './pages/sakerhetsdatablad/SakerhetsdatabladDetail'
+import NodlageList from './pages/nodlage/NodlageList'
+import NodlageDetail from './pages/nodlage/NodlageDetail'
 
 export default function App() {
   return (
@@ -256,6 +258,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <SakerhetsdatabladDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/nodlage"
+                element={
+                  <ProtectedRoute>
+                    <NodlageList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/nodlage/:id"
+                element={
+                  <ProtectedRoute>
+                    <NodlageDetail />
                   </ProtectedRoute>
                 }
               />

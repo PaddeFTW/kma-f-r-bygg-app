@@ -379,3 +379,28 @@ export type Sakerhetsdatablad = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 18 – Nödlägesberedskap */
+export type Nodlage = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  raddningshjalp: string | null
+  larmrutin_miljoolycka: string | null
+  larmrutin_personskada: string | null
+  information_narboende: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type NodlageOrganisation = {
+  id: string
+  nodlage_id: string
+  sort_order: number
+  befattning: string | null
+  namn: string | null
+  telefon: string | null
+  created_at: string
+  updated_at: string
+}

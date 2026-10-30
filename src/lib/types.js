@@ -948,3 +948,56 @@ export function sakerhetsdatabladFormToPayload(form) {
     datum: t(form.datum) || null,
   }
 }
+
+/** Flik 18 – Nödlägesberedskap */
+export const emptyNodlageOrgRad = () => ({
+  _key: `new-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  befattning: '',
+  namn: '',
+  telefon: '',
+})
+
+export const emptyNodlageForm = {
+  raddningshjalp: '',
+  larmrutin_miljoolycka: '',
+  larmrutin_personskada: '',
+  information_narboende: '',
+  organisation: [],
+}
+
+export function nodlageToForm(row, organisation = []) {
+  if (!row) return { ...emptyNodlageForm, organisation: [] }
+  return {
+    raddningshjalp: row.raddningshjalp || '',
+    larmrutin_miljoolycka: row.larmrutin_miljoolycka || '',
+    larmrutin_personskada: row.larmrutin_personskada || '',
+    information_narboende: row.information_narboende || '',
+    organisation: (organisation || []).map((rad, index) => ({
+      _key: rad.id || `rad-${index}`,
+      befattning: rad.befattning || '',
+      namn: rad.namn || '',
+      telefon: rad.telefon || '',
+    })),
+  }
+}
+
+export function nodlageFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    raddningshjalp: t(form.raddningshjalp) || null,
+    larmrutin_miljoolycka: t(form.larmrutin_miljoolycka) || null,
+    larmrutin_personskada: t(form.larmrutin_personskada) || null,
+    information_narboende: t(form.information_narboende) || null,
+  }
+}
+
+export function nodlageOrganisationToPayload(nodlageId, organisation) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (organisation || []).map((rad, index) => ({
+    nodlage_id: nodlageId,
+    sort_order: index,
+    befattning: t(rad.befattning) || null,
+    namn: t(rad.namn) || null,
+    telefon: t(rad.telefon) || null,
+  }))
+}

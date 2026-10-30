@@ -30,6 +30,7 @@ import AssignmentTurnedInOutlinedIcon from '@mui/icons-material/AssignmentTurned
 import PrecisionManufacturingOutlinedIcon from '@mui/icons-material/PrecisionManufacturingOutlined'
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined'
 import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined'
+import EmergencyOutlinedIcon from '@mui/icons-material/EmergencyOutlined'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -54,6 +55,7 @@ const menuItems = [
   { text: 'Maskiner UE', path: '/maskiner-ue', icon: <PrecisionManufacturingOutlinedIcon /> },
   { text: 'ÄTA / Avvikelse', path: '/ata', icon: <ReportProblemOutlinedIcon /> },
   { text: 'Säkerhetsdatablad', path: '/sakerhetsdatablad', icon: <ScienceOutlinedIcon /> },
+  { text: 'Nödlägesberedskap', path: '/nodlage', icon: <EmergencyOutlinedIcon /> },
 ]
 
 export default function VerticalLayout({ children }) {
