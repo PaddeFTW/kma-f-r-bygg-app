@@ -16,6 +16,12 @@ import UppgiftDetail from './pages/uppgifter/UppgiftDetail'
 import CompanyPage from './pages/company/CompanyPage'
 import ProjectsList from './pages/projects/ProjectsList'
 import ProjectDetail from './pages/projects/ProjectDetail'
+import KvalitetsplanerList from './pages/kvalitetsplan/KvalitetsplanerList'
+import KvalitetsplanDetail from './pages/kvalitetsplan/KvalitetsplanDetail'
+import MiljoplanerList from './pages/miljoplan/MiljoplanerList'
+import MiljoplanDetail from './pages/miljoplan/MiljoplanDetail'
+import ArbetsmiljoplanerList from './pages/arbetsmiljoplan/ArbetsmiljoplanerList'
+import ArbetsmiljoplanDetail from './pages/arbetsmiljoplan/ArbetsmiljoplanDetail'
 
 export default function App() {
   return (
@@ -58,6 +64,54 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <ProjectDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/kvalitetsplan"
+                element={
+                  <ProtectedRoute>
+                    <KvalitetsplanerList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/kvalitetsplan/:id"
+                element={
+                  <ProtectedRoute>
+                    <KvalitetsplanDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/miljoplan"
+                element={
+                  <ProtectedRoute>
+                    <MiljoplanerList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/miljoplan/:id"
+                element={
+                  <ProtectedRoute>
+                    <MiljoplanDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/arbetsmiljoplan"
+                element={
+                  <ProtectedRoute>
+                    <ArbetsmiljoplanerList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/arbetsmiljoplan/:id"
+                element={
+                  <ProtectedRoute>
+                    <ArbetsmiljoplanDetail />
                   </ProtectedRoute>
                 }
               />

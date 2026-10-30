@@ -21,6 +21,8 @@ import {
 } from '../../lib/types'
 import ProjectFormFields from './ProjectFormFields'
 import ProjectRolesSection from './ProjectRolesSection'
+import ProjectClientSection from './ProjectClientSection'
+import ProjectSubcontractorsSection from './ProjectSubcontractorsSection'
 
 export default function ProjectDetail() {
   const { id } = useParams()
@@ -156,6 +158,10 @@ export default function ProjectDetail() {
             </Card>
 
             <ProjectRolesSection projectId={item.id} companyId={item.company_id} />
+
+            <ProjectClientSection projectId={item.id} companyId={item.company_id} />
+
+            <ProjectSubcontractorsSection projectId={item.id} companyId={item.company_id} />
           </>
         )}
       </Stack>

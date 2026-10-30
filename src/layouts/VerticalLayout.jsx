@@ -20,6 +20,9 @@ import MenuIcon from '@mui/icons-material/Menu'
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined'
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
+import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined'
+import RecyclingOutlinedIcon from '@mui/icons-material/RecyclingOutlined'
+import HealthAndSafetyOutlinedIcon from '@mui/icons-material/HealthAndSafetyOutlined'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -34,6 +37,9 @@ const menuItems = [
   { text: 'Dashboard', path: '/', icon: <DashboardOutlinedIcon /> },
   { text: 'Företag', path: '/company', icon: <BusinessOutlinedIcon /> },
   { text: 'Projekt', path: '/projects', icon: <FolderOutlinedIcon /> },
+  { text: 'Kvalitetsplan', path: '/kvalitetsplan', icon: <VerifiedOutlinedIcon /> },
+  { text: 'Miljöplan', path: '/miljoplan', icon: <RecyclingOutlinedIcon /> },
+  { text: 'Arbetsmiljöplan', path: '/arbetsmiljoplan', icon: <HealthAndSafetyOutlinedIcon /> },
 ]
 
 export default function VerticalLayout({ children }) {

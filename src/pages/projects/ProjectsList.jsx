@@ -71,7 +71,13 @@ export default function ProjectsList() {
 
     const { data, error: fetchError } = await supabase
       .from('projects')
-      .select('*')
+      .select(
+        `
+        *,
+        project_clients ( contact_name, ceo_name ),
+        project_subcontractors ( id )
+      `,
+      )
       .eq('company_id', companyData.id)
       .order('created_at', { ascending: false })
 
@@ -132,6 +138,19 @@ export default function ProjectsList() {
     return parts.join(', ') || '—'
   }
 
+  const clientLabel = (item) => {
+    const client = Array.isArray(item.project_clients)
+      ? item.project_clients[0]
+      : item.project_clients
+    if (!client) return '—'
+    return client.contact_name || client.ceo_name || '—'
+  }
+
+  const subcontractorCount = (item) => {
+    const rows = item.project_subcontractors
+    return Array.isArray(rows) ? rows.length : 0
+  }
+
   return (
     <VerticalLayout>
       <Stack spacing={3}>
@@ -149,7 +168,7 @@ export default function ProjectsList() {
               Projekt
             </Typography>
             <Typography color="text.secondary">
-              Projektstart enligt Flik 1 och roller enligt Flik 2, kopplat till ditt företag
+              Projektstart Flik 1–4: beskrivning, roller, beställare och underleverantörer
             </Typography>
           </Box>
           <Button
@@ -201,6 +220,8 @@ export default function ProjectsList() {
                     <TableCell>Fastighetsbeteckning</TableCell>
                     <TableCell>Plats</TableCell>
                     <TableCell>Byggherre</TableCell>
+                    <TableCell>Beställare</TableCell>
+                    <TableCell>UE</TableCell>
                     <TableCell>Entreprenör</TableCell>
                     <TableCell>Entreprenadform</TableCell>
                     <TableCell>Skapad</TableCell>
@@ -230,6 +251,8 @@ export default function ProjectsList() {
                       </TableCell>
                       <TableCell>{locationLabel(item)}</TableCell>
                       <TableCell>{item.client_name || '—'}</TableCell>
+                      <TableCell>{clientLabel(item)}</TableCell>
+                      <TableCell>{subcontractorCount(item)}</TableCell>
                       <TableCell>{item.contractor_name || '—'}</TableCell>
                       <TableCell>{item.contract_form || '—'}</TableCell>
                       <TableCell>{new Date(item.created_at).toLocaleString('sv-SE')}</TableCell>

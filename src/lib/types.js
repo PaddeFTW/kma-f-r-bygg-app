@@ -184,3 +184,286 @@ export function isProjectFormValid(form) {
   ]
   return required.every((v) => typeof v === 'string' && v.trim().length > 0)
 }
+
+/** Flik 3 – Beställarens organisation (fält enligt underlaget) */
+export const emptyProjectClientForm = {
+  ceo_name: '',
+  contact_name: '',
+  address: '',
+  postal_code: '',
+  city: '',
+  phone: '',
+  email: '',
+  website: '',
+  project_manager: '',
+  quality_manager: '',
+  environmental_manager: '',
+  work_environment_manager: '',
+  notes: '',
+}
+
+/** Flik 4 – Underleverantör (fält enligt underlaget, inkl. inköpsansvarig) */
+export const emptyProjectSubcontractorForm = {
+  ...emptyProjectClientForm,
+  purchasing_manager: '',
+}
+
+export function projectClientToForm(row) {
+  if (!row) return { ...emptyProjectClientForm }
+  return {
+    ceo_name: row.ceo_name || '',
+    contact_name: row.contact_name || '',
+    address: row.address || '',
+    postal_code: row.postal_code || '',
+    city: row.city || '',
+    phone: row.phone || '',
+    email: row.email || '',
+    website: row.website || '',
+    project_manager: row.project_manager || '',
+    quality_manager: row.quality_manager || '',
+    environmental_manager: row.environmental_manager || '',
+    work_environment_manager: row.work_environment_manager || '',
+    notes: row.notes || '',
+  }
+}
+
+export function projectSubcontractorToForm(row) {
+  if (!row) return { ...emptyProjectSubcontractorForm }
+  return {
+    ...projectClientToForm(row),
+    purchasing_manager: row.purchasing_manager || '',
+  }
+}
+
+/**
+ * Obligatoriska kontaktfält för huvudparter enligt underlaget (Flik 3/4).
+ * VD, Kontaktperson, Adress, Postnr/Ort, Mobil, E-post.
+ */
+export function isOrgContactFormValid(form) {
+  const required = [
+    form.ceo_name,
+    form.contact_name,
+    form.address,
+    form.postal_code,
+    form.city,
+    form.phone,
+    form.email,
+  ]
+  return required.every((v) => typeof v === 'string' && v.trim().length > 0)
+}
+
+/** Payload för insert/update – null för tomma valfria fält */
+export function orgContactFormToPayload(form, { includePurchasing = false } = {}) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  const payload = {
+    ceo_name: t(form.ceo_name) || null,
+    contact_name: t(form.contact_name) || null,
+    address: t(form.address) || null,
+    postal_code: t(form.postal_code) || null,
+    city: t(form.city) || null,
+    phone: t(form.phone) || null,
+    email: t(form.email) || null,
+    website: t(form.website) || null,
+    project_manager: t(form.project_manager) || null,
+    quality_manager: t(form.quality_manager) || null,
+    environmental_manager: t(form.environmental_manager) || null,
+    work_environment_manager: t(form.work_environment_manager) || null,
+    notes: t(form.notes) || null,
+  }
+  if (includePurchasing) {
+    payload.purchasing_manager = t(form.purchasing_manager) || null
+  }
+  return payload
+}
+
+/** Flik 5 – Kvalitetsplan (avsnitt enligt underlaget) */
+export const emptyKvalitetsplanForm = {
+  kvalitetspolicy: '',
+  orientering_allman_info: '',
+  orientering_entreprenadform: '',
+  orientering_art: '',
+  orientering_tidplan: '',
+  organisation: '',
+  projektgenomgang_byggmote: '',
+  projektgenomgang_andringar: '',
+  projektgenomgang_protokoll: '',
+  projektering_kontrollplan: '',
+  produktion_egenkontroll: '',
+  produktion_dagbok: '',
+  produktion_ata: '',
+  produktion_personalliggare: '',
+  produktion_avvikelser: '',
+  montage_matutrustning: '',
+  avslutning_provning: '',
+  avslutning_besiktning: '',
+  dokumentstyrning: '',
+  distributionsforteckning: '',
+}
+
+export function kvalitetsplanToForm(row) {
+  if (!row) return { ...emptyKvalitetsplanForm }
+  return {
+    kvalitetspolicy: row.kvalitetspolicy || '',
+    orientering_allman_info: row.orientering_allman_info || '',
+    orientering_entreprenadform: row.orientering_entreprenadform || '',
+    orientering_art: row.orientering_art || '',
+    orientering_tidplan: row.orientering_tidplan || '',
+    organisation: row.organisation || '',
+    projektgenomgang_byggmote: row.projektgenomgang_byggmote || '',
+    projektgenomgang_andringar: row.projektgenomgang_andringar || '',
+    projektgenomgang_protokoll: row.projektgenomgang_protokoll || '',
+    projektering_kontrollplan: row.projektering_kontrollplan || '',
+    produktion_egenkontroll: row.produktion_egenkontroll || '',
+    produktion_dagbok: row.produktion_dagbok || '',
+    produktion_ata: row.produktion_ata || '',
+    produktion_personalliggare: row.produktion_personalliggare || '',
+    produktion_avvikelser: row.produktion_avvikelser || '',
+    montage_matutrustning: row.montage_matutrustning || '',
+    avslutning_provning: row.avslutning_provning || '',
+    avslutning_besiktning: row.avslutning_besiktning || '',
+    dokumentstyrning: row.dokumentstyrning || '',
+    distributionsforteckning: row.distributionsforteckning || '',
+  }
+}
+
+/** Payload för insert/update – null för tomma fält */
+export function kvalitetsplanFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    kvalitetspolicy: t(form.kvalitetspolicy) || null,
+    orientering_allman_info: t(form.orientering_allman_info) || null,
+    orientering_entreprenadform: t(form.orientering_entreprenadform) || null,
+    orientering_art: t(form.orientering_art) || null,
+    orientering_tidplan: t(form.orientering_tidplan) || null,
+    organisation: t(form.organisation) || null,
+    projektgenomgang_byggmote: t(form.projektgenomgang_byggmote) || null,
+    projektgenomgang_andringar: t(form.projektgenomgang_andringar) || null,
+    projektgenomgang_protokoll: t(form.projektgenomgang_protokoll) || null,
+    projektering_kontrollplan: t(form.projektering_kontrollplan) || null,
+    produktion_egenkontroll: t(form.produktion_egenkontroll) || null,
+    produktion_dagbok: t(form.produktion_dagbok) || null,
+    produktion_ata: t(form.produktion_ata) || null,
+    produktion_personalliggare: t(form.produktion_personalliggare) || null,
+    produktion_avvikelser: t(form.produktion_avvikelser) || null,
+    montage_matutrustning: t(form.montage_matutrustning) || null,
+    avslutning_provning: t(form.avslutning_provning) || null,
+    avslutning_besiktning: t(form.avslutning_besiktning) || null,
+    dokumentstyrning: t(form.dokumentstyrning) || null,
+    distributionsforteckning: t(form.distributionsforteckning) || null,
+  }
+}
+
+/** Flik 6 – Miljöplan (avsnitt enligt underlaget) */
+export const emptyMiljoplanForm = {
+  miljopolicy: '',
+  aspekt_transporter: false,
+  aspekt_byggavfall: false,
+  aspekt_kemikalier: false,
+  aspekt_farligt_avfall: false,
+  aspekt_el: false,
+  aspekt_kallsortering: false,
+  miljoaspekter_anteckningar: '',
+  kallsortering_kemikalier_sdb: '',
+  lagar_krav: '',
+  ansvar: '',
+  utbildning: '',
+  kommunikation: '',
+  egenkontroll_miljo: '',
+  avvikelser: '',
+  nodlage: '',
+}
+
+export function miljoplanToForm(row) {
+  if (!row) return { ...emptyMiljoplanForm }
+  return {
+    miljopolicy: row.miljopolicy || '',
+    aspekt_transporter: Boolean(row.aspekt_transporter),
+    aspekt_byggavfall: Boolean(row.aspekt_byggavfall),
+    aspekt_kemikalier: Boolean(row.aspekt_kemikalier),
+    aspekt_farligt_avfall: Boolean(row.aspekt_farligt_avfall),
+    aspekt_el: Boolean(row.aspekt_el),
+    aspekt_kallsortering: Boolean(row.aspekt_kallsortering),
+    miljoaspekter_anteckningar: row.miljoaspekter_anteckningar || '',
+    kallsortering_kemikalier_sdb: row.kallsortering_kemikalier_sdb || '',
+    lagar_krav: row.lagar_krav || '',
+    ansvar: row.ansvar || '',
+    utbildning: row.utbildning || '',
+    kommunikation: row.kommunikation || '',
+    egenkontroll_miljo: row.egenkontroll_miljo || '',
+    avvikelser: row.avvikelser || '',
+    nodlage: row.nodlage || '',
+  }
+}
+
+/** Payload för insert/update – null för tomma textfält */
+export function miljoplanFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    miljopolicy: t(form.miljopolicy) || null,
+    aspekt_transporter: Boolean(form.aspekt_transporter),
+    aspekt_byggavfall: Boolean(form.aspekt_byggavfall),
+    aspekt_kemikalier: Boolean(form.aspekt_kemikalier),
+    aspekt_farligt_avfall: Boolean(form.aspekt_farligt_avfall),
+    aspekt_el: Boolean(form.aspekt_el),
+    aspekt_kallsortering: Boolean(form.aspekt_kallsortering),
+    miljoaspekter_anteckningar: t(form.miljoaspekter_anteckningar) || null,
+    kallsortering_kemikalier_sdb: t(form.kallsortering_kemikalier_sdb) || null,
+    lagar_krav: t(form.lagar_krav) || null,
+    ansvar: t(form.ansvar) || null,
+    utbildning: t(form.utbildning) || null,
+    kommunikation: t(form.kommunikation) || null,
+    egenkontroll_miljo: t(form.egenkontroll_miljo) || null,
+    avvikelser: t(form.avvikelser) || null,
+    nodlage: t(form.nodlage) || null,
+  }
+}
+
+/** Flik 7 – Arbetsmiljöplan (avsnitt enligt underlaget) */
+export const emptyArbetsmiljoplanForm = {
+  arbetsmiljopolicy: '',
+  uppfoljning_skyddsronder: '',
+  regel_skyddsutrustning: false,
+  regel_heta_arbeten: false,
+  regel_tillfallig_el: false,
+  regel_buller: false,
+  regel_droger: false,
+  ordningsregler_anteckningar: '',
+  samordning_ue: '',
+  skyddsrond_anteckningar: '',
+  riskbedomning_anteckningar: '',
+}
+
+export function arbetsmiljoplanToForm(row) {
+  if (!row) return { ...emptyArbetsmiljoplanForm }
+  return {
+    arbetsmiljopolicy: row.arbetsmiljopolicy || '',
+    uppfoljning_skyddsronder: row.uppfoljning_skyddsronder || '',
+    regel_skyddsutrustning: Boolean(row.regel_skyddsutrustning),
+    regel_heta_arbeten: Boolean(row.regel_heta_arbeten),
+    regel_tillfallig_el: Boolean(row.regel_tillfallig_el),
+    regel_buller: Boolean(row.regel_buller),
+    regel_droger: Boolean(row.regel_droger),
+    ordningsregler_anteckningar: row.ordningsregler_anteckningar || '',
+    samordning_ue: row.samordning_ue || '',
+    skyddsrond_anteckningar: row.skyddsrond_anteckningar || '',
+    riskbedomning_anteckningar: row.riskbedomning_anteckningar || '',
+  }
+}
+
+/** Payload för insert/update – null för tomma textfält */
+export function arbetsmiljoplanFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    arbetsmiljopolicy: t(form.arbetsmiljopolicy) || null,
+    uppfoljning_skyddsronder: t(form.uppfoljning_skyddsronder) || null,
+    regel_skyddsutrustning: Boolean(form.regel_skyddsutrustning),
+    regel_heta_arbeten: Boolean(form.regel_heta_arbeten),
+    regel_tillfallig_el: Boolean(form.regel_tillfallig_el),
+    regel_buller: Boolean(form.regel_buller),
+    regel_droger: Boolean(form.regel_droger),
+    ordningsregler_anteckningar: t(form.ordningsregler_anteckningar) || null,
+    samordning_ue: t(form.samordning_ue) || null,
+    skyddsrond_anteckningar: t(form.skyddsrond_anteckningar) || null,
+    riskbedomning_anteckningar: t(form.riskbedomning_anteckningar) || null,
+  }
+}

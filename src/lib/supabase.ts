@@ -96,3 +96,108 @@ export type ProjectRole = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 3 – Beställarens organisation */
+export type ProjectClient = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  ceo_name: string | null
+  contact_name: string | null
+  address: string | null
+  postal_code: string | null
+  city: string | null
+  phone: string | null
+  email: string | null
+  website: string | null
+  project_manager: string | null
+  quality_manager: string | null
+  environmental_manager: string | null
+  work_environment_manager: string | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 4 – Underleverantör */
+export type ProjectSubcontractor = ProjectClient & {
+  purchasing_manager: string | null
+}
+
+/** Flik 5 – Kvalitetsplan */
+export type Kvalitetsplan = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  kvalitetspolicy: string | null
+  orientering_allman_info: string | null
+  orientering_entreprenadform: string | null
+  orientering_art: string | null
+  orientering_tidplan: string | null
+  organisation: string | null
+  projektgenomgang_byggmote: string | null
+  projektgenomgang_andringar: string | null
+  projektgenomgang_protokoll: string | null
+  projektering_kontrollplan: string | null
+  produktion_egenkontroll: string | null
+  produktion_dagbok: string | null
+  produktion_ata: string | null
+  produktion_personalliggare: string | null
+  produktion_avvikelser: string | null
+  montage_matutrustning: string | null
+  avslutning_provning: string | null
+  avslutning_besiktning: string | null
+  dokumentstyrning: string | null
+  distributionsforteckning: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 6 – Miljöplan */
+export type Miljoplan = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  miljopolicy: string | null
+  aspekt_transporter: boolean
+  aspekt_byggavfall: boolean
+  aspekt_kemikalier: boolean
+  aspekt_farligt_avfall: boolean
+  aspekt_el: boolean
+  aspekt_kallsortering: boolean
+  miljoaspekter_anteckningar: string | null
+  kallsortering_kemikalier_sdb: string | null
+  lagar_krav: string | null
+  ansvar: string | null
+  utbildning: string | null
+  kommunikation: string | null
+  egenkontroll_miljo: string | null
+  avvikelser: string | null
+  nodlage: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 7 – Arbetsmiljöplan */
+export type Arbetsmiljoplan = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  arbetsmiljopolicy: string | null
+  uppfoljning_skyddsronder: string | null
+  regel_skyddsutrustning: boolean
+  regel_heta_arbeten: boolean
+  regel_tillfallig_el: boolean
+  regel_buller: boolean
+  regel_droger: boolean
+  ordningsregler_anteckningar: string | null
+  samordning_ue: string | null
+  skyddsrond_anteckningar: string | null
+  riskbedomning_anteckningar: string | null
+  created_at: string
+  updated_at: string
+}
