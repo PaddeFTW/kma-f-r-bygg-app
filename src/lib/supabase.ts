@@ -299,3 +299,16 @@ export type EgenkontrollUe = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 15 – Inventering av maskiner för UE */
+export type MaskinUe = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  underleverantor: string
+  maskiner: string | null
+  datum: string | null
+  created_at: string
+  updated_at: string
+}

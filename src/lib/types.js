@@ -764,3 +764,28 @@ export function egenkontrollUeFormToPayload(form) {
     datum: t(form.datum) || null,
   }
 }
+
+/** Flik 15 – Inventering av maskiner för UE */
+export const emptyMaskinUeForm = {
+  underleverantor: '',
+  maskiner: '',
+  datum: '',
+}
+
+export function maskinUeToForm(row) {
+  if (!row) return { ...emptyMaskinUeForm }
+  return {
+    underleverantor: row.underleverantor || '',
+    maskiner: row.maskiner || '',
+    datum: row.datum || '',
+  }
+}
+
+export function maskinUeFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    underleverantor: t(form.underleverantor),
+    maskiner: t(form.maskiner) || null,
+    datum: t(form.datum) || null,
+  }
+}

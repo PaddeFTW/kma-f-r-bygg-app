@@ -27,6 +27,7 @@ import ArchitectureOutlinedIcon from '@mui/icons-material/ArchitectureOutlined'
 import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined'
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined'
 import AssignmentTurnedInOutlinedIcon from '@mui/icons-material/AssignmentTurnedInOutlined'
+import PrecisionManufacturingOutlinedIcon from '@mui/icons-material/PrecisionManufacturingOutlined'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -48,6 +49,7 @@ const menuItems = [
   { text: 'Kontrollplan', path: '/kontrollplan', icon: <FactCheckOutlinedIcon /> },
   { text: 'Egenkontroll', path: '/egenkontroll', icon: <ChecklistOutlinedIcon /> },
   { text: 'Egenkontroll UE', path: '/egenkontroll-ue', icon: <AssignmentTurnedInOutlinedIcon /> },
+  { text: 'Maskiner UE', path: '/maskiner-ue', icon: <PrecisionManufacturingOutlinedIcon /> },
 ]
 
 export default function VerticalLayout({ children }) {

@@ -30,6 +30,8 @@ import EgenkontrollerList from './pages/egenkontroll/EgenkontrollerList'
 import EgenkontrollDetail from './pages/egenkontroll/EgenkontrollDetail'
 import EgenkontrollerUeList from './pages/egenkontroll-ue/EgenkontrollerUeList'
 import EgenkontrollUeDetail from './pages/egenkontroll-ue/EgenkontrollUeDetail'
+import MaskinerUeList from './pages/maskiner-ue/MaskinerUeList'
+import MaskinUeDetail from './pages/maskiner-ue/MaskinUeDetail'
 
 export default function App() {
   return (
@@ -184,6 +186,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <EgenkontrollUeDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/maskiner-ue"
+                element={
+                  <ProtectedRoute>
+                    <MaskinerUeList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/maskiner-ue/:id"
+                element={
+                  <ProtectedRoute>
+                    <MaskinUeDetail />
                   </ProtectedRoute>
                 }
               />
