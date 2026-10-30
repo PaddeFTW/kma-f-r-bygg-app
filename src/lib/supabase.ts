@@ -312,3 +312,56 @@ export type MaskinUe = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 16 – Avvikelserapport */
+export type Avvikelse = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  ordernr: string | null
+  datum: string | null
+  inlamnat_av: string | null
+  beskrivning: string | null
+  korrigerande_atgard: string | null
+  grundorsak: string | null
+  kostnad: number | null
+  forebyggande_atgard: string | null
+  uppfoljning: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 16 – ÄTA */
+export type Ata = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  ordernr: string | null
+  objekt: string | null
+  beskrivning: string | null
+  rapportor: string | null
+  orsak: string | null
+  hanvisning: string | null
+  pris_modell: 'fast_pris' | 'lopande_rakning' | string | null
+  signatur: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 16 – ÄTA-lista */
+export type AtaLista = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  nr: string | null
+  datum: string | null
+  beskrivning: string | null
+  bestalld: boolean | null
+  summa: number | null
+  fakturerad: boolean | null
+  created_at: string
+  updated_at: string
+}

@@ -32,6 +32,10 @@ import EgenkontrollerUeList from './pages/egenkontroll-ue/EgenkontrollerUeList'
 import EgenkontrollUeDetail from './pages/egenkontroll-ue/EgenkontrollUeDetail'
 import MaskinerUeList from './pages/maskiner-ue/MaskinerUeList'
 import MaskinUeDetail from './pages/maskiner-ue/MaskinUeDetail'
+import AtaList from './pages/ata/AtaList'
+import AvvikelseDetail from './pages/ata/AvvikelseDetail'
+import AtaDetail from './pages/ata/AtaDetail'
+import AtaListaDetail from './pages/ata/AtaListaDetail'
 
 export default function App() {
   return (
@@ -202,6 +206,38 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <MaskinUeDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ata"
+                element={
+                  <ProtectedRoute>
+                    <AtaList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ata/avvikelser/:id"
+                element={
+                  <ProtectedRoute>
+                    <AvvikelseDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ata/ata/:id"
+                element={
+                  <ProtectedRoute>
+                    <AtaDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ata/ata-lista/:id"
+                element={
+                  <ProtectedRoute>
+                    <AtaListaDetail />
                   </ProtectedRoute>
                 }
               />

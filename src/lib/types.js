@@ -789,3 +789,129 @@ export function maskinUeFormToPayload(form) {
     datum: t(form.datum) || null,
   }
 }
+
+/** Flik 16 – Avvikelserapport */
+export const emptyAvvikelseForm = {
+  ordernr: '',
+  datum: '',
+  inlamnat_av: '',
+  beskrivning: '',
+  korrigerande_atgard: '',
+  grundorsak: '',
+  kostnad: '',
+  forebyggande_atgard: '',
+  uppfoljning: '',
+}
+
+export function avvikelseToForm(row) {
+  if (!row) return { ...emptyAvvikelseForm }
+  return {
+    ordernr: row.ordernr || '',
+    datum: row.datum || '',
+    inlamnat_av: row.inlamnat_av || '',
+    beskrivning: row.beskrivning || '',
+    korrigerande_atgard: row.korrigerande_atgard || '',
+    grundorsak: row.grundorsak || '',
+    kostnad: row.kostnad != null ? String(row.kostnad) : '',
+    forebyggande_atgard: row.forebyggande_atgard || '',
+    uppfoljning: row.uppfoljning || '',
+  }
+}
+
+export function avvikelseFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  const kostnadRaw = t(form.kostnad)
+  const kostnadNum = kostnadRaw === '' ? null : Number(kostnadRaw.replace(',', '.'))
+  return {
+    ordernr: t(form.ordernr) || null,
+    datum: t(form.datum) || null,
+    inlamnat_av: t(form.inlamnat_av) || null,
+    beskrivning: t(form.beskrivning) || null,
+    korrigerande_atgard: t(form.korrigerande_atgard) || null,
+    grundorsak: t(form.grundorsak) || null,
+    kostnad: Number.isFinite(kostnadNum) ? kostnadNum : null,
+    forebyggande_atgard: t(form.forebyggande_atgard) || null,
+    uppfoljning: t(form.uppfoljning) || null,
+  }
+}
+
+/** Flik 16 – ÄTA */
+export const emptyAtaForm = {
+  ordernr: '',
+  objekt: '',
+  beskrivning: '',
+  rapportor: '',
+  orsak: '',
+  hanvisning: '',
+  pris_modell: '',
+  signatur: '',
+}
+
+export function ataToForm(row) {
+  if (!row) return { ...emptyAtaForm }
+  return {
+    ordernr: row.ordernr || '',
+    objekt: row.objekt || '',
+    beskrivning: row.beskrivning || '',
+    rapportor: row.rapportor || '',
+    orsak: row.orsak || '',
+    hanvisning: row.hanvisning || '',
+    pris_modell: row.pris_modell || '',
+    signatur: row.signatur || '',
+  }
+}
+
+export function ataFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    ordernr: t(form.ordernr) || null,
+    objekt: t(form.objekt) || null,
+    beskrivning: t(form.beskrivning) || null,
+    rapportor: t(form.rapportor) || null,
+    orsak: t(form.orsak) || null,
+    hanvisning: t(form.hanvisning) || null,
+    pris_modell: t(form.pris_modell) || null,
+    signatur: t(form.signatur) || null,
+  }
+}
+
+/** Flik 16 – ÄTA-lista */
+export const emptyAtaListaForm = {
+  nr: '',
+  datum: '',
+  beskrivning: '',
+  bestalld: '',
+  summa: '',
+  fakturerad: '',
+}
+
+export function ataListaToForm(row) {
+  if (!row) return { ...emptyAtaListaForm }
+  return {
+    nr: row.nr || '',
+    datum: row.datum || '',
+    beskrivning: row.beskrivning || '',
+    bestalld: row.bestalld == null ? '' : row.bestalld ? 'ja' : 'nej',
+    summa: row.summa != null ? String(row.summa) : '',
+    fakturerad: row.fakturerad == null ? '' : row.fakturerad ? 'ja' : 'nej',
+  }
+}
+
+export function ataListaFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  const summaRaw = t(form.summa)
+  const summaNum = summaRaw === '' ? null : Number(summaRaw.replace(',', '.'))
+  const toBool = (v) => {
+    if (v === 'ja') return true
+    if (v === 'nej') return false
+    return null
+  }
+  return {
+    nr: t(form.nr) || null,
+    datum: t(form.datum) || null,
+    beskrivning: t(form.beskrivning) || null,
+    bestalld: toBool(form.bestalld),
+    summa: Number.isFinite(summaNum) ? summaNum : null,
+    fakturerad: toBool(form.fakturerad),
+  }
+}
