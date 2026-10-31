@@ -50,6 +50,8 @@ import EkonomiList from './pages/ekonomi/EkonomiList'
 import EkonomiDetail from './pages/ekonomi/EkonomiDetail'
 import ArbetsplatsbesiktningList from './pages/arbetsplatsbesiktning/ArbetsplatsbesiktningList'
 import ArbetsplatsbesiktningDetail from './pages/arbetsplatsbesiktning/ArbetsplatsbesiktningDetail'
+import SlutbesiktningList from './pages/slutbesiktning/SlutbesiktningList'
+import SlutbesiktningDetail from './pages/slutbesiktning/SlutbesiktningDetail'
 
 export default function App() {
   return (
@@ -364,6 +366,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <ArbetsplatsbesiktningDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/slutbesiktning"
+                element={
+                  <ProtectedRoute>
+                    <SlutbesiktningList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/slutbesiktning/:id"
+                element={
+                  <ProtectedRoute>
+                    <SlutbesiktningDetail />
                   </ProtectedRoute>
                 }
               />

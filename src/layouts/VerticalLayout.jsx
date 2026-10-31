@@ -36,6 +36,7 @@ import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
 import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined'
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined'
 import HomeRepairServiceOutlinedIcon from '@mui/icons-material/HomeRepairServiceOutlined'
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -66,6 +67,7 @@ const menuItems = [
   { text: 'Skyddsrond', path: '/skyddsrond', icon: <SecurityOutlinedIcon /> },
   { text: 'Ekonomi', path: '/ekonomi', icon: <AccountBalanceOutlinedIcon /> },
   { text: 'Arbetsplatsbesiktning', path: '/arbetsplatsbesiktning', icon: <HomeRepairServiceOutlinedIcon /> },
+  { text: 'Slutbesiktning', path: '/slutbesiktning', icon: <DescriptionOutlinedIcon /> },
 ]
 
 export default function VerticalLayout({ children }) {

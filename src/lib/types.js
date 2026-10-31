@@ -1251,3 +1251,31 @@ export function arbetsplatsbesiktningRaderToPayload(besiktningId, rader) {
     status: t(r.status) || null,
   }))
 }
+
+/** Flik 24 – Slutbesiktningsprotokoll (dokumentarkiv) */
+export const emptySlutbesiktningForm = {
+  namn: '',
+  beskrivning: '',
+  file_url: '',
+  file_name: '',
+}
+
+export function slutbesiktningToForm(row) {
+  if (!row) return { ...emptySlutbesiktningForm }
+  return {
+    namn: row.namn || '',
+    beskrivning: row.beskrivning || '',
+    file_url: row.file_url || '',
+    file_name: row.file_name || '',
+  }
+}
+
+/** Payload för insert/update – null för tomma fält (filmetadata sätts separat vid uppladdning) */
+export function slutbesiktningFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    namn: t(form.namn),
+    beskrivning: t(form.beskrivning) || null,
+    file_url: t(form.file_url) || null,
+  }
+}
