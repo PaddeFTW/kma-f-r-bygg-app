@@ -56,6 +56,8 @@ import UppfoljningAmList from './pages/uppfoljning-am/UppfoljningAmList'
 import UppfoljningAmDetail from './pages/uppfoljning-am/UppfoljningAmDetail'
 import UppfoljningKvalitetList from './pages/uppfoljning-kvalitet/UppfoljningKvalitetList'
 import UppfoljningKvalitetDetail from './pages/uppfoljning-kvalitet/UppfoljningKvalitetDetail'
+import UppfoljningMiljoList from './pages/uppfoljning-miljo/UppfoljningMiljoList'
+import UppfoljningMiljoDetail from './pages/uppfoljning-miljo/UppfoljningMiljoDetail'
 
 export default function App() {
   return (
@@ -418,6 +420,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <UppfoljningKvalitetDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/uppfoljning-miljo"
+                element={
+                  <ProtectedRoute>
+                    <UppfoljningMiljoList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/uppfoljning-miljo/:id"
+                element={
+                  <ProtectedRoute>
+                    <UppfoljningMiljoDetail />
                   </ProtectedRoute>
                 }
               />

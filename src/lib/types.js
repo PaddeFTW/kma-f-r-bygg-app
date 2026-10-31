@@ -1378,3 +1378,54 @@ export function uppfoljningKvalitetRaderToPayload(uppfoljningKvalitetId, rader) 
     status: t(r.status) || null,
   }))
 }
+
+/** Flik 27 – Uppföljning Miljö */
+export const UPPFOLJNING_MILJO_STATUS_OPTIONS = [
+  { value: '1', label: '1 – Icke godkänt' },
+  { value: '2', label: '2 – Godkänt' },
+  { value: '3', label: '3 – Väl godkänt' },
+]
+
+export const UPPFOLJNING_MILJO_MOMENTS = [
+  'Miljömaskiner',
+  'Tomgång',
+  'Miljöfarliga produkter',
+  'Spill',
+  'Källsortering',
+  'Upplag',
+]
+
+export const emptyUppfoljningMiljoRad = (kontrollmoment = '') => ({
+  _key: `new-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  kontrollmoment,
+  status: '',
+})
+
+export function uppfoljningMiljoRaderDefaults() {
+  return UPPFOLJNING_MILJO_MOMENTS.map((m) => emptyUppfoljningMiljoRad(m))
+}
+
+export const emptyUppfoljningMiljoForm = {
+  rader: [],
+}
+
+export function uppfoljningMiljoToForm(row, rader = []) {
+  if (!row) return { ...emptyUppfoljningMiljoForm, rader: [] }
+  return {
+    rader: (rader || []).map((rad, index) => ({
+      _key: rad.id || `rad-${index}`,
+      kontrollmoment: rad.kontrollmoment || '',
+      status: rad.status || '',
+    })),
+  }
+}
+
+export function uppfoljningMiljoRaderToPayload(uppfoljningMiljoId, rader) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (rader || []).map((r, index) => ({
+    uppfoljning_miljo_id: uppfoljningMiljoId,
+    sort_order: index,
+    kontrollmoment: t(r.kontrollmoment) || null,
+    status: t(r.status) || null,
+  }))
+}

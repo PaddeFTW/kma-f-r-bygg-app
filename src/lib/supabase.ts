@@ -561,3 +561,23 @@ export type UppfoljningKvalitetRad = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 27 – Uppföljning Miljö */
+export type UppfoljningMiljo = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  created_at: string
+  updated_at: string
+}
+
+export type UppfoljningMiljoRad = {
+  id: string
+  uppfoljning_miljo_id: string
+  sort_order: number
+  kontrollmoment: string | null
+  status: '1' | '2' | '3' | string | null
+  created_at: string
+  updated_at: string
+}
