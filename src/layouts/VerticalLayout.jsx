@@ -31,6 +31,7 @@ import PrecisionManufacturingOutlinedIcon from '@mui/icons-material/PrecisionMan
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined'
 import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined'
 import EmergencyOutlinedIcon from '@mui/icons-material/EmergencyOutlined'
+import ContactPhoneOutlinedIcon from '@mui/icons-material/ContactPhoneOutlined'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -56,6 +57,7 @@ const menuItems = [
   { text: 'ÄTA / Avvikelse', path: '/ata', icon: <ReportProblemOutlinedIcon /> },
   { text: 'Säkerhetsdatablad', path: '/sakerhetsdatablad', icon: <ScienceOutlinedIcon /> },
   { text: 'Nödlägesberedskap', path: '/nodlage', icon: <EmergencyOutlinedIcon /> },
+  { text: 'Anhöriglista', path: '/anhoriglista', icon: <ContactPhoneOutlinedIcon /> },
 ]
 
 export default function VerticalLayout({ children }) {

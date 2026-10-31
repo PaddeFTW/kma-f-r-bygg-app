@@ -404,3 +404,17 @@ export type NodlageOrganisation = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 19 – Anhöriglista */
+export type Anhoriglista = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  medarbetare: string
+  narmaste_anhorig: string | null
+  telefon_mobil: string | null
+  datum: string | null
+  created_at: string
+  updated_at: string
+}

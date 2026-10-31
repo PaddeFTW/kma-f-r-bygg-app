@@ -40,6 +40,8 @@ import SakerhetsdatabladList from './pages/sakerhetsdatablad/SakerhetsdatabladLi
 import SakerhetsdatabladDetail from './pages/sakerhetsdatablad/SakerhetsdatabladDetail'
 import NodlageList from './pages/nodlage/NodlageList'
 import NodlageDetail from './pages/nodlage/NodlageDetail'
+import AnhoriglistaList from './pages/anhoriglista/AnhoriglistaList'
+import AnhoriglistaDetail from './pages/anhoriglista/AnhoriglistaDetail'
 
 export default function App() {
   return (
@@ -274,6 +276,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <NodlageDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/anhoriglista"
+                element={
+                  <ProtectedRoute>
+                    <AnhoriglistaList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/anhoriglista/:id"
+                element={
+                  <ProtectedRoute>
+                    <AnhoriglistaDetail />
                   </ProtectedRoute>
                 }
               />

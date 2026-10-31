@@ -1001,3 +1001,31 @@ export function nodlageOrganisationToPayload(nodlageId, organisation) {
     telefon: t(rad.telefon) || null,
   }))
 }
+
+/** Flik 19 – Anhöriglista */
+export const emptyAnhoriglistaForm = {
+  medarbetare: '',
+  narmaste_anhorig: '',
+  telefon_mobil: '',
+  datum: '',
+}
+
+export function anhoriglistaToForm(row) {
+  if (!row) return { ...emptyAnhoriglistaForm }
+  return {
+    medarbetare: row.medarbetare || '',
+    narmaste_anhorig: row.narmaste_anhorig || '',
+    telefon_mobil: row.telefon_mobil || '',
+    datum: row.datum || '',
+  }
+}
+
+export function anhoriglistaFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    medarbetare: t(form.medarbetare),
+    narmaste_anhorig: t(form.narmaste_anhorig) || null,
+    telefon_mobil: t(form.telefon_mobil) || null,
+    datum: t(form.datum) || null,
+  }
+}
