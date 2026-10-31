@@ -486,3 +486,23 @@ export type Ekonomi = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 23 – Arbetsplatsbesiktning */
+export type Arbetsplatsbesiktning = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  created_at: string
+  updated_at: string
+}
+
+export type ArbetsplatsbesiktningRad = {
+  id: string
+  arbetsplatsbesiktning_id: string
+  sort_order: number
+  kontrollmoment: string | null
+  status: '1' | '2' | '3' | string | null
+  created_at: string
+  updated_at: string
+}

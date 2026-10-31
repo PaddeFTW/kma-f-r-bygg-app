@@ -48,6 +48,8 @@ import SkyddsrondList from './pages/skyddsrond/SkyddsrondList'
 import SkyddsrondDetail from './pages/skyddsrond/SkyddsrondDetail'
 import EkonomiList from './pages/ekonomi/EkonomiList'
 import EkonomiDetail from './pages/ekonomi/EkonomiDetail'
+import ArbetsplatsbesiktningList from './pages/arbetsplatsbesiktning/ArbetsplatsbesiktningList'
+import ArbetsplatsbesiktningDetail from './pages/arbetsplatsbesiktning/ArbetsplatsbesiktningDetail'
 
 export default function App() {
   return (
@@ -346,6 +348,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <EkonomiDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/arbetsplatsbesiktning"
+                element={
+                  <ProtectedRoute>
+                    <ArbetsplatsbesiktningList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/arbetsplatsbesiktning/:id"
+                element={
+                  <ProtectedRoute>
+                    <ArbetsplatsbesiktningDetail />
                   </ProtectedRoute>
                 }
               />

@@ -1200,3 +1200,54 @@ export function ekonomiFormToPayload(form) {
     file_url: t(form.file_url) || null,
   }
 }
+
+/** Flik 23 – Arbetsplatsbesiktning */
+export const ARBETSPLATSBESIKTNING_STATUS_OPTIONS = [
+  { value: '1', label: '1 – Kontrollerat och godkänt' },
+  { value: '2', label: '2 – Kontrollerat och ej godkänt' },
+  { value: '3', label: '3 – Ej kontrollerat' },
+]
+
+export const ARBETSPLATSBESIKTNING_MOMENTS = [
+  'Besiktat platsen',
+  'Riskbedömning gjord',
+  'AMP/miljöplan/kvalitetsplan gjorda',
+  'Lagar beaktade',
+  'UE informerade/deltagit',
+  'Brister åtgärdade',
+]
+
+export const emptyArbetsplatsbesiktningRad = (kontrollmoment = '') => ({
+  _key: `new-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  kontrollmoment,
+  status: '',
+})
+
+export function arbetsplatsbesiktningRaderDefaults() {
+  return ARBETSPLATSBESIKTNING_MOMENTS.map((m) => emptyArbetsplatsbesiktningRad(m))
+}
+
+export const emptyArbetsplatsbesiktningForm = {
+  rader: [],
+}
+
+export function arbetsplatsbesiktningToForm(row, rader = []) {
+  if (!row) return { ...emptyArbetsplatsbesiktningForm, rader: [] }
+  return {
+    rader: (rader || []).map((rad, index) => ({
+      _key: rad.id || `rad-${index}`,
+      kontrollmoment: rad.kontrollmoment || '',
+      status: rad.status || '',
+    })),
+  }
+}
+
+export function arbetsplatsbesiktningRaderToPayload(besiktningId, rader) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (rader || []).map((r, index) => ({
+    arbetsplatsbesiktning_id: besiktningId,
+    sort_order: index,
+    kontrollmoment: t(r.kontrollmoment) || null,
+    status: t(r.status) || null,
+  }))
+}
