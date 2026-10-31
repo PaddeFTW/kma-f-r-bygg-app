@@ -26,6 +26,24 @@ import BygghandlingarList from './pages/bygghandlingar/BygghandlingarList'
 import BygghandlingDetail from './pages/bygghandlingar/BygghandlingDetail'
 import KontrollplanerList from './pages/kontrollplan/KontrollplanerList'
 import KontrollplanDetail from './pages/kontrollplan/KontrollplanDetail'
+import EgenkontrollerList from './pages/egenkontroll/EgenkontrollerList'
+import EgenkontrollDetail from './pages/egenkontroll/EgenkontrollDetail'
+import EgenkontrollerUeList from './pages/egenkontroll-ue/EgenkontrollerUeList'
+import EgenkontrollUeDetail from './pages/egenkontroll-ue/EgenkontrollUeDetail'
+import MaskinerUeList from './pages/maskiner-ue/MaskinerUeList'
+import MaskinUeDetail from './pages/maskiner-ue/MaskinUeDetail'
+import AtaList from './pages/ata/AtaList'
+import AvvikelseDetail from './pages/ata/AvvikelseDetail'
+import AtaDetail from './pages/ata/AtaDetail'
+import AtaListaDetail from './pages/ata/AtaListaDetail'
+import SakerhetsdatabladList from './pages/sakerhetsdatablad/SakerhetsdatabladList'
+import SakerhetsdatabladDetail from './pages/sakerhetsdatablad/SakerhetsdatabladDetail'
+import NodlageList from './pages/nodlage/NodlageList'
+import NodlageDetail from './pages/nodlage/NodlageDetail'
+import AnhoriglistaList from './pages/anhoriglista/AnhoriglistaList'
+import AnhoriglistaDetail from './pages/anhoriglista/AnhoriglistaDetail'
+import KrisberedskapList from './pages/krisberedskap/KrisberedskapList'
+import KrisberedskapDetail from './pages/krisberedskap/KrisberedskapDetail'
 
 export default function App() {
   return (
@@ -148,6 +166,150 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <KontrollplanDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/egenkontroll"
+                element={
+                  <ProtectedRoute>
+                    <EgenkontrollerList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/egenkontroll/:id"
+                element={
+                  <ProtectedRoute>
+                    <EgenkontrollDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/egenkontroll-ue"
+                element={
+                  <ProtectedRoute>
+                    <EgenkontrollerUeList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/egenkontroll-ue/:id"
+                element={
+                  <ProtectedRoute>
+                    <EgenkontrollUeDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/maskiner-ue"
+                element={
+                  <ProtectedRoute>
+                    <MaskinerUeList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/maskiner-ue/:id"
+                element={
+                  <ProtectedRoute>
+                    <MaskinUeDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ata"
+                element={
+                  <ProtectedRoute>
+                    <AtaList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ata/avvikelser/:id"
+                element={
+                  <ProtectedRoute>
+                    <AvvikelseDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ata/ata/:id"
+                element={
+                  <ProtectedRoute>
+                    <AtaDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ata/ata-lista/:id"
+                element={
+                  <ProtectedRoute>
+                    <AtaListaDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/sakerhetsdatablad"
+                element={
+                  <ProtectedRoute>
+                    <SakerhetsdatabladList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/sakerhetsdatablad/:id"
+                element={
+                  <ProtectedRoute>
+                    <SakerhetsdatabladDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/nodlage"
+                element={
+                  <ProtectedRoute>
+                    <NodlageList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/nodlage/:id"
+                element={
+                  <ProtectedRoute>
+                    <NodlageDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/anhoriglista"
+                element={
+                  <ProtectedRoute>
+                    <AnhoriglistaList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/anhoriglista/:id"
+                element={
+                  <ProtectedRoute>
+                    <AnhoriglistaDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/krisberedskap"
+                element={
+                  <ProtectedRoute>
+                    <KrisberedskapList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/krisberedskap/:id"
+                element={
+                  <ProtectedRoute>
+                    <KrisberedskapDetail />
                   </ProtectedRoute>
                 }
               />

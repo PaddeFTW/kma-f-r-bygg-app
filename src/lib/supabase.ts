@@ -254,3 +254,183 @@ export type KontrollplanRad = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 13 – Egenkontroll */
+export type EgenkontrollStatus = '1' | '2' | '3'
+
+export type Egenkontroll = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  typ: string | null
+  bestallare: string | null
+  entreprenor: string | null
+  objekt: string | null
+  projektnr: string | null
+  referens: string | null
+  ovriga_anteckningar: string | null
+  kontrollansvarig: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type EgenkontrollRad = {
+  id: string
+  egenkontroll_id: string
+  sort_order: number
+  kontrollmoment: string | null
+  status: EgenkontrollStatus | string | null
+  datum: string | null
+  signatur: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 14 – Egenkontroller från UE */
+export type EgenkontrollUe = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  underleverantor: string
+  egenkontroll: string | null
+  datum: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 15 – Inventering av maskiner för UE */
+export type MaskinUe = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  underleverantor: string
+  maskiner: string | null
+  datum: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 16 – Avvikelserapport */
+export type Avvikelse = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  ordernr: string | null
+  datum: string | null
+  inlamnat_av: string | null
+  beskrivning: string | null
+  korrigerande_atgard: string | null
+  grundorsak: string | null
+  kostnad: number | null
+  forebyggande_atgard: string | null
+  uppfoljning: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 16 – ÄTA */
+export type Ata = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  ordernr: string | null
+  objekt: string | null
+  beskrivning: string | null
+  rapportor: string | null
+  orsak: string | null
+  hanvisning: string | null
+  pris_modell: 'fast_pris' | 'lopande_rakning' | string | null
+  signatur: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 16 – ÄTA-lista */
+export type AtaLista = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  nr: string | null
+  datum: string | null
+  beskrivning: string | null
+  bestalld: boolean | null
+  summa: number | null
+  fakturerad: boolean | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 17 – Säkerhetsdatablad */
+export type Sakerhetsdatablad = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  produkt: string
+  sakerhetsdatablad: boolean | null
+  ansvarig: string | null
+  datum: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 18 – Nödlägesberedskap */
+export type Nodlage = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  raddningshjalp: string | null
+  larmrutin_miljoolycka: string | null
+  larmrutin_personskada: string | null
+  information_narboende: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type NodlageOrganisation = {
+  id: string
+  nodlage_id: string
+  sort_order: number
+  befattning: string | null
+  namn: string | null
+  telefon: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 19 – Anhöriglista */
+export type Anhoriglista = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  medarbetare: string
+  narmaste_anhorig: string | null
+  telefon_mobil: string | null
+  datum: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 20 – Krisberedskap */
+export type Krisberedskap = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  exempel_handelser: string | null
+  omedelbara_atgarder: string | null
+  krisgrupp: string | null
+  viktiga_telefonnummer: string | null
+  anmalan_arbetsmiljoverket: string | null
+  uppfoljning: string | null
+  created_at: string
+  updated_at: string
+}
