@@ -54,6 +54,8 @@ import SlutbesiktningList from './pages/slutbesiktning/SlutbesiktningList'
 import SlutbesiktningDetail from './pages/slutbesiktning/SlutbesiktningDetail'
 import UppfoljningAmList from './pages/uppfoljning-am/UppfoljningAmList'
 import UppfoljningAmDetail from './pages/uppfoljning-am/UppfoljningAmDetail'
+import UppfoljningKvalitetList from './pages/uppfoljning-kvalitet/UppfoljningKvalitetList'
+import UppfoljningKvalitetDetail from './pages/uppfoljning-kvalitet/UppfoljningKvalitetDetail'
 
 export default function App() {
   return (
@@ -400,6 +402,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <UppfoljningAmDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/uppfoljning-kvalitet"
+                element={
+                  <ProtectedRoute>
+                    <UppfoljningKvalitetList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/uppfoljning-kvalitet/:id"
+                element={
+                  <ProtectedRoute>
+                    <UppfoljningKvalitetDetail />
                   </ProtectedRoute>
                 }
               />

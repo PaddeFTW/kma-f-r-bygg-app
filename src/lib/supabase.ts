@@ -541,3 +541,23 @@ export type UppfoljningAmRad = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 26 – Uppföljning Kvalitet */
+export type UppfoljningKvalitet = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  created_at: string
+  updated_at: string
+}
+
+export type UppfoljningKvalitetRad = {
+  id: string
+  uppfoljning_kvalitet_id: string
+  sort_order: number
+  kontrollmoment: string | null
+  status: '1' | '2' | '3' | string | null
+  created_at: string
+  updated_at: string
+}

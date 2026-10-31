@@ -38,6 +38,7 @@ import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlin
 import HomeRepairServiceOutlinedIcon from '@mui/icons-material/HomeRepairServiceOutlined'
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 import MonitorHeartOutlinedIcon from '@mui/icons-material/MonitorHeartOutlined'
+import WorkspacePremiumOutlinedIcon from '@mui/icons-material/WorkspacePremiumOutlined'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -70,6 +71,7 @@ const menuItems = [
   { text: 'Arbetsplatsbesiktning', path: '/arbetsplatsbesiktning', icon: <HomeRepairServiceOutlinedIcon /> },
   { text: 'Slutbesiktning', path: '/slutbesiktning', icon: <DescriptionOutlinedIcon /> },
   { text: 'Uppföljning AM', path: '/uppfoljning-am', icon: <MonitorHeartOutlinedIcon /> },
+  { text: 'Uppföljning Kvalitet', path: '/uppfoljning-kvalitet', icon: <WorkspacePremiumOutlinedIcon /> },
 ]
 
 export default function VerticalLayout({ children }) {
