@@ -471,3 +471,18 @@ export type SkyddsrondHandlingsplan = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 22 – Ekonomi, betalningsplan (dokumentarkiv) */
+export type Ekonomi = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  namn: string
+  beskrivning: string | null
+  file_url: string | null
+  file_path: string | null
+  file_name: string | null
+  created_at: string
+  updated_at: string
+}

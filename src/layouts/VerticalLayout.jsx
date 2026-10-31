@@ -34,6 +34,7 @@ import EmergencyOutlinedIcon from '@mui/icons-material/EmergencyOutlined'
 import ContactPhoneOutlinedIcon from '@mui/icons-material/ContactPhoneOutlined'
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
 import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined'
+import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -62,6 +63,7 @@ const menuItems = [
   { text: 'Anhöriglista', path: '/anhoriglista', icon: <ContactPhoneOutlinedIcon /> },
   { text: 'Krisberedskap', path: '/krisberedskap', icon: <GroupsOutlinedIcon /> },
   { text: 'Skyddsrond', path: '/skyddsrond', icon: <SecurityOutlinedIcon /> },
+  { text: 'Ekonomi', path: '/ekonomi', icon: <AccountBalanceOutlinedIcon /> },
 ]
 
 export default function VerticalLayout({ children }) {

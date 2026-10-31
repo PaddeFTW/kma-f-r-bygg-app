@@ -46,6 +46,8 @@ import KrisberedskapList from './pages/krisberedskap/KrisberedskapList'
 import KrisberedskapDetail from './pages/krisberedskap/KrisberedskapDetail'
 import SkyddsrondList from './pages/skyddsrond/SkyddsrondList'
 import SkyddsrondDetail from './pages/skyddsrond/SkyddsrondDetail'
+import EkonomiList from './pages/ekonomi/EkonomiList'
+import EkonomiDetail from './pages/ekonomi/EkonomiDetail'
 
 export default function App() {
   return (
@@ -328,6 +330,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <SkyddsrondDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ekonomi"
+                element={
+                  <ProtectedRoute>
+                    <EkonomiList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ekonomi/:id"
+                element={
+                  <ProtectedRoute>
+                    <EkonomiDetail />
                   </ProtectedRoute>
                 }
               />

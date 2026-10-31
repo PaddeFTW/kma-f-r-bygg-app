@@ -1172,3 +1172,31 @@ export function skyddsrondHandlingsplanToPayload(skyddsrondId, handlingsplan) {
     atgardat_datum: t(rad.atgardat_datum) || null,
   }))
 }
+
+/** Flik 22 – Ekonomi, betalningsplan (dokumentarkiv) */
+export const emptyEkonomiForm = {
+  namn: '',
+  beskrivning: '',
+  file_url: '',
+  file_name: '',
+}
+
+export function ekonomiToForm(row) {
+  if (!row) return { ...emptyEkonomiForm }
+  return {
+    namn: row.namn || '',
+    beskrivning: row.beskrivning || '',
+    file_url: row.file_url || '',
+    file_name: row.file_name || '',
+  }
+}
+
+/** Payload för insert/update – null för tomma fält (filmetadata sätts separat vid uppladdning) */
+export function ekonomiFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    namn: t(form.namn),
+    beskrivning: t(form.beskrivning) || null,
+    file_url: t(form.file_url) || null,
+  }
+}
