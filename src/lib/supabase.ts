@@ -434,3 +434,40 @@ export type Krisberedskap = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 21 – Skydds- och miljörond */
+export type Skyddsrond = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  platschef: string | null
+  arbetsledare: string | null
+  skyddsombud: string | null
+  ue: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type SkyddsrondChecklista = {
+  id: string
+  skyddsrond_id: string
+  sort_order: number
+  punkt: string | null
+  status: 'ja' | 'nej' | string | null
+  created_at: string
+  updated_at: string
+}
+
+export type SkyddsrondHandlingsplan = {
+  id: string
+  skyddsrond_id: string
+  sort_order: number
+  nr: string | null
+  fel_brister: string | null
+  atgardas_senast: string | null
+  ansvarig: string | null
+  atgardat_datum: string | null
+  created_at: string
+  updated_at: string
+}

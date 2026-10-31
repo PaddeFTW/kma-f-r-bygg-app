@@ -44,6 +44,8 @@ import AnhoriglistaList from './pages/anhoriglista/AnhoriglistaList'
 import AnhoriglistaDetail from './pages/anhoriglista/AnhoriglistaDetail'
 import KrisberedskapList from './pages/krisberedskap/KrisberedskapList'
 import KrisberedskapDetail from './pages/krisberedskap/KrisberedskapDetail'
+import SkyddsrondList from './pages/skyddsrond/SkyddsrondList'
+import SkyddsrondDetail from './pages/skyddsrond/SkyddsrondDetail'
 
 export default function App() {
   return (
@@ -310,6 +312,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <KrisberedskapDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/skyddsrond"
+                element={
+                  <ProtectedRoute>
+                    <SkyddsrondList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/skyddsrond/:id"
+                element={
+                  <ProtectedRoute>
+                    <SkyddsrondDetail />
                   </ProtectedRoute>
                 }
               />

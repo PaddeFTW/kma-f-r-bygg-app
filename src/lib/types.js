@@ -1063,3 +1063,112 @@ export function krisberedskapFormToPayload(form) {
     uppfoljning: t(form.uppfoljning) || null,
   }
 }
+
+/** Flik 21 – Skydds- och miljörond */
+export const SKYDDSROND_CHECKLISTA_DEFAULT = [
+  'Allmän ordning',
+  'Arbetsmiljöplan',
+  'Avstängningar',
+  'Belysning',
+  'Brandskydd',
+  'Buller',
+  'Byggelement',
+  'Damm',
+  'Drivmedel',
+  'Fallskydd',
+  'Farliga ämnen',
+  'Källsortering',
+  'Lyft',
+  'Maskiner',
+  'Trafik',
+  'Öppningar',
+]
+
+export const SKYDDSROND_STATUS_OPTIONS = [
+  { value: 'ja', label: 'Ja' },
+  { value: 'nej', label: 'Nej' },
+]
+
+export const emptySkyddsrondCheckRad = (punkt = '') => ({
+  _key: `chk-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  punkt,
+  status: '',
+})
+
+export const emptySkyddsrondHandlingsplanRad = () => ({
+  _key: `hp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  nr: '',
+  fel_brister: '',
+  atgardas_senast: '',
+  ansvarig: '',
+  atgardat_datum: '',
+})
+
+export function skyddsrondChecklistaDefaults() {
+  return SKYDDSROND_CHECKLISTA_DEFAULT.map((punkt) => emptySkyddsrondCheckRad(punkt))
+}
+
+export const emptySkyddsrondForm = {
+  platschef: '',
+  arbetsledare: '',
+  skyddsombud: '',
+  ue: '',
+  checklista: [],
+  handlingsplan: [],
+}
+
+export function skyddsrondToForm(row, checklista = [], handlingsplan = []) {
+  if (!row) return { ...emptySkyddsrondForm, checklista: [], handlingsplan: [] }
+  return {
+    platschef: row.platschef || '',
+    arbetsledare: row.arbetsledare || '',
+    skyddsombud: row.skyddsombud || '',
+    ue: row.ue || '',
+    checklista: (checklista || []).map((rad, index) => ({
+      _key: rad.id || `chk-${index}`,
+      punkt: rad.punkt || '',
+      status: rad.status || '',
+    })),
+    handlingsplan: (handlingsplan || []).map((rad, index) => ({
+      _key: rad.id || `hp-${index}`,
+      nr: rad.nr || '',
+      fel_brister: rad.fel_brister || '',
+      atgardas_senast: rad.atgardas_senast || '',
+      ansvarig: rad.ansvarig || '',
+      atgardat_datum: rad.atgardat_datum || '',
+    })),
+  }
+}
+
+export function skyddsrondFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    platschef: t(form.platschef) || null,
+    arbetsledare: t(form.arbetsledare) || null,
+    skyddsombud: t(form.skyddsombud) || null,
+    ue: t(form.ue) || null,
+  }
+}
+
+export function skyddsrondChecklistaToPayload(skyddsrondId, checklista) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (checklista || []).map((rad, index) => ({
+    skyddsrond_id: skyddsrondId,
+    sort_order: index,
+    punkt: t(rad.punkt) || null,
+    status: t(rad.status) || null,
+  }))
+}
+
+export function skyddsrondHandlingsplanToPayload(skyddsrondId, handlingsplan) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (handlingsplan || []).map((rad, index) => ({
+    skyddsrond_id: skyddsrondId,
+    sort_order: index,
+    nr: t(rad.nr) || null,
+    fel_brister: t(rad.fel_brister) || null,
+    atgardas_senast: t(rad.atgardas_senast) || null,
+    ansvarig: t(rad.ansvarig) || null,
+    atgardat_datum: t(rad.atgardat_datum) || null,
+  }))
+}
