@@ -418,3 +418,19 @@ export type Anhoriglista = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 20 – Krisberedskap */
+export type Krisberedskap = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  exempel_handelser: string | null
+  omedelbara_atgarder: string | null
+  krisgrupp: string | null
+  viktiga_telefonnummer: string | null
+  anmalan_arbetsmiljoverket: string | null
+  uppfoljning: string | null
+  created_at: string
+  updated_at: string
+}

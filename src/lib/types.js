@@ -1029,3 +1029,37 @@ export function anhoriglistaFormToPayload(form) {
     datum: t(form.datum) || null,
   }
 }
+
+/** Flik 20 – Krisberedskap */
+export const emptyKrisberedskapForm = {
+  exempel_handelser: '',
+  omedelbara_atgarder: '',
+  krisgrupp: '',
+  viktiga_telefonnummer: '',
+  anmalan_arbetsmiljoverket: '',
+  uppfoljning: '',
+}
+
+export function krisberedskapToForm(row) {
+  if (!row) return { ...emptyKrisberedskapForm }
+  return {
+    exempel_handelser: row.exempel_handelser || '',
+    omedelbara_atgarder: row.omedelbara_atgarder || '',
+    krisgrupp: row.krisgrupp || '',
+    viktiga_telefonnummer: row.viktiga_telefonnummer || '',
+    anmalan_arbetsmiljoverket: row.anmalan_arbetsmiljoverket || '',
+    uppfoljning: row.uppfoljning || '',
+  }
+}
+
+export function krisberedskapFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    exempel_handelser: t(form.exempel_handelser) || null,
+    omedelbara_atgarder: t(form.omedelbara_atgarder) || null,
+    krisgrupp: t(form.krisgrupp) || null,
+    viktiga_telefonnummer: t(form.viktiga_telefonnummer) || null,
+    anmalan_arbetsmiljoverket: t(form.anmalan_arbetsmiljoverket) || null,
+    uppfoljning: t(form.uppfoljning) || null,
+  }
+}

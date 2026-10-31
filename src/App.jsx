@@ -42,6 +42,8 @@ import NodlageList from './pages/nodlage/NodlageList'
 import NodlageDetail from './pages/nodlage/NodlageDetail'
 import AnhoriglistaList from './pages/anhoriglista/AnhoriglistaList'
 import AnhoriglistaDetail from './pages/anhoriglista/AnhoriglistaDetail'
+import KrisberedskapList from './pages/krisberedskap/KrisberedskapList'
+import KrisberedskapDetail from './pages/krisberedskap/KrisberedskapDetail'
 
 export default function App() {
   return (
@@ -292,6 +294,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <AnhoriglistaDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/krisberedskap"
+                element={
+                  <ProtectedRoute>
+                    <KrisberedskapList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/krisberedskap/:id"
+                element={
+                  <ProtectedRoute>
+                    <KrisberedskapDetail />
                   </ProtectedRoute>
                 }
               />
