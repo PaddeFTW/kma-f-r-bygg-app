@@ -52,6 +52,8 @@ import ArbetsplatsbesiktningList from './pages/arbetsplatsbesiktning/Arbetsplats
 import ArbetsplatsbesiktningDetail from './pages/arbetsplatsbesiktning/ArbetsplatsbesiktningDetail'
 import SlutbesiktningList from './pages/slutbesiktning/SlutbesiktningList'
 import SlutbesiktningDetail from './pages/slutbesiktning/SlutbesiktningDetail'
+import UppfoljningAmList from './pages/uppfoljning-am/UppfoljningAmList'
+import UppfoljningAmDetail from './pages/uppfoljning-am/UppfoljningAmDetail'
 
 export default function App() {
   return (
@@ -382,6 +384,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <SlutbesiktningDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/uppfoljning-am"
+                element={
+                  <ProtectedRoute>
+                    <UppfoljningAmList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/uppfoljning-am/:id"
+                element={
+                  <ProtectedRoute>
+                    <UppfoljningAmDetail />
                   </ProtectedRoute>
                 }
               />

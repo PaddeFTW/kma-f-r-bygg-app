@@ -1279,3 +1279,52 @@ export function slutbesiktningFormToPayload(form) {
     file_url: t(form.file_url) || null,
   }
 }
+
+/** Flik 25 – Uppföljning Arbetsmiljö */
+export const UPPFOLJNING_AM_STATUS_OPTIONS = [
+  { value: '1', label: '1 – Icke godkänt' },
+  { value: '2', label: '2 – Godkänt' },
+  { value: '3', label: '3 – Väl godkänt' },
+]
+
+export const UPPFOLJNING_AM_MOMENTS = [
+  'Skyddsronder genomförda',
+  'Tillbud/olyckor',
+  'Rapporterade',
+  'Skyddsutrustning använd',
+]
+
+export const emptyUppfoljningAmRad = (kontrollmoment = '') => ({
+  _key: `new-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  kontrollmoment,
+  status: '',
+})
+
+export function uppfoljningAmRaderDefaults() {
+  return UPPFOLJNING_AM_MOMENTS.map((m) => emptyUppfoljningAmRad(m))
+}
+
+export const emptyUppfoljningAmForm = {
+  rader: [],
+}
+
+export function uppfoljningAmToForm(row, rader = []) {
+  if (!row) return { ...emptyUppfoljningAmForm, rader: [] }
+  return {
+    rader: (rader || []).map((rad, index) => ({
+      _key: rad.id || `rad-${index}`,
+      kontrollmoment: rad.kontrollmoment || '',
+      status: rad.status || '',
+    })),
+  }
+}
+
+export function uppfoljningAmRaderToPayload(uppfoljningAmId, rader) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (rader || []).map((r, index) => ({
+    uppfoljning_am_id: uppfoljningAmId,
+    sort_order: index,
+    kontrollmoment: t(r.kontrollmoment) || null,
+    status: t(r.status) || null,
+  }))
+}

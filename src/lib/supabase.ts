@@ -521,3 +521,23 @@ export type Slutbesiktning = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 25 – Uppföljning Arbetsmiljö */
+export type UppfoljningAm = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  created_at: string
+  updated_at: string
+}
+
+export type UppfoljningAmRad = {
+  id: string
+  uppfoljning_am_id: string
+  sort_order: number
+  kontrollmoment: string | null
+  status: '1' | '2' | '3' | string | null
+  created_at: string
+  updated_at: string
+}

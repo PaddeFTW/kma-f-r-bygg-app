@@ -37,6 +37,7 @@ import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined'
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined'
 import HomeRepairServiceOutlinedIcon from '@mui/icons-material/HomeRepairServiceOutlined'
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
+import MonitorHeartOutlinedIcon from '@mui/icons-material/MonitorHeartOutlined'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -68,6 +69,7 @@ const menuItems = [
   { text: 'Ekonomi', path: '/ekonomi', icon: <AccountBalanceOutlinedIcon /> },
   { text: 'Arbetsplatsbesiktning', path: '/arbetsplatsbesiktning', icon: <HomeRepairServiceOutlinedIcon /> },
   { text: 'Slutbesiktning', path: '/slutbesiktning', icon: <DescriptionOutlinedIcon /> },
+  { text: 'Uppföljning AM', path: '/uppfoljning-am', icon: <MonitorHeartOutlinedIcon /> },
 ]
 
 export default function VerticalLayout({ children }) {
