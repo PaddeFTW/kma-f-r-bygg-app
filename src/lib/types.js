@@ -1600,3 +1600,88 @@ export function kvitteringRaderToPayload(kvitteringId, form) {
     signatur: t(rad.signatur) || null,
   }))
 }
+
+/** Flik 30 – Checklista byggpärm (Flik 1–31) */
+export const CHECKLISTA_BYGGPARM_JA_NEJ_OPTIONS = [
+  { value: 'ja', label: 'Ja' },
+  { value: 'nej', label: 'Nej' },
+]
+
+export const CHECKLISTA_BYGGPARM_AVSNITT = [
+  { flik_nr: 1, avsnitt: 'Projektbeskrivning' },
+  { flik_nr: 2, avsnitt: 'Organisation' },
+  { flik_nr: 3, avsnitt: 'Beställarens organisation' },
+  { flik_nr: 4, avsnitt: 'Underleverantörer (organisation)' },
+  { flik_nr: 5, avsnitt: 'Kvalitetsplan' },
+  { flik_nr: 6, avsnitt: 'Miljöplan' },
+  { flik_nr: 7, avsnitt: 'Arbetsmiljöplan' },
+  { flik_nr: 8, avsnitt: 'Miljöanalys' },
+  { flik_nr: 9, avsnitt: 'Rivningsplan' },
+  { flik_nr: 10, avsnitt: 'Protokoll – byggmöte' },
+  { flik_nr: 11, avsnitt: 'Bygghandlingar / relationsritningar' },
+  { flik_nr: 12, avsnitt: 'Kontrollplan' },
+  { flik_nr: 13, avsnitt: 'Egenkontroller' },
+  { flik_nr: 14, avsnitt: 'Egenkontroller från UE' },
+  { flik_nr: 15, avsnitt: 'Inventering av maskiner för UE' },
+  { flik_nr: 16, avsnitt: 'ÄTA / Avvikelserapport / ÄTA-lista' },
+  { flik_nr: 17, avsnitt: 'Säkerhetsdatablad' },
+  { flik_nr: 18, avsnitt: 'Nödlägesberedskap' },
+  { flik_nr: 19, avsnitt: 'Anhöriglista' },
+  { flik_nr: 20, avsnitt: 'Krisberedskap' },
+  { flik_nr: 21, avsnitt: 'Skydds- och miljörond' },
+  { flik_nr: 22, avsnitt: 'Ekonomi, betalningsplan' },
+  { flik_nr: 23, avsnitt: 'Arbetsplatsbesiktning' },
+  { flik_nr: 24, avsnitt: 'Slutbesiktningsprotokoll' },
+  { flik_nr: 25, avsnitt: 'Uppföljning Arbetsmiljö' },
+  { flik_nr: 26, avsnitt: 'Uppföljning Kvalitet' },
+  { flik_nr: 27, avsnitt: 'Uppföljning Miljö' },
+  { flik_nr: 28, avsnitt: 'Riskbedömning + Lagar' },
+  { flik_nr: 29, avsnitt: 'Kvitteringslistor' },
+  { flik_nr: 30, avsnitt: 'Checklista byggpärm' },
+  { flik_nr: 31, avsnitt: 'Distribution och signering' },
+]
+
+export const emptyChecklistaByggparmRad = (flik_nr = null, avsnitt = '') => ({
+  _key: `cb-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  flik_nr,
+  avsnitt,
+  klart: '',
+  ansvarig: '',
+  datum: '',
+})
+
+export function checklistaByggparmDefaults() {
+  return CHECKLISTA_BYGGPARM_AVSNITT.map((item) =>
+    emptyChecklistaByggparmRad(item.flik_nr, item.avsnitt)
+  )
+}
+
+export const emptyChecklistaByggparmForm = {
+  rader: [],
+}
+
+export function checklistaByggparmToForm(_row, rader = []) {
+  return {
+    rader: (rader || []).map((rad, index) => ({
+      _key: rad.id || `cb-${index}`,
+      flik_nr: rad.flik_nr ?? null,
+      avsnitt: rad.avsnitt || '',
+      klart: rad.klart || '',
+      ansvarig: rad.ansvarig || '',
+      datum: rad.datum || '',
+    })),
+  }
+}
+
+export function checklistaByggparmRaderToPayload(checklistaId, rader) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (rader || []).map((rad, index) => ({
+    checklista_id: checklistaId,
+    sort_order: index,
+    flik_nr: rad.flik_nr == null || rad.flik_nr === '' ? null : Number(rad.flik_nr),
+    avsnitt: t(rad.avsnitt) || null,
+    klart: t(rad.klart) || null,
+    ansvarig: t(rad.ansvarig) || null,
+    datum: t(rad.datum) || null,
+  }))
+}

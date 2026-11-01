@@ -62,6 +62,8 @@ import RiskbedomningList from './pages/riskbedomning/RiskbedomningList'
 import RiskbedomningDetail from './pages/riskbedomning/RiskbedomningDetail'
 import KvitteringList from './pages/kvittering/KvitteringList'
 import KvitteringDetail from './pages/kvittering/KvitteringDetail'
+import ChecklistaByggparmList from './pages/checklista-byggparm/ChecklistaByggparmList'
+import ChecklistaByggparmDetail from './pages/checklista-byggparm/ChecklistaByggparmDetail'
 
 export default function App() {
   return (
@@ -472,6 +474,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <KvitteringDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/checklista-byggparm"
+                element={
+                  <ProtectedRoute>
+                    <ChecklistaByggparmList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/checklista-byggparm/:id"
+                element={
+                  <ProtectedRoute>
+                    <ChecklistaByggparmDetail />
                   </ProtectedRoute>
                 }
               />

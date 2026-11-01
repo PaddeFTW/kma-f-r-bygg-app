@@ -648,3 +648,26 @@ export type KvitteringRad = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 30 – Checklista byggpärm */
+export type ChecklistaByggparm = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  created_at: string
+  updated_at: string
+}
+
+export type ChecklistaByggparmRad = {
+  id: string
+  checklista_id: string
+  sort_order: number
+  flik_nr: number | null
+  avsnitt: string | null
+  klart: 'ja' | 'nej' | string | null
+  ansvarig: string | null
+  datum: string | null
+  created_at: string
+  updated_at: string
+}
