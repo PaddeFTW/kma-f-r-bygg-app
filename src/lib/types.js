@@ -1429,3 +1429,117 @@ export function uppfoljningMiljoRaderToPayload(uppfoljningMiljoId, rader) {
     status: t(r.status) || null,
   }))
 }
+
+/** Flik 28 – Riskbedömning + Lagar */
+export const RISKBEDOMNING_JA_NEJ_OPTIONS = [
+  { value: 'ja', label: 'Ja' },
+  { value: 'nej', label: 'Nej' },
+]
+
+export const RISKBEDOMNING_RISKNIVA_OPTIONS = [
+  { value: 'lag', label: 'Låg' },
+  { value: 'medel', label: 'Medel' },
+  { value: 'hog', label: 'Hög' },
+]
+
+/** Exempel AFS från underlaget (m.fl. kan läggas till). */
+export const RISKBEDOMNING_AFS_DEFAULTS = [
+  '2023:1',
+  '2023:3',
+  '2023:10',
+  '2023:11',
+  '2023:13',
+]
+
+export const emptyRiskbedomningAfsRad = (afs_nummer = '') => ({
+  _key: `afs-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  afs_nummer,
+  titel: '',
+  tillamplig: '',
+  riskniva: '',
+  ansvarig: '',
+  handlingsplan_nr: '',
+  datum: '',
+})
+
+export const emptyRiskbedomningHandlingsplanRad = () => ({
+  _key: `hp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  fran_afs: '',
+  atgard: '',
+  ansvarig: '',
+  klart_datum: '',
+})
+
+export function riskbedomningAfsDefaults() {
+  return RISKBEDOMNING_AFS_DEFAULTS.map((nr) => emptyRiskbedomningAfsRad(nr))
+}
+
+export const emptyRiskbedomningForm = {
+  upprattare: '',
+  vd: '',
+  arbetstagarrepresentant: '',
+  afs_rader: [],
+  handlingsplan: [],
+}
+
+export function riskbedomningToForm(row, afsRader = [], handlingsplan = []) {
+  if (!row) return { ...emptyRiskbedomningForm, afs_rader: [], handlingsplan: [] }
+  return {
+    upprattare: row.upprattare || '',
+    vd: row.vd || '',
+    arbetstagarrepresentant: row.arbetstagarrepresentant || '',
+    afs_rader: (afsRader || []).map((rad, index) => ({
+      _key: rad.id || `afs-${index}`,
+      afs_nummer: rad.afs_nummer || '',
+      titel: rad.titel || '',
+      tillamplig: rad.tillamplig || '',
+      riskniva: rad.riskniva || '',
+      ansvarig: rad.ansvarig || '',
+      handlingsplan_nr: rad.handlingsplan_nr || '',
+      datum: rad.datum || '',
+    })),
+    handlingsplan: (handlingsplan || []).map((rad, index) => ({
+      _key: rad.id || `hp-${index}`,
+      fran_afs: rad.fran_afs || '',
+      atgard: rad.atgard || '',
+      ansvarig: rad.ansvarig || '',
+      klart_datum: rad.klart_datum || '',
+    })),
+  }
+}
+
+export function riskbedomningFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    upprattare: t(form.upprattare) || null,
+    vd: t(form.vd) || null,
+    arbetstagarrepresentant: t(form.arbetstagarrepresentant) || null,
+  }
+}
+
+export function riskbedomningAfsToPayload(riskbedomningId, afsRader) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (afsRader || []).map((rad, index) => ({
+    riskbedomning_id: riskbedomningId,
+    sort_order: index,
+    afs_nummer: t(rad.afs_nummer) || null,
+    titel: t(rad.titel) || null,
+    tillamplig: t(rad.tillamplig) || null,
+    riskniva: t(rad.riskniva) || null,
+    ansvarig: t(rad.ansvarig) || null,
+    handlingsplan_nr: t(rad.handlingsplan_nr) || null,
+    datum: t(rad.datum) || null,
+  }))
+}
+
+export function riskbedomningHandlingsplanToPayload(riskbedomningId, handlingsplan) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (handlingsplan || []).map((rad, index) => ({
+    riskbedomning_id: riskbedomningId,
+    sort_order: index,
+    fran_afs: t(rad.fran_afs) || null,
+    atgard: t(rad.atgard) || null,
+    ansvarig: t(rad.ansvarig) || null,
+    klart_datum: t(rad.klart_datum) || null,
+  }))
+}

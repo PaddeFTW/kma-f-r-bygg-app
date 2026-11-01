@@ -581,3 +581,43 @@ export type UppfoljningMiljoRad = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 28 – Riskbedömning + Lagar */
+export type Riskbedomning = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  upprattare: string | null
+  vd: string | null
+  arbetstagarrepresentant: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type RiskbedomningAfs = {
+  id: string
+  riskbedomning_id: string
+  sort_order: number
+  afs_nummer: string | null
+  titel: string | null
+  tillamplig: 'ja' | 'nej' | string | null
+  riskniva: 'lag' | 'medel' | 'hog' | string | null
+  ansvarig: string | null
+  handlingsplan_nr: string | null
+  datum: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type RiskbedomningHandlingsplan = {
+  id: string
+  riskbedomning_id: string
+  sort_order: number
+  fran_afs: string | null
+  atgard: string | null
+  ansvarig: string | null
+  klart_datum: string | null
+  created_at: string
+  updated_at: string
+}

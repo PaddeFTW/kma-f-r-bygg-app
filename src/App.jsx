@@ -58,6 +58,8 @@ import UppfoljningKvalitetList from './pages/uppfoljning-kvalitet/UppfoljningKva
 import UppfoljningKvalitetDetail from './pages/uppfoljning-kvalitet/UppfoljningKvalitetDetail'
 import UppfoljningMiljoList from './pages/uppfoljning-miljo/UppfoljningMiljoList'
 import UppfoljningMiljoDetail from './pages/uppfoljning-miljo/UppfoljningMiljoDetail'
+import RiskbedomningList from './pages/riskbedomning/RiskbedomningList'
+import RiskbedomningDetail from './pages/riskbedomning/RiskbedomningDetail'
 
 export default function App() {
   return (
@@ -436,6 +438,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <UppfoljningMiljoDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/riskbedomning"
+                element={
+                  <ProtectedRoute>
+                    <RiskbedomningList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/riskbedomning/:id"
+                element={
+                  <ProtectedRoute>
+                    <RiskbedomningDetail />
                   </ProtectedRoute>
                 }
               />
