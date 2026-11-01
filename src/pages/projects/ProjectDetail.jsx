@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined'
 import VerticalLayout from '../../layouts/VerticalLayout'
 import NextStep from '../../components/NextStep'
 import { supabase } from '../../lib/supabase'
@@ -168,6 +169,34 @@ export default function ProjectDetail() {
             <ProjectClientSection projectId={item.id} companyId={item.company_id} />
 
             <ProjectSubcontractorsSection projectId={item.id} companyId={item.company_id} />
+
+            <Card>
+              <CardContent sx={{ p: 4, '&:last-child': { pb: 4 } }}>
+                <Stack
+                  direction={{ xs: 'column', sm: 'row' }}
+                  spacing={2}
+                  alignItems={{ sm: 'center' }}
+                  justifyContent="space-between"
+                >
+                  <Box>
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      Export & delning
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Välj flikar, ladda ner PDF/Word eller skapa delningslänk och inbjudan.
+                    </Typography>
+                  </Box>
+                  <Button
+                    component={RouterLink}
+                    to={`/projekt/${item.id}/export`}
+                    variant="contained"
+                    startIcon={<IosShareOutlinedIcon />}
+                  >
+                    Öppna export
+                  </Button>
+                </Stack>
+              </CardContent>
+            </Card>
 
             {showNextStep && (
               <NextStep
