@@ -12,16 +12,19 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  MenuItem,
   Stack,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined'
 import VerticalLayout from '../../layouts/VerticalLayout'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
@@ -29,7 +32,13 @@ import {
   emptyProjectForm,
   isProjectFormValid,
   projectFormToPayload,
+  projectToForm,
 } from '../../lib/types'
+import {
+  applyProjectTemplate,
+  listTemplates,
+  templateScopeLabel,
+} from '../../lib/projectTemplates'
 import ProjectFormFields from './ProjectFormFields'
 
 export default function ProjectsList() {
@@ -37,10 +46,12 @@ export default function ProjectsList() {
   const navigate = useNavigate()
   const [company, setCompany] = useState(null)
   const [items, setItems] = useState([])
+  const [templates, setTemplates] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState(emptyProjectForm)
+  const [templateId, setTemplateId] = useState('')
   const [saving, setSaving] = useState(false)
 
   const load = async () => {
@@ -57,6 +68,7 @@ export default function ProjectsList() {
       setError(companyError.message)
       setCompany(null)
       setItems([])
+      setTemplates([])
       setLoading(false)
       return
     }
@@ -65,24 +77,29 @@ export default function ProjectsList() {
 
     if (!companyData) {
       setItems([])
+      setTemplates([])
       setLoading(false)
       return
     }
 
-    const { data, error: fetchError } = await supabase
-      .from('projects')
-      .select(
-        `
+    const [{ data, error: fetchError }, projectTemplates] = await Promise.all([
+      supabase
+        .from('projects')
+        .select(
+          `
         *,
         project_clients ( contact_name, ceo_name ),
         project_subcontractors ( id )
       `,
-      )
-      .eq('company_id', companyData.id)
-      .order('created_at', { ascending: false })
+        )
+        .eq('company_id', companyData.id)
+        .order('created_at', { ascending: false }),
+      listTemplates(companyData.id, { scope: 'project' }).catch(() => []),
+    ])
 
     if (fetchError) setError(fetchError.message)
     else setItems(data || [])
+    setTemplates(projectTemplates || [])
     setLoading(false)
   }
 
@@ -94,6 +111,22 @@ export default function ProjectsList() {
     setForm((prev) => ({ ...prev, [field]: event.target.value }))
   }
 
+  const handleTemplateChange = (event) => {
+    const id = event.target.value
+    setTemplateId(id)
+    if (!id) return
+    const template = templates.find((t) => t.id === id)
+    const flik1 = template?.payload?.sections?.find((s) => s.flik_nr === 1)
+    const source = flik1?.records?.[0]
+    if (source) {
+      const next = projectToForm(source)
+      if (next.property_designation) {
+        next.property_designation = `${next.property_designation} (från mall)`
+      }
+      setForm(next)
+    }
+  }
+
   const handleCreate = async (event) => {
     event.preventDefault()
     if (!company?.id || !isProjectFormValid(form)) return
@@ -101,27 +134,44 @@ export default function ProjectsList() {
     setSaving(true)
     setError('')
 
-    const { data, error: insertError } = await supabase
-      .from('projects')
-      .insert({
-        user_id: user.id,
-        company_id: company.id,
-        ...projectFormToPayload(form),
-        guided_answers: {},
-      })
-      .select()
-      .single()
+    try {
+      if (templateId) {
+        const template = templates.find((t) => t.id === templateId)
+        if (!template) throw new Error('Mallen hittades inte.')
+        const project = await applyProjectTemplate(template, {
+          userId: user.id,
+          companyId: company.id,
+          projectOverrides: form,
+        })
+        setOpen(false)
+        setForm({ ...emptyProjectForm })
+        setTemplateId('')
+        navigate(`/projects/${project.id}`, { state: { justCreated: true } })
+        return
+      }
 
-    setSaving(false)
+      const { data, error: insertError } = await supabase
+        .from('projects')
+        .insert({
+          user_id: user.id,
+          company_id: company.id,
+          ...projectFormToPayload(form),
+          guided_answers: {},
+        })
+        .select()
+        .single()
 
-    if (insertError) {
-      setError(insertError.message)
-      return
+      if (insertError) throw new Error(insertError.message)
+
+      setOpen(false)
+      setForm({ ...emptyProjectForm })
+      setTemplateId('')
+      navigate(`/projects/${data.id}`, { state: { justCreated: true } })
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSaving(false)
     }
-
-    setOpen(false)
-    setForm({ ...emptyProjectForm })
-    navigate(`/projects/${data.id}`, { state: { justCreated: true } })
   }
 
   const handleDelete = async (id) => {
@@ -171,17 +221,29 @@ export default function ProjectsList() {
               Projektstart Flik 1–4: beskrivning, roller, beställare och underleverantörer
             </Typography>
           </Box>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => {
-              setForm({ ...emptyProjectForm })
-              setOpen(true)
-            }}
-            disabled={!company}
-          >
-            Nytt projekt
-          </Button>
+          <Stack direction="row" spacing={1.5} flexWrap="wrap">
+            <Button
+              component={RouterLink}
+              to="/templates"
+              variant="outlined"
+              startIcon={<BookmarkBorderOutlinedIcon />}
+              disabled={!company}
+            >
+              Mallar
+            </Button>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => {
+                setForm({ ...emptyProjectForm })
+                setTemplateId('')
+                setOpen(true)
+              }}
+              disabled={!company}
+            >
+              Nytt projekt
+            </Button>
+          </Stack>
         </Box>
 
         {error && <Alert severity="error">{error}</Alert>}
@@ -283,9 +345,30 @@ export default function ProjectsList() {
           <DialogTitle>Nytt projekt – Flik 1 Projektbeskrivning</DialogTitle>
           <DialogContent>
             <Typography color="text.secondary" sx={{ mb: 2 }}>
-              Fyll i grunddata. Kontaktfält för huvudparter är obligatoriska. Roller läggs till i
-              nästa steg.
+              Fyll i grunddata. Du kan starta från en företagsmall. Kontaktfält för huvudparter är
+              obligatoriska.
             </Typography>
+            <Stack spacing={2} sx={{ mb: 2 }}>
+              <TextField
+                select
+                label="Starta från mall (valfritt)"
+                value={templateId}
+                onChange={handleTemplateChange}
+                fullWidth
+                helperText={
+                  templates.length
+                    ? 'Projektmallar kopierar Flik 1 och övriga sparade flikar.'
+                    : 'Inga projektmallar sparade ännu.'
+                }
+              >
+                <MenuItem value="">Ingen mall – tomt projekt</MenuItem>
+                {templates.map((t) => (
+                  <MenuItem key={t.id} value={t.id}>
+                    {t.name} ({templateScopeLabel(t)})
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Stack>
             <ProjectFormFields form={form} onChange={handleChange} />
           </DialogContent>
           <DialogActions sx={{ px: 3, pb: 2 }}>

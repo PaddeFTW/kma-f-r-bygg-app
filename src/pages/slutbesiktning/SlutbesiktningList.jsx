@@ -25,6 +25,8 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import VerticalLayout from '../../layouts/VerticalLayout'
+import FlikTemplateSelect from '../../components/templates/FlikTemplateSelect'
+import { applyFlikTemplate, listTemplates } from '../../lib/projectTemplates'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
 
@@ -43,6 +45,7 @@ export default function SlutbesiktningList() {
   const [projectId, setProjectId] = useState('')
   const [namn, setNamn] = useState('')
   const [saving, setSaving] = useState(false)
+  const [templateId, setTemplateId] = useState('')
 
   const projectLabel = useMemo(() => {
     const map = new Map(projects.map((p) => [p.id, p.property_designation]))
@@ -121,6 +124,30 @@ export default function SlutbesiktningList() {
     setSaving(true)
     setError('')
 
+    if (templateId) {
+      try {
+        const templates = await listTemplates(company.id, { scope: 'flik', flikNr: 24 })
+        const template = templates.find((t) => t.id === templateId)
+        if (!template) throw new Error('Mallen hittades inte.')
+        const result = await applyFlikTemplate(template, {
+          userId: user.id,
+          companyId: company.id,
+          projectId,
+        })
+        setOpen(false)
+        setProjectId('')
+        setTemplateId('')
+        if (result.firstId) navigate(`/slutbesiktning/${result.firstId}`)
+        else navigate('/slutbesiktning')
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setSaving(false)
+      }
+      return
+    }
+
+
     const { data, error: insertError } = await supabase
       .from('slutbesiktning')
       .insert({
@@ -160,6 +187,7 @@ export default function SlutbesiktningList() {
   const openCreate = () => {
     setProjectId(filterProjectId || '')
     setNamn('')
+    setTemplateId('')
     setOpen(true)
   }
 
@@ -315,6 +343,13 @@ export default function SlutbesiktningList() {
                   </MenuItem>
                 ))}
               </TextField>
+              <FlikTemplateSelect
+                companyId={company?.id}
+                flikNr={24}
+                value={templateId}
+                onChange={setTemplateId}
+                disabled={saving}
+              />
               <TextField
                 label="Namn"
                 value={namn}

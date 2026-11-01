@@ -12,8 +12,11 @@ import {
 } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined'
+import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined'
 import VerticalLayout from '../../layouts/VerticalLayout'
 import NextStep from '../../components/NextStep'
+import SaveAsTemplateDialog from '../../components/templates/SaveAsTemplateDialog'
+import SaveFlikAsTemplateButton from '../../components/templates/SaveFlikAsTemplateButton'
 import { ContactListProvider, useContactList } from '../../context/ContactListContext'
 import useSaveToContactList from '../../hooks/useSaveToContactList'
 import { supabase } from '../../lib/supabase'
@@ -65,6 +68,8 @@ function ProjectDetailInner({ projectId }) {
   const [saved, setSaved] = useState(false)
   const [showNextStep, setShowNextStep] = useState(Boolean(location.state?.justCreated))
   const [ampRequired, setAmpRequired] = useState(false)
+  const [templateOpen, setTemplateOpen] = useState(false)
+  const [templateSaved, setTemplateSaved] = useState(false)
   const handleAmpRequiredChange = useCallback((value) => setAmpRequired(Boolean(value)), [])
 
   const { offerSave, dialog: contactDialog } = useSaveToContactList(item?.company_id, {
@@ -194,9 +199,18 @@ function ProjectDetailInner({ projectId }) {
                   <ProjectFormFields form={form} onChange={handleChange} />
 
                   <Stack direction="row" spacing={1.5} justifyContent="space-between" flexWrap="wrap">
-                    <Button color="error" variant="outlined" onClick={handleDelete} disabled={saving}>
-                      Ta bort
-                    </Button>
+                    <Stack direction="row" spacing={1.5} flexWrap="wrap">
+                      <Button color="error" variant="outlined" onClick={handleDelete} disabled={saving}>
+                        Ta bort
+                      </Button>
+                      <SaveFlikAsTemplateButton
+                        companyId={item.company_id}
+                        projectId={item.id}
+                        projectLabel={item.property_designation}
+                        flikNr={1}
+                        disabled={saving}
+                      />
+                    </Stack>
                     <Button
                       type="submit"
                       variant="contained"
@@ -225,31 +239,57 @@ function ProjectDetailInner({ projectId }) {
 
             <Card>
               <CardContent sx={{ p: 4, '&:last-child': { pb: 4 } }}>
-                <Stack
-                  direction={{ xs: 'column', sm: 'row' }}
-                  spacing={2}
-                  alignItems={{ sm: 'center' }}
-                  justifyContent="space-between"
-                >
-                  <Box>
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                      Export & delning
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Välj flikar, ladda ner PDF/Word eller skapa delningslänk och inbjudan.
-                    </Typography>
-                  </Box>
-                  <Button
-                    component={RouterLink}
-                    to={`/projekt/${item.id}/export`}
-                    variant="contained"
-                    startIcon={<IosShareOutlinedIcon />}
+                <Stack spacing={2}>
+                  {templateSaved && <Alert severity="success">Mallen är sparad.</Alert>}
+                  <Stack
+                    direction={{ xs: 'column', sm: 'row' }}
+                    spacing={2}
+                    alignItems={{ sm: 'center' }}
+                    justifyContent="space-between"
                   >
-                    Öppna export
-                  </Button>
+                    <Box>
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        Mallar & export
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Spara projektet som återanvändbar mall, eller exportera och dela valda
+                        flikar.
+                      </Typography>
+                    </Box>
+                    <Stack direction="row" spacing={1.5} flexWrap="wrap">
+                      <Button
+                        variant="outlined"
+                        startIcon={<BookmarkAddOutlinedIcon />}
+                        onClick={() => {
+                          setTemplateSaved(false)
+                          setTemplateOpen(true)
+                        }}
+                      >
+                        Spara som mall
+                      </Button>
+                      <Button
+                        component={RouterLink}
+                        to={`/projekt/${item.id}/export`}
+                        variant="contained"
+                        startIcon={<IosShareOutlinedIcon />}
+                      >
+                        Öppna export
+                      </Button>
+                    </Stack>
+                  </Stack>
                 </Stack>
               </CardContent>
             </Card>
+
+            <SaveAsTemplateDialog
+              open={templateOpen}
+              onClose={() => setTemplateOpen(false)}
+              onSaved={() => setTemplateSaved(true)}
+              companyId={item.company_id}
+              projectId={item.id}
+              projectLabel={item.property_designation}
+              mode="project"
+            />
 
             {showNextStep && (
               <NextStep

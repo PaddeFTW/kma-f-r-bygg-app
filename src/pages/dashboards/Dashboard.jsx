@@ -16,6 +16,7 @@ import {
 } from '@mui/material'
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined'
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
+import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined'
 import AddIcon from '@mui/icons-material/Add'
 import VerticalLayout from '../../layouts/VerticalLayout'
 import { useAuth } from '../../context/AuthContext'
@@ -135,6 +136,15 @@ export default function Dashboard() {
                 startIcon={<BusinessOutlinedIcon />}
               >
                 {company ? 'Redigera företag' : 'Skapa företag'}
+              </Button>
+              <Button
+                component={RouterLink}
+                to="/templates"
+                variant="outlined"
+                startIcon={<BookmarkBorderOutlinedIcon />}
+                disabled={!company}
+              >
+                Mallar
               </Button>
               <Button
                 component={RouterLink}
