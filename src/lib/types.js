@@ -1685,3 +1685,43 @@ export function checklistaByggparmRaderToPayload(checklistaId, rader) {
     datum: t(rad.datum) || null,
   }))
 }
+
+/** Flik 31 – Distribution och signering */
+export const emptyDistributionForm = {
+  parmstatus: '',
+  distributionslista: '',
+  bestallare: '',
+  bestallare_datum: '',
+  platschef: '',
+  platschef_datum: '',
+  bestallarens_ombud: '',
+  bestallarens_ombud_datum: '',
+}
+
+export function distributionToForm(row) {
+  if (!row) return { ...emptyDistributionForm }
+  return {
+    parmstatus: row.parmstatus || '',
+    distributionslista: row.distributionslista || '',
+    bestallare: row.bestallare || '',
+    bestallare_datum: row.bestallare_datum || '',
+    platschef: row.platschef || '',
+    platschef_datum: row.platschef_datum || '',
+    bestallarens_ombud: row.bestallarens_ombud || '',
+    bestallarens_ombud_datum: row.bestallarens_ombud_datum || '',
+  }
+}
+
+export function distributionFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    parmstatus: t(form.parmstatus) || null,
+    distributionslista: t(form.distributionslista) || null,
+    bestallare: t(form.bestallare) || null,
+    bestallare_datum: t(form.bestallare_datum) || null,
+    platschef: t(form.platschef) || null,
+    platschef_datum: t(form.platschef_datum) || null,
+    bestallarens_ombud: t(form.bestallarens_ombud) || null,
+    bestallarens_ombud_datum: t(form.bestallarens_ombud_datum) || null,
+  }
+}

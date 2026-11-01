@@ -64,6 +64,8 @@ import KvitteringList from './pages/kvittering/KvitteringList'
 import KvitteringDetail from './pages/kvittering/KvitteringDetail'
 import ChecklistaByggparmList from './pages/checklista-byggparm/ChecklistaByggparmList'
 import ChecklistaByggparmDetail from './pages/checklista-byggparm/ChecklistaByggparmDetail'
+import DistributionList from './pages/distribution/DistributionList'
+import DistributionDetail from './pages/distribution/DistributionDetail'
 
 export default function App() {
   return (
@@ -490,6 +492,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <ChecklistaByggparmDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/distribution"
+                element={
+                  <ProtectedRoute>
+                    <DistributionList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/distribution/:id"
+                element={
+                  <ProtectedRoute>
+                    <DistributionDetail />
                   </ProtectedRoute>
                 }
               />

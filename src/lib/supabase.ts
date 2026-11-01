@@ -671,3 +671,21 @@ export type ChecklistaByggparmRad = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 31 – Distribution och signering */
+export type DistributionSignering = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  parmstatus: string | null
+  distributionslista: string | null
+  bestallare: string | null
+  bestallare_datum: string | null
+  platschef: string | null
+  platschef_datum: string | null
+  bestallarens_ombud: string | null
+  bestallarens_ombud_datum: string | null
+  created_at: string
+  updated_at: string
+}
