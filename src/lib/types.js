@@ -1543,3 +1543,60 @@ export function riskbedomningHandlingsplanToPayload(riskbedomningId, handlingspl
     klart_datum: t(rad.klart_datum) || null,
   }))
 }
+
+/** Flik 29 – Kvitteringslistor */
+export const emptyKvitteringRad = (kategori = 'anstalld') => ({
+  _key: `kv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  kategori,
+  namn: '',
+  datum: '',
+  signatur: '',
+})
+
+export const emptyKvitteringForm = {
+  dokument_amp: true,
+  dokument_riskbedomning: true,
+  dokument_ordningsregler: true,
+  anstallda: [],
+  ue: [],
+}
+
+export function kvitteringToForm(row, rader = []) {
+  if (!row) return { ...emptyKvitteringForm, anstallda: [], ue: [] }
+  const mapped = (rader || []).map((rad, index) => ({
+    _key: rad.id || `kv-${index}`,
+    kategori: rad.kategori || 'anstalld',
+    namn: rad.namn || '',
+    datum: rad.datum || '',
+    signatur: rad.signatur || '',
+  }))
+  return {
+    dokument_amp: Boolean(row.dokument_amp),
+    dokument_riskbedomning: Boolean(row.dokument_riskbedomning),
+    dokument_ordningsregler: Boolean(row.dokument_ordningsregler),
+    anstallda: mapped.filter((rad) => rad.kategori === 'anstalld'),
+    ue: mapped.filter((rad) => rad.kategori === 'ue'),
+  }
+}
+
+export function kvitteringFormToPayload(form) {
+  return {
+    dokument_amp: Boolean(form.dokument_amp),
+    dokument_riskbedomning: Boolean(form.dokument_riskbedomning),
+    dokument_ordningsregler: Boolean(form.dokument_ordningsregler),
+  }
+}
+
+export function kvitteringRaderToPayload(kvitteringId, form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  const anstallda = (form.anstallda || []).map((rad) => ({ ...rad, kategori: 'anstalld' }))
+  const ue = (form.ue || []).map((rad) => ({ ...rad, kategori: 'ue' }))
+  return [...anstallda, ...ue].map((rad, index) => ({
+    kvittering_id: kvitteringId,
+    sort_order: index,
+    kategori: rad.kategori,
+    namn: t(rad.namn) || null,
+    datum: t(rad.datum) || null,
+    signatur: t(rad.signatur) || null,
+  }))
+}

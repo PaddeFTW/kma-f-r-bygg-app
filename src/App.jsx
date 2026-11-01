@@ -60,6 +60,8 @@ import UppfoljningMiljoList from './pages/uppfoljning-miljo/UppfoljningMiljoList
 import UppfoljningMiljoDetail from './pages/uppfoljning-miljo/UppfoljningMiljoDetail'
 import RiskbedomningList from './pages/riskbedomning/RiskbedomningList'
 import RiskbedomningDetail from './pages/riskbedomning/RiskbedomningDetail'
+import KvitteringList from './pages/kvittering/KvitteringList'
+import KvitteringDetail from './pages/kvittering/KvitteringDetail'
 
 export default function App() {
   return (
@@ -454,6 +456,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <RiskbedomningDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/kvittering"
+                element={
+                  <ProtectedRoute>
+                    <KvitteringList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/kvittering/:id"
+                element={
+                  <ProtectedRoute>
+                    <KvitteringDetail />
                   </ProtectedRoute>
                 }
               />

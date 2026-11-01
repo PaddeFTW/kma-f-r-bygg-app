@@ -621,3 +621,30 @@ export type RiskbedomningHandlingsplan = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 29 – Kvitteringslistor */
+export type KvitteringKategori = 'anstalld' | 'ue'
+
+export type Kvitteringslista = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  dokument_amp: boolean
+  dokument_riskbedomning: boolean
+  dokument_ordningsregler: boolean
+  created_at: string
+  updated_at: string
+}
+
+export type KvitteringRad = {
+  id: string
+  kvittering_id: string
+  sort_order: number
+  kategori: KvitteringKategori | string
+  namn: string | null
+  datum: string | null
+  signatur: string | null
+  created_at: string
+  updated_at: string
+}

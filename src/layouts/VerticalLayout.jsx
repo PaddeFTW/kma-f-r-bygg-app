@@ -41,6 +41,7 @@ import MonitorHeartOutlinedIcon from '@mui/icons-material/MonitorHeartOutlined'
 import WorkspacePremiumOutlinedIcon from '@mui/icons-material/WorkspacePremiumOutlined'
 import EnergySavingsLeafOutlinedIcon from '@mui/icons-material/EnergySavingsLeafOutlined'
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined'
+import HowToRegOutlinedIcon from '@mui/icons-material/HowToRegOutlined'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -76,6 +77,7 @@ const menuItems = [
   { text: 'Uppföljning Kvalitet', path: '/uppfoljning-kvalitet', icon: <WorkspacePremiumOutlinedIcon /> },
   { text: 'Uppföljning Miljö', path: '/uppfoljning-miljo', icon: <EnergySavingsLeafOutlinedIcon /> },
   { text: 'Riskbedömning', path: '/riskbedomning', icon: <GavelOutlinedIcon /> },
+  { text: 'Kvittering', path: '/kvittering', icon: <HowToRegOutlinedIcon /> },
 ]
 
 export default function VerticalLayout({ children }) {
