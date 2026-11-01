@@ -3,7 +3,7 @@
 -- Kör i Supabase SQL Editor efter 030_flik31_distribution_signering.sql.
 -- Kräver pgcrypto för lösenordshash (bcrypt).
 
-create extension if not exists pgcrypto;
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;
 
 -- Snapshot-baserad delning: mottagare får aldrig live-läsning via RLS på övriga tabeller.
 create table if not exists public.project_shares (
@@ -175,7 +175,7 @@ begin
     if p_password is null or p_password = '' then
       return jsonb_build_object('ok', false, 'error', 'password_required', 'needs_password', true);
     end if;
-    if s.password_hash <> crypt(p_password, s.password_hash) then
+    if s.password_hash <> extensions.crypt(p_password, s.password_hash) then
       return jsonb_build_object('ok', false, 'error', 'Fel lösenord', 'needs_password', true);
     end if;
   end if;
@@ -247,7 +247,7 @@ begin
   end if;
 
   if s.password_hash is not null then
-    if p_password is null or s.password_hash <> crypt(p_password, s.password_hash) then
+    if p_password is null or s.password_hash <> extensions.crypt(p_password, s.password_hash) then
       return jsonb_build_object('ok', false, 'error', 'Fel lösenord');
     end if;
   end if;
@@ -279,7 +279,7 @@ set search_path = public
 as $$
   select case
     when p_password is null or length(trim(p_password)) = 0 then null
-    else crypt(trim(p_password), gen_salt('bf'))
+    else extensions.crypt(trim(p_password), extensions.gen_salt('bf'))
   end;
 $$;
 
