@@ -5,12 +5,16 @@ import {
   InputAdornment,
   MenuItem,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material'
 import AttachFileIcon from '@mui/icons-material/AttachFile'
 import LinkIcon from '@mui/icons-material/Link'
 import { BYGGHANDLING_TYP_OPTIONS } from '../../lib/types'
+import { SectionHeader, GuidedTextField } from '../../components/forms'
+
+function SectionTitle({ children, helper, why }) {
+  return <SectionHeader helper={helper} why={why} asGridItem={false}>{children}</SectionHeader>
+}
 
 export default function BygghandlingFormFields({
   form,
@@ -23,22 +27,24 @@ export default function BygghandlingFormFields({
   return (
     <Stack spacing={3}>
       <Box>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5 }}>
+        <SectionTitle
+          helper="Placeholder för ritningar, relationsritningar och övriga bygghandlingar."
+          why="Tydliga handlingar gör det enklare att hitta rätt underlag vid produktion, kontroll och överlämning."
+        >
           Handling
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          Placeholder för ritningar, relationsritningar och övriga bygghandlingar.
-        </Typography>
+        </SectionTitle>
         <Stack spacing={2}>
-          <TextField
+          <GuidedTextField
+            helpKey="bygghandling_namn"
             label="Namn"
             value={form.namn}
             onChange={onChange('namn')}
             required
             fullWidth
           />
-          <TextField
+          <GuidedTextField
             select
+            helpKey="bygghandling_typ"
             label="Typ"
             value={form.typ}
             onChange={onChange('typ')}
@@ -50,32 +56,36 @@ export default function BygghandlingFormFields({
                 {opt.label}
               </MenuItem>
             ))}
-          </TextField>
-          <TextField
+          </GuidedTextField>
+          <GuidedTextField
             label="Beskrivning"
             value={form.beskrivning}
             onChange={onChange('beskrivning')}
             fullWidth
             multiline
             minRows={3}
+            tooltip="Kort beskrivning av vad handlingen innehåller eller när den ska användas."
+            why="Beskrivningen hjälper andra att förstå handlingens syfte utan att öppna filen."
           />
         </Stack>
       </Box>
 
       <Box>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5 }}>
+        <SectionTitle
+          helper="Ladda upp en fil till arkivet eller ange en extern länk."
+          why="Fil eller länk gör att rätt version av handlingen kan följas upp och delas."
+        >
           Fil eller länk
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          Ladda upp en fil till arkivet eller ange en extern länk.
-        </Typography>
+        </SectionTitle>
         <Stack spacing={2}>
-          <TextField
+          <GuidedTextField
             label="Extern länk"
             value={form.file_url}
             onChange={onChange('file_url')}
             fullWidth
             placeholder="https://…"
+            tooltip="Ange en webblänk om handlingen ligger i ett externt system."
+            why="Externa länkar gör det möjligt att samla referenser även när filen inte laddas upp i pärmen."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

@@ -15,19 +15,14 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { KONTROLLPLAN_UTFOR_AV_OPTIONS } from '../../lib/types'
+import { SectionHeader, GuidedTextField, SuggestionAutocomplete } from '../../components/forms'
+import { SUGGESTIONS } from '../../lib/formHelp'
 
-function SectionTitle({ children, helper }) {
+function SectionTitle({ children, helper, why }) {
   return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
+    <SectionHeader helper={helper} why={why}>
+      {children}
+    </SectionHeader>
   )
 }
 
@@ -56,11 +51,15 @@ export default function KontrollplanFormFields({
         />
       </Grid>
 
-      <SectionTitle helper="Kontrollansvarig ska vara certifierad enligt underlaget.">
+      <SectionTitle
+        helper="Kontrollansvarig ska vara certifierad enligt underlaget."
+        why="Parterna i kontrollplanen måste vara spårbara vid tillsyn och slutbesked."
+      >
         Parter
       </SectionTitle>
       <Grid item xs={12} md={4}>
-        <TextField
+        <GuidedTextField
+          helpKey="kontrollansvarig"
           label="Kontrollansvarig (certifierad)"
           value={form.kontrollansvarig}
           onChange={onChange('kontrollansvarig')}
@@ -68,11 +67,12 @@ export default function KontrollplanFormFields({
         />
       </Grid>
       <Grid item xs={12} md={4}>
-        <TextField
+        <SuggestionAutocomplete
           label="Byggherre"
           value={form.byggherre}
-          onChange={onChange('byggherre')}
-          fullWidth
+          onChangeField={onChange('byggherre')}
+          options={SUGGESTIONS.kontaktroller}
+          helpKey="client_name"
         />
       </Grid>
       <Grid item xs={12} md={4}>

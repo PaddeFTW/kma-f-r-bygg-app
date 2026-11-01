@@ -66,6 +66,8 @@ import ChecklistaByggparmList from './pages/checklista-byggparm/ChecklistaByggpa
 import ChecklistaByggparmDetail from './pages/checklista-byggparm/ChecklistaByggparmDetail'
 import DistributionList from './pages/distribution/DistributionList'
 import DistributionDetail from './pages/distribution/DistributionDetail'
+import ProjectExportPage from './pages/export/ProjectExportPage'
+import ShareViewPage from './pages/export/ShareViewPage'
 
 export default function App() {
   return (
@@ -78,6 +80,7 @@ export default function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/dela/:token" element={<ShareViewPage />} />
 
               <Route
                 path="/"
@@ -108,6 +111,22 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <ProjectDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/projekt/:id/export"
+                element={
+                  <ProtectedRoute>
+                    <ProjectExportPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/projects/:id/export"
+                element={
+                  <ProtectedRoute>
+                    <ProjectExportPage />
                   </ProtectedRoute>
                 }
               />

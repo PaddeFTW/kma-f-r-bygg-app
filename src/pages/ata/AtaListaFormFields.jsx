@@ -1,19 +1,16 @@
-import { Grid, MenuItem, TextField, Typography } from '@mui/material'
+import { Grid, MenuItem, TextField } from '@mui/material'
+import { SectionHeader, GuidedTextField } from '../../components/forms'
+import { JA_NEJ_OPTIONS } from '../../lib/formHelp'
 
-function SectionTitle({ children, helper }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
-  )
+function SectionTitle({ children, helper, why }) {
+  return <SectionHeader helper={helper} why={why}>{children}</SectionHeader>
 }
+
+const BESTALLD_OPTIONS = [
+  { value: '', label: 'Välj…' },
+  { value: 'ja', label: 'Beställd' },
+  { value: 'nej', label: 'Icke beställd' },
+]
 
 /**
  * Flik 16 – ÄTA-lista.
@@ -22,7 +19,12 @@ function SectionTitle({ children, helper }) {
 export default function AtaListaFormFields({ form, onChange }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Lista för uppföljning av ÄTA.">ÄTA-lista</SectionTitle>
+      <SectionTitle
+        helper="Lista för uppföljning av ÄTA."
+        why="Listan samlar status för beställning, summa och fakturering så att inget tappas bort."
+      >
+        ÄTA-lista
+      </SectionTitle>
       <Grid item xs={12} md={4}>
         <TextField
           label="Nr"
@@ -51,7 +53,8 @@ export default function AtaListaFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          helpKey="ata_beskrivning"
           label="Beskrivning"
           value={form.beskrivning}
           onChange={onChange('beskrivning')}
@@ -61,30 +64,36 @@ export default function AtaListaFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
           select
+          helpKey="ata_bestalld"
           label="Beställd/icke"
           value={form.bestalld}
           onChange={onChange('bestalld')}
           fullWidth
         >
-          <MenuItem value="">—</MenuItem>
-          <MenuItem value="ja">Beställd</MenuItem>
-          <MenuItem value="nej">Icke beställd</MenuItem>
-        </TextField>
+          {BESTALLD_OPTIONS.map((opt) => (
+            <MenuItem key={opt.value || 'empty'} value={opt.value}>
+              {opt.label}
+            </MenuItem>
+          ))}
+        </GuidedTextField>
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
           select
+          helpKey="ata_fakturerad"
           label="Fakturerad"
           value={form.fakturerad}
           onChange={onChange('fakturerad')}
           fullWidth
         >
-          <MenuItem value="">—</MenuItem>
-          <MenuItem value="ja">Ja</MenuItem>
-          <MenuItem value="nej">Nej</MenuItem>
-        </TextField>
+          {JA_NEJ_OPTIONS.map((opt) => (
+            <MenuItem key={opt.value || 'empty'} value={opt.value}>
+              {opt.label}
+            </MenuItem>
+          ))}
+        </GuidedTextField>
       </Grid>
     </Grid>
   )

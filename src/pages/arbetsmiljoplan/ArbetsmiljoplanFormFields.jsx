@@ -1,28 +1,32 @@
 import {
   Alert,
   Checkbox,
+  Chip,
   Grid,
+  Link,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import {
+  KB_AFS_2023_3_URL,
+  getRiskHelper,
+  rowsRequireAmp,
+} from '../../lib/sarskildaRisker'
 
-function SectionTitle({ children, helper }) {
+import { SectionHeader, GuidedTextField } from '../../components/forms'
+
+function SectionTitle({ children, helper, why, showKbLink }) {
   return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
+    <SectionHeader helper={helper} why={why} showKbLink={showKbLink}>
+      {children}
+    </SectionHeader>
   )
 }
 
@@ -37,14 +41,85 @@ const ORDNINGSREGLER = [
 
 /**
  * Flik 7 – Arbetsmiljöplan.
- * Avsnitt enligt docs/kma-underlag/flikar-05-07-planer.md.
+ * Avsnitt enligt docs/kma-underlag/flikar-05-07-planer.md + AFS 2023:3 särskilda risker.
  */
-export default function ArbetsmiljoplanFormFields({ form, onChange, onCheckboxChange }) {
+export default function ArbetsmiljoplanFormFields({
+  form,
+  onChange,
+  onCheckboxChange,
+  sarskildaRisker = [],
+}) {
+  const ampRequired = rowsRequireAmp(sarskildaRisker)
+  const jaRisker = (sarskildaRisker || []).filter((r) => r.svar === 'ja')
+
   return (
     <Grid container spacing={2}>
-      <SectionTitle>Arbetsmiljöpolicy</SectionTitle>
+      {ampRequired ? (
+        <Grid item xs={12}>
+          <Alert
+            severity="warning"
+            action={<Chip size="small" color="warning" label="AMP krävs" />}
+          >
+            Projektet har särskilda risker markerade Ja (AFS 2023:3 11 kap. 12 §). Avsnittet
+            riskbedömning förifylls från checklistan.{' '}
+            <Link href={KB_AFS_2023_3_URL} target="_blank" rel="noopener noreferrer">
+              Knowledge base
+            </Link>
+          </Alert>
+        </Grid>
+      ) : null}
+
+      {jaRisker.length > 0 ? (
+        <>
+          <SectionTitle helper="Hämtas från projektets 13-punktschecklista.">
+            Särskilda risker som kräver AMP
+          </SectionTitle>
+          <Grid item xs={12}>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell width={48}>Nr</TableCell>
+                  <TableCell>Risk</TableCell>
+                  <TableCell>Åtgärd</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {jaRisker.map((row) => {
+                  const meta = getRiskHelper(row.punkt_nr)
+                  return (
+                    <TableRow key={row.punkt_nr}>
+                      <TableCell>{row.punkt_nr}</TableCell>
+                      <TableCell>
+                        <Typography variant="body2" component="span" sx={{ mr: 0.5 }}>
+                          {row.benamning}
+                        </Typography>
+                        {meta ? (
+                          <Tooltip title={`${meta.helper} Förslag: ${meta.atgard_forslag}`} arrow>
+                            <InfoOutlinedIcon
+                              sx={{ fontSize: 16, color: 'text.disabled', verticalAlign: 'middle' }}
+                            />
+                          </Tooltip>
+                        ) : null}
+                      </TableCell>
+                      <TableCell>{row.atgard || meta?.atgard_forslag || '—'}</TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </Grid>
+        </>
+      ) : null}
+
+      <SectionTitle
+        why="Policyn är kärnan i AMP och visar Bas-P/Bas-U-ansvaret."
+        showKbLink
+      >
+        Arbetsmiljöpolicy
+      </SectionTitle>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          helpKey="arbetsmiljopolicy"
           label="Arbetsmiljöpolicy"
           value={form.arbetsmiljopolicy}
           onChange={onChange('arbetsmiljopolicy')}
@@ -54,14 +129,18 @@ export default function ArbetsmiljoplanFormFields({ form, onChange, onCheckboxCh
         />
       </Grid>
 
-      <SectionTitle helper="Uppföljning sker via skyddsronder (Flik 21).">
+      <SectionTitle
+        helper="Uppföljning sker via skyddsronder (Flik 21)."
+        why="Skyddsronderna är beviset att AMP följs upp ute på plats."
+      >
         Uppföljning via skyddsronder
       </SectionTitle>
       <Grid item xs={12}>
         <Alert severity="info" sx={{ mb: 1 }}>
           Hänvisar till skyddsrond (Flik 21) när den finns.
         </Alert>
-        <TextField
+        <GuidedTextField
+          helpKey="skyddsrond"
           label="Uppföljning via skyddsronder"
           value={form.uppfoljning_skyddsronder}
           onChange={onChange('uppfoljning_skyddsronder')}
@@ -109,9 +188,13 @@ export default function ArbetsmiljoplanFormFields({ form, onChange, onCheckboxCh
         />
       </Grid>
 
-      <SectionTitle>Samordning med underentreprenörer</SectionTitle>
+      <SectionTitle why="UE måste få samma AMP-krav och ordningsregler som egna anställda.">
+        Samordning med underentreprenörer
+      </SectionTitle>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          tooltip="Hur Bas-U samordnar UE kring AMP, ordningsregler och skyddsronder."
+          why="Samordningen minskar gränssnittsrisker mellan entreprenörer."
           label="Samordning med underentreprenörer"
           value={form.samordning_ue}
           onChange={onChange('samordning_ue')}
@@ -137,10 +220,13 @@ export default function ArbetsmiljoplanFormFields({ form, onChange, onCheckboxCh
         />
       </Grid>
 
-      <SectionTitle>Riskbedömning och handlingsplan</SectionTitle>
+      <SectionTitle helper="Förifylls när särskilda risker är Ja. Detaljerad riskmatris finns i Flik 28.">
+        Riskbedömning och handlingsplan
+      </SectionTitle>
       <Grid item xs={12}>
         <Alert severity="info" sx={{ mb: 1 }}>
-          Hänvisar till riskbedömning och handlingsplan (Flik 28). Full modul byggs i ett senare steg.
+          Hänvisar till riskbedömning och handlingsplan (Flik 28). Texten ovan speglar AFS 2023:3
+          11 kap. 12 §.
         </Alert>
         <TextField
           label="Anteckningar till riskbedömning och handlingsplan"
@@ -148,7 +234,7 @@ export default function ArbetsmiljoplanFormFields({ form, onChange, onCheckboxCh
           onChange={onChange('riskbedomning_anteckningar')}
           fullWidth
           multiline
-          minRows={2}
+          minRows={ampRequired ? 5 : 2}
         />
       </Grid>
     </Grid>

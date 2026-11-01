@@ -12,6 +12,8 @@ import {
 } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VerticalLayout from '../../layouts/VerticalLayout'
+import NextStep from '../../components/NextStep'
+import useSaveToContactList from '../../hooks/useSaveToContactList'
 import { supabase } from '../../lib/supabase'
 import {
   emptyEgenkontrollUeForm,
@@ -30,6 +32,7 @@ export default function EgenkontrollUeDetail() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [saved, setSaved] = useState(false)
+  const { offerSave, dialog: contactDialog } = useSaveToContactList(item?.company_id)
 
   useEffect(() => {
     let mounted = true
@@ -112,6 +115,12 @@ export default function EgenkontrollUeDetail() {
     setItem(data)
     setForm(egenkontrollUeToForm(data))
     setSaved(true)
+
+    await offerSave({
+      name: form.underleverantor,
+      role: 'UE-kontakt',
+      company_name: form.underleverantor,
+    })
   }
 
   const handleDelete = async () => {
@@ -146,6 +155,7 @@ export default function EgenkontrollUeDetail() {
         ) : !item ? (
           <Alert severity="error">{error || 'Posten hittades inte.'}</Alert>
         ) : (
+          <>
           <Card>
             <CardContent sx={{ p: 5, '&:last-child': { pb: 5 } }}>
               <Stack component="form" spacing={4} onSubmit={handleSave}>
@@ -187,8 +197,15 @@ export default function EgenkontrollUeDetail() {
               </Stack>
             </CardContent>
           </Card>
+
+          {saved && (
+            <NextStep currentPath="/egenkontroll-ue" projectId={item.project_id} />
+          )}
+
+        </>
         )}
       </Stack>
+      {contactDialog}
     </VerticalLayout>
   )
 }

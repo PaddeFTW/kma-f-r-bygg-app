@@ -78,11 +78,16 @@ export type Project = {
   description: string | null
   /** Reserved for future guided Q&A flow */
   guided_answers: Record<string, unknown>
+  bas_overlamning_gjord?: boolean
+  bas_overlamning_datum?: string | null
+  bas_overlamning_from?: string | null
+  bas_overlamning_to?: string | null
+  bas_overlamning_anteckning?: string | null
   created_at: string
   updated_at: string
 }
 
-/** Flik 2 – Roller och ansvar */
+/** Flik 2 – Roller och ansvar (inkl. Bas-P/Bas-U kompetens) */
 export type ProjectRole = {
   id: string
   user_id: string
@@ -93,6 +98,40 @@ export type ProjectRole = {
   phone: string | null
   email: string | null
   responsibility_area: string | null
+  competence?: string | null
+  education?: string | null
+  cert_file_path?: string | null
+  cert_file_name?: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Företagets återanvändbara kontaktlista */
+export type CompanyContact = {
+  id: string
+  user_id: string
+  company_id: string
+  name: string
+  email: string | null
+  phone: string | null
+  company_name: string | null
+  role: string | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** AFS 2023:3 11 kap. 12 § – särskilda risker */
+export type ProjectSarskildRisk = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  sort_order: number
+  punkt_nr: number
+  benamning: string
+  svar: '' | 'ja' | 'nej'
+  atgard: string | null
   created_at: string
   updated_at: string
 }
@@ -688,4 +727,53 @@ export type DistributionSignering = {
   bestallarens_ombud_datum: string | null
   created_at: string
   updated_at: string
+}
+
+/** Export & delning – snapshot-baserad länk */
+export type ProjectShare = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  token: string
+  title: string | null
+  flik_nrs: number[]
+  can_read: boolean
+  can_sign: boolean
+  can_approve: boolean
+  password_hash: string | null
+  expires_at: string
+  revoked_at: string | null
+  snapshot: Record<string, unknown>
+  project_label: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type ProjectShareInvite = {
+  id: string
+  share_id: string
+  user_id: string
+  project_id: string
+  recipient_name: string | null
+  recipient_email: string
+  permission: 'read' | 'sign' | 'approve'
+  status: 'pending' | 'sent' | 'opened' | 'signed' | 'approved' | 'revoked'
+  message: string | null
+  sent_at: string | null
+  opened_at: string | null
+  completed_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type ProjectShareAction = {
+  id: string
+  share_id: string
+  invite_id: string | null
+  action: 'sign' | 'approve'
+  actor_name: string
+  actor_email: string | null
+  note: string | null
+  created_at: string
 }

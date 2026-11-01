@@ -1,20 +1,11 @@
-import { Alert, Grid, Link, MenuItem, TextField, Typography } from '@mui/material'
+import { Alert, Grid, Link, MenuItem, TextField } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
 import { contractForms } from '../../lib/types'
+import { SectionHeader, GuidedTextField, SuggestionAutocomplete } from '../../components/forms'
+import { SUGGESTIONS } from '../../lib/formHelp'
 
-function SectionTitle({ children, helper }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
-  )
+function SectionTitle({ children, helper, why }) {
+  return <SectionHeader helper={helper} why={why}>{children}</SectionHeader>
 }
 
 /**
@@ -24,9 +15,12 @@ function SectionTitle({ children, helper }) {
 export default function KvalitetsplanFormFields({ form, onChange, projectId }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle>Kvalitetspolicy</SectionTitle>
+      <SectionTitle why="Policyn visar hur kvalitet styrs och följs upp i projektet.">
+        Kvalitetspolicy
+      </SectionTitle>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          helpKey="kvalitetspolicy"
           label="Kvalitetspolicy"
           value={form.kvalitetspolicy}
           onChange={onChange('kvalitetspolicy')}
@@ -36,7 +30,12 @@ export default function KvalitetsplanFormFields({ form, onChange, projectId }) {
         />
       </Grid>
 
-      <SectionTitle helper="Allmän info, entreprenadform, art och tidplan.">Orientering</SectionTitle>
+      <SectionTitle
+        helper="Allmän info, entreprenadform, art och tidplan."
+        why="Orienteringen knyter ihop projektets art med kontroll och tidplan."
+      >
+        Orientering
+      </SectionTitle>
       <Grid item xs={12}>
         <TextField
           label="Allmän info"
@@ -48,8 +47,9 @@ export default function KvalitetsplanFormFields({ form, onChange, projectId }) {
         />
       </Grid>
       <Grid item xs={12} md={4}>
-        <TextField
+        <GuidedTextField
           select
+          helpKey="contract_form"
           label="Entreprenadform"
           value={form.orientering_entreprenadform}
           onChange={onChange('orientering_entreprenadform')}
@@ -63,14 +63,15 @@ export default function KvalitetsplanFormFields({ form, onChange, projectId }) {
               {value}
             </MenuItem>
           ))}
-        </TextField>
+        </GuidedTextField>
       </Grid>
       <Grid item xs={12} md={4}>
-        <TextField
+        <SuggestionAutocomplete
           label="Art"
           value={form.orientering_art}
-          onChange={onChange('orientering_art')}
-          fullWidth
+          onChangeField={onChange('orientering_art')}
+          options={SUGGESTIONS.entreprenadArt}
+          tooltip="Typ av uppdrag. Välj förslag eller skriv fritext."
         />
       </Grid>
       <Grid item xs={12} md={4}>

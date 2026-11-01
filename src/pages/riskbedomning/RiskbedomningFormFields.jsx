@@ -18,19 +18,14 @@ import {
   RISKBEDOMNING_JA_NEJ_OPTIONS,
   RISKBEDOMNING_RISKNIVA_OPTIONS,
 } from '../../lib/types'
+import { SectionHeader, GuidedTextField, SuggestionAutocomplete } from '../../components/forms'
+import { SUGGESTIONS } from '../../lib/formHelp'
 
-function SectionTitle({ children, helper }) {
+function SectionTitle({ children, helper, why }) {
   return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
+    <SectionHeader helper={helper} why={why} showKbLink>
+      {children}
+    </SectionHeader>
   )
 }
 
@@ -50,7 +45,10 @@ export default function RiskbedomningFormFields({
 }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Riskbedömning baserad på AFS. Anslås på arbetsplatsen.">
+      <SectionTitle
+        helper="Riskbedömning baserad på AFS. Anslås på arbetsplatsen."
+        why="Matrisen prioriterar åtgärder och kopplas till AMP och skyddsronder."
+      >
         Riskmatris (AFS)
       </SectionTitle>
       <Grid item xs={12}>
@@ -78,16 +76,18 @@ export default function RiskbedomningFormFields({
                   </TableCell>
                 </TableRow>
               ) : (
-                form.afs_rader.map((rad) => (
+                form.afs_rader.map((rad, index) => (
                   <TableRow key={rad._key}>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         value={rad.afs_nummer}
                         onChange={onAfsChange(rad._key, 'afs_nummer')}
                         size="small"
                         fullWidth
                         variant="standard"
                         placeholder="2023:1"
+                        compact
+                        helpKey={index === 0 ? 'risk_afs' : undefined}
                       />
                     </TableCell>
                     <TableCell>
@@ -117,13 +117,15 @@ export default function RiskbedomningFormFields({
                       </TextField>
                     </TableCell>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         select
                         value={rad.riskniva}
                         onChange={onAfsChange(rad._key, 'riskniva')}
                         size="small"
                         fullWidth
                         variant="standard"
+                        compact
+                        helpKey={index === 0 ? 'risk_niva' : undefined}
                       >
                         <MenuItem value="">—</MenuItem>
                         {RISKBEDOMNING_RISKNIVA_OPTIONS.map((opt) => (
@@ -131,7 +133,7 @@ export default function RiskbedomningFormFields({
                             {opt.label}
                           </MenuItem>
                         ))}
-                      </TextField>
+                      </GuidedTextField>
                     </TableCell>
                     <TableCell>
                       <TextField
@@ -183,7 +185,10 @@ export default function RiskbedomningFormFields({
         </Button>
       </Grid>
 
-      <SectionTitle helper="Härleds från risk AFS, åtgärd, ansvarig, klart datum.">
+      <SectionTitle
+        helper="Härleds från risk AFS, åtgärd, ansvarig, klart datum. Åtgärd kan väljas från förslag eller fritext."
+        why="Handlingsplanen omsätter riskbedömningen till konkreta åtgärder."
+      >
         Handlingsplan
       </SectionTitle>
       <Grid item xs={12}>
@@ -221,12 +226,13 @@ export default function RiskbedomningFormFields({
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField
-                        value={rad.atgard}
-                        onChange={onPlanChange(rad._key, 'atgard')}
-                        size="small"
-                        fullWidth
-                        variant="standard"
+                      <SuggestionAutocomplete
+                        label="Åtgärd"
+                        options={SUGGESTIONS.atgarder}
+                        value={rad.atgard || ''}
+                        onChangeField={onPlanChange(rad._key, 'atgard')}
+                        tooltip="Välj en vanlig åtgärd eller skriv en egen."
+                        placeholder="Åtgärd"
                       />
                     </TableCell>
                     <TableCell>
@@ -270,29 +276,34 @@ export default function RiskbedomningFormFields({
         </Button>
       </Grid>
 
-      <SectionTitle>Signering</SectionTitle>
+      <SectionTitle why="Signering visar vem som ansvarar för riskbedömningen och att parterna tagit del av den.">
+        Signering
+      </SectionTitle>
       <Grid item xs={12} md={4}>
-        <TextField
+        <GuidedTextField
           label="Upprättare"
           value={form.upprattare}
           onChange={onChange('upprattare')}
           fullWidth
+          helpKey="risk_upprattare"
         />
       </Grid>
       <Grid item xs={12} md={4}>
-        <TextField
+        <GuidedTextField
           label="VD"
           value={form.vd}
           onChange={onChange('vd')}
           fullWidth
+          helpKey="contact_name"
         />
       </Grid>
       <Grid item xs={12} md={4}>
-        <TextField
+        <GuidedTextField
           label="Arbetstagarrepresentant"
           value={form.arbetstagarrepresentant}
           onChange={onChange('arbetstagarrepresentant')}
           fullWidth
+          helpKey="contact_name"
         />
       </Grid>
     </Grid>

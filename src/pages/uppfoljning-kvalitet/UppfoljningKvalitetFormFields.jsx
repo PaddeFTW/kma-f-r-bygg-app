@@ -16,19 +16,13 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { UPPFOLJNING_KVALITET_STATUS_OPTIONS } from '../../lib/types'
+import { SectionHeader, GuidedTextField } from '../../components/forms'
 
-function SectionTitle({ children, helper }) {
+function SectionTitle({ children, helper, why }) {
   return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
+    <SectionHeader helper={helper} why={why}>
+      {children}
+    </SectionHeader>
   )
 }
 
@@ -44,12 +38,15 @@ export default function UppfoljningKvalitetFormFields({
 }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Uppföljning av kvalitet.">
+      <SectionTitle
+        helper="Uppföljning av kvalitet. Poäng väljs i lista (1/2/3)."
+        why="Poängen visar kvalitetsnivå och vad som behöver åtgärdas."
+      >
         Kontrollmoment
       </SectionTitle>
       <Grid item xs={12}>
         <Alert severity="info" sx={{ mb: 1.5 }}>
-          1 = Icke godkänt · 2 = Godkänt · 3 = Väl godkänt
+          1 = Icke godkänt · 2 = Godkänt · 3 = Väl godkänt. Välj poäng i listan.
         </Alert>
         <Box sx={{ overflowX: 'auto', border: 1, borderColor: 'divider', borderRadius: 1 }}>
           <Table size="small" sx={{ minWidth: 640 }}>
@@ -70,25 +67,29 @@ export default function UppfoljningKvalitetFormFields({
                   </TableCell>
                 </TableRow>
               ) : (
-                form.rader.map((rad) => (
+                form.rader.map((rad, index) => (
                   <TableRow key={rad._key}>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         value={rad.kontrollmoment}
                         onChange={onRadChange(rad._key, 'kontrollmoment')}
                         size="small"
                         fullWidth
                         variant="standard"
+                        compact
+                        helpKey={index === 0 ? 'kontrollmoment' : undefined}
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         select
                         value={rad.status}
                         onChange={onRadChange(rad._key, 'status')}
                         size="small"
                         fullWidth
                         variant="standard"
+                        compact
+                        helpKey={index === 0 ? 'uppfoljning_poang' : undefined}
                       >
                         <MenuItem value="">—</MenuItem>
                         {UPPFOLJNING_KVALITET_STATUS_OPTIONS.map((opt) => (
@@ -96,7 +97,7 @@ export default function UppfoljningKvalitetFormFields({
                             {opt.label}
                           </MenuItem>
                         ))}
-                      </TextField>
+                      </GuidedTextField>
                     </TableCell>
                     <TableCell align="right">
                       <IconButton

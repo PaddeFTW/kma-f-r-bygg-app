@@ -15,19 +15,14 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { SKYDDSROND_STATUS_OPTIONS } from '../../lib/types'
+import { SectionHeader, GuidedTextField, SuggestionAutocomplete } from '../../components/forms'
+import { SUGGESTIONS } from '../../lib/formHelp'
 
-function SectionTitle({ children, helper }) {
+function SectionTitle({ children, helper, why }) {
   return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
+    <SectionHeader helper={helper} why={why}>
+      {children}
+    </SectionHeader>
   )
 }
 
@@ -47,43 +42,53 @@ export default function SkyddsrondFormFields({
 }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Platschef, arbetsledare, skyddsombud och UE.">
+      <SectionTitle
+        helper="Platschef, arbetsledare, skyddsombud och UE."
+        why="Deltagare och status visar att skyddsronden genomförts enligt AMP."
+      >
         Deltagare
       </SectionTitle>
       <Grid item xs={12} md={6}>
-        <TextField
+        <SuggestionAutocomplete
           label="Platschef"
           value={form.platschef}
-          onChange={onChange('platschef')}
-          fullWidth
+          onChangeField={onChange('platschef')}
+          options={SUGGESTIONS.kontaktroller}
+          helpKey="contact_name"
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <SuggestionAutocomplete
           label="Arbetsledare"
           value={form.arbetsledare}
-          onChange={onChange('arbetsledare')}
-          fullWidth
+          onChangeField={onChange('arbetsledare')}
+          options={SUGGESTIONS.kontaktroller}
+          helpKey="skyddsrond_deltagare"
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <SuggestionAutocomplete
           label="Skyddsombud"
           value={form.skyddsombud}
-          onChange={onChange('skyddsombud')}
-          fullWidth
+          onChangeField={onChange('skyddsombud')}
+          options={SUGGESTIONS.kontaktroller}
+          helpKey="skyddsrond_deltagare"
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <SuggestionAutocomplete
           label="UE"
           value={form.ue}
-          onChange={onChange('ue')}
-          fullWidth
+          onChangeField={onChange('ue')}
+          options={SUGGESTIONS.kontaktroller}
+          helpKey="skyddsrond_deltagare"
         />
       </Grid>
 
-      <SectionTitle helper="Ja/Nej. Lägg till fler punkter vid behov (m.fl.).">
+      <SectionTitle
+        helper="Ja/Nej. Lägg till fler punkter vid behov (m.fl.)."
+        why="Checklistan säkrar att ronden går igenom återkommande risker på samma sätt varje gång."
+      >
         Checklista
       </SectionTitle>
       <Grid item xs={12}>
@@ -109,12 +114,14 @@ export default function SkyddsrondFormFields({
                 form.checklista.map((rad) => (
                   <TableRow key={rad._key}>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         value={rad.punkt}
                         onChange={onCheckChange(rad._key, 'punkt')}
                         size="small"
                         fullWidth
                         variant="standard"
+                        compact
+                        helpKey="skyddsrond_punkt"
                       />
                     </TableCell>
                     <TableCell>
@@ -155,7 +162,10 @@ export default function SkyddsrondFormFields({
         </Button>
       </Grid>
 
-      <SectionTitle helper="Nr, fel & brister, åtgärdas senast, ansvarig, åtgärdat datum.">
+      <SectionTitle
+        helper="Nr, fel & brister, åtgärdas senast, ansvarig, åtgärdat datum."
+        why="Handlingsplanen gör brister åtgärdbara med ansvarig person och datum."
+      >
         Sammanställning + Handlingsplan
       </SectionTitle>
       <Grid item xs={12}>
@@ -193,12 +203,14 @@ export default function SkyddsrondFormFields({
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         value={rad.fel_brister}
                         onChange={onPlanChange(rad._key, 'fel_brister')}
                         size="small"
                         fullWidth
                         variant="standard"
+                        compact
+                        tooltip="Beskriv bristen så att åtgärden kan följas upp."
                       />
                     </TableCell>
                     <TableCell>

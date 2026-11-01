@@ -5,21 +5,14 @@ import {
   FormGroup,
   Grid,
   TextField,
-  Typography,
 } from '@mui/material'
+import { SectionHeader, GuidedTextField } from '../../components/forms'
 
-function SectionTitle({ children, helper }) {
+function SectionTitle({ children, helper, why }) {
   return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
+    <SectionHeader helper={helper} why={why}>
+      {children}
+    </SectionHeader>
   )
 }
 
@@ -39,19 +32,26 @@ const MILJOASPEKTER = [
 export default function MiljoplanFormFields({ form, onChange, onCheckboxChange }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle>Miljöpolicy</SectionTitle>
+      <SectionTitle why="Policyn beskriver hur miljöarbetet styrs i projektet.">
+        Miljöpolicy
+      </SectionTitle>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          helpKey="miljoaspekter"
           label="Miljöpolicy"
           value={form.miljopolicy}
           onChange={onChange('miljopolicy')}
           fullWidth
           multiline
           minRows={3}
+          tooltip="Kort miljöpolicy för projektet."
         />
       </Grid>
 
-      <SectionTitle helper="Markera aktuella miljöaspekter. Detaljerad analys hör till Flik 8.">
+      <SectionTitle
+        helper="Markera aktuella miljöaspekter. Detaljerad analys hör till Flik 8."
+        why="Aspekterna styr åtgärder, SDB och uppföljning miljö."
+      >
         Miljöaspekter
       </SectionTitle>
       <Grid item xs={12}>

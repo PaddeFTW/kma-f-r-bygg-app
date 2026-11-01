@@ -12,6 +12,7 @@ import {
 } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VerticalLayout from '../../layouts/VerticalLayout'
+import NextStep from '../../components/NextStep'
 import { supabase } from '../../lib/supabase'
 import {
   emptyChecklistaByggparmForm,
@@ -207,6 +208,7 @@ export default function ChecklistaByggparmDetail() {
         ) : !item ? (
           <Alert severity="error">{error || 'Posten hittades inte.'}</Alert>
         ) : (
+          <>
           <Card>
             <CardContent sx={{ p: 5, '&:last-child': { pb: 5 } }}>
               <Stack component="form" spacing={4} onSubmit={handleSave}>
@@ -256,6 +258,12 @@ export default function ChecklistaByggparmDetail() {
               </Stack>
             </CardContent>
           </Card>
+
+          {saved && (
+            <NextStep currentPath="/checklista-byggparm" projectId={item.project_id} />
+          )}
+
+        </>
         )}
       </Stack>
     </VerticalLayout>

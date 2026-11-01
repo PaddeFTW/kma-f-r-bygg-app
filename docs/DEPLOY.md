@@ -41,7 +41,7 @@ create policy "Users can delete own uppgifter"
   using (auth.uid() = user_id);
 ```
 
-5. Kör även SQL för KMA-grund (`companies` + `projects`), se [`supabase/migrations/001_companies_projects.sql`](../supabase/migrations/001_companies_projects.sql), därefter projektstart Flik 1–2 [`supabase/migrations/002_projektstart_flik1_2.sql`](../supabase/migrations/002_projektstart_flik1_2.sql) (utökade projektfält + `project_roles` med RLS), och Flik 3–4 [`supabase/migrations/003_flik3_4_organisation.sql`](../supabase/migrations/003_flik3_4_organisation.sql) (`project_clients` + `project_subcontractors` med RLS).
+5. Kör även SQL för KMA-grund (`companies` + `projects`), se [`supabase/migrations/001_companies_projects.sql`](../supabase/migrations/001_companies_projects.sql), därefter projektstart Flik 1–2 [`supabase/migrations/002_projektstart_flik1_2.sql`](../supabase/migrations/002_projektstart_flik1_2.sql) (utökade projektfält + `project_roles` med RLS), och Flik 3–4 [`supabase/migrations/003_flik3_4_organisation.sql`](../supabase/migrations/003_flik3_4_organisation.sql) (`project_clients` + `project_subcontractors` med RLS). För export/delning: [`supabase/migrations/031_export_sharing.sql`](../supabase/migrations/031_export_sharing.sql) (snapshot-länkar, inbjudningar, RPC `open_project_share` / `submit_project_share_action`). För Bas-P/Bas-U + 13 särskilda risker: [`supabase/migrations/032_bas_sarskilda_risker.sql`](../supabase/migrations/032_bas_sarskilda_risker.sql). För företagets kontaktlista: [`supabase/migrations/033_company_contacts.sql`](../supabase/migrations/033_company_contacts.sql).
 
 6. Auth → Providers: Email aktiverat. För snabb lokal test kan du stänga av “Confirm email”.
 

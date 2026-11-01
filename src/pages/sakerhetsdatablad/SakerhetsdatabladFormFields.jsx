@@ -1,18 +1,9 @@
-import { Grid, MenuItem, TextField, Typography } from '@mui/material'
+import { Grid, MenuItem, TextField } from '@mui/material'
+import { SectionHeader, GuidedTextField, SuggestionAutocomplete } from '../../components/forms'
+import { JA_NEJ_OPTIONS, SUGGESTIONS } from '../../lib/formHelp'
 
-function SectionTitle({ children, helper }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
-  )
+function SectionTitle({ children, helper, why }) {
+  return <SectionHeader helper={helper} why={why}>{children}</SectionHeader>
 }
 
 /**
@@ -22,33 +13,41 @@ function SectionTitle({ children, helper }) {
 export default function SakerhetsdatabladFormFields({ form, onChange }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Lista över farliga kemikalier med SDB-status.">
+      <SectionTitle
+        helper="Lista över farliga kemikalier med SDB-status."
+        why="Säkerhetsdatablad behöver vara spårbara så att rätt skyddsåtgärder finns vid hantering och olycka."
+      >
         Säkerhetsdatablad
       </SectionTitle>
       <Grid item xs={12} md={6}>
-        <TextField
+        <SuggestionAutocomplete
+          helpKey="sdb_produkt"
           label="Produkt"
           value={form.produkt}
-          onChange={onChange('produkt')}
+          onChangeField={onChange('produkt')}
+          options={SUGGESTIONS.kemikalier}
           required
-          fullWidth
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
           select
+          helpKey="sdb_status"
           label="Säkerhetsdatablad ja/nej"
           value={form.sakerhetsdatablad}
           onChange={onChange('sakerhetsdatablad')}
           fullWidth
         >
-          <MenuItem value="">—</MenuItem>
-          <MenuItem value="ja">Ja</MenuItem>
-          <MenuItem value="nej">Nej</MenuItem>
-        </TextField>
+          {JA_NEJ_OPTIONS.map((opt) => (
+            <MenuItem key={opt.value || 'empty'} value={opt.value}>
+              {opt.label}
+            </MenuItem>
+          ))}
+        </GuidedTextField>
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
+          helpKey="contact_name"
           label="Ansvarig"
           value={form.ansvarig}
           onChange={onChange('ansvarig')}

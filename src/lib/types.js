@@ -51,10 +51,15 @@ export const emptyProjectForm = {
 export const contractForms = ['Total', 'Utförande']
 
 /**
- * Roller enligt Flik 2 Organisation.
- * Minst: Projektchef, Arbetsledare, Platschef, KMA, Huvudskyddsombud.
+ * Roller enligt Flik 2 Organisation + Bas-P/Bas-U (AFS 2023:3).
+ * Obligatoriska: Bas-P, Bas-U samt tidigare kärnroller.
  */
 export const projectRoleTitles = [
+  'Bas-P',
+  'Bas-U',
+  'Byggherre',
+  'Projektledare',
+  'UE-kontakt',
   'Projektchef',
   'Arbetsledare',
   'Inköpsansvarig',
@@ -68,6 +73,8 @@ export const projectRoleTitles = [
 ]
 
 export const requiredProjectRoleTitles = [
+  'Bas-P',
+  'Bas-U',
   'Projektchef',
   'Arbetsledare',
   'Platschef',
@@ -75,12 +82,19 @@ export const requiredProjectRoleTitles = [
   'Huvudskyddsombud',
 ]
 
+/** Roller där kompetens/utbildning/intyg är särskilt relevanta. */
+export const competenceRoleTitles = ['Bas-P', 'Bas-U', 'Projektledare', 'UE-kontakt', 'Byggherre']
+
 export const emptyProjectRoleForm = {
   role_title: '',
   name: '',
   phone: '',
   email: '',
   responsibility_area: '',
+  competence: '',
+  education: '',
+  cert_file_path: '',
+  cert_file_name: '',
 }
 
 export function projectToForm(project) {

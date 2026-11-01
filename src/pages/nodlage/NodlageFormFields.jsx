@@ -8,25 +8,14 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  TextField,
   Typography,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import { SectionHeader, GuidedTextField } from '../../components/forms'
 
-function SectionTitle({ children, helper }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
-  )
+function SectionTitle({ children, helper, why }) {
+  return <SectionHeader helper={helper} why={why}>{children}</SectionHeader>
 }
 
 /**
@@ -42,7 +31,10 @@ export default function NodlageFormFields({
 }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Befattning, namn och telefon för nödlägesorganisationen.">
+      <SectionTitle
+        helper="Befattning, namn och telefon för nödlägesorganisationen."
+        why="Organisationen visar vem som leder larm, kontakt och åtgärder när något akut händer."
+      >
         Organisation
       </SectionTitle>
       <Grid item xs={12}>
@@ -68,30 +60,36 @@ export default function NodlageFormFields({
               form.organisation.map((rad) => (
                 <TableRow key={rad._key}>
                   <TableCell>
-                    <TextField
+                    <GuidedTextField
+                      helpKey="nodlage_befattning"
                       value={rad.befattning}
                       onChange={onOrgChange(rad._key, 'befattning')}
                       fullWidth
                       size="small"
+                      compact
                       placeholder="Befattning"
                     />
                   </TableCell>
                   <TableCell>
-                    <TextField
+                    <GuidedTextField
+                      helpKey="contact_name"
                       value={rad.namn}
                       onChange={onOrgChange(rad._key, 'namn')}
                       fullWidth
                       size="small"
+                      compact
                       placeholder="Namn"
                     />
                   </TableCell>
                   <TableCell>
-                    <TextField
+                    <GuidedTextField
                       value={rad.telefon}
                       onChange={onOrgChange(rad._key, 'telefon')}
                       fullWidth
                       size="small"
+                      compact
                       placeholder="Telefon"
+                      tooltip="Telefonnummer som fungerar vid nödläge."
                     />
                   </TableCell>
                   <TableCell align="right">
@@ -116,9 +114,15 @@ export default function NodlageFormFields({
         </Box>
       </Grid>
 
-      <SectionTitle helper="Räddningshjälp via 112.">Räddningshjälp (112)</SectionTitle>
+      <SectionTitle
+        helper="Räddningshjälp via 112."
+        why="Rutinen ska vara enkel att följa även under stress."
+      >
+        Räddningshjälp (112)
+      </SectionTitle>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          helpKey="nodlage_larmrutin"
           label="Räddningshjälp (112)"
           value={form.raddningshjalp}
           onChange={onChange('raddningshjalp')}
@@ -129,9 +133,12 @@ export default function NodlageFormFields({
         />
       </Grid>
 
-      <SectionTitle>Larmrutiner</SectionTitle>
+      <SectionTitle why="Larmrutinerna förklarar vad som ska göras direkt vid miljöolycka eller personskada.">
+        Larmrutiner
+      </SectionTitle>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          helpKey="nodlage_larmrutin"
           label="Larmrutin miljöolycka"
           value={form.larmrutin_miljoolycka}
           onChange={onChange('larmrutin_miljoolycka')}
@@ -141,7 +148,8 @@ export default function NodlageFormFields({
         />
       </Grid>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          helpKey="nodlage_larmrutin"
           label="Larmrutin personskada"
           value={form.larmrutin_personskada}
           onChange={onChange('larmrutin_personskada')}
@@ -151,15 +159,19 @@ export default function NodlageFormFields({
         />
       </Grid>
 
-      <SectionTitle>Information till närboende</SectionTitle>
+      <SectionTitle why="Förberedda budskap minskar osäkerhet för närboende vid störning eller olycka.">
+        Information till närboende
+      </SectionTitle>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
           label="Information till närboende"
           value={form.information_narboende}
           onChange={onChange('information_narboende')}
           fullWidth
           multiline
           minRows={3}
+          tooltip="Beskriv vad som ska informeras, av vem och via vilken kanal."
+          why="Informationen hjälper projektet att agera snabbt och konsekvent mot närboende."
         />
       </Grid>
     </Grid>

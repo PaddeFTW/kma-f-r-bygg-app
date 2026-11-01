@@ -15,19 +15,13 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { CHECKLISTA_BYGGPARM_JA_NEJ_OPTIONS } from '../../lib/types'
+import { SectionHeader, GuidedTextField } from '../../components/forms'
 
-function SectionTitle({ children, helper }) {
+function SectionTitle({ children, helper, why }) {
   return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
+    <SectionHeader helper={helper} why={why}>
+      {children}
+    </SectionHeader>
   )
 }
 
@@ -43,7 +37,10 @@ export default function ChecklistaByggparmFormFields({
 }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Kontroll att alla flikar är klara.">
+      <SectionTitle
+        helper="Kontroll att alla flikar är klara. Ja/Nej + ansvarig/datum."
+        why="Ger snabb status över pärmen innan distribution och signering."
+      >
         Avsnitt (Flik 1–31)
       </SectionTitle>
       <Grid item xs={12}>
@@ -69,7 +66,7 @@ export default function ChecklistaByggparmFormFields({
                   </TableCell>
                 </TableRow>
               ) : (
-                form.rader.map((rad) => (
+                form.rader.map((rad, index) => (
                   <TableRow key={rad._key}>
                     <TableCell>
                       <TextField
@@ -92,13 +89,15 @@ export default function ChecklistaByggparmFormFields({
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         select
                         value={rad.klart}
                         onChange={onRadChange(rad._key, 'klart')}
                         size="small"
                         fullWidth
                         variant="standard"
+                        compact
+                        helpKey={index === 0 ? 'checklista_klart' : undefined}
                       >
                         <MenuItem value="">—</MenuItem>
                         {CHECKLISTA_BYGGPARM_JA_NEJ_OPTIONS.map((opt) => (
@@ -106,15 +105,17 @@ export default function ChecklistaByggparmFormFields({
                             {opt.label}
                           </MenuItem>
                         ))}
-                      </TextField>
+                      </GuidedTextField>
                     </TableCell>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         value={rad.ansvarig}
                         onChange={onRadChange(rad._key, 'ansvarig')}
                         size="small"
                         fullWidth
                         variant="standard"
+                        compact
+                        helpKey={index === 0 ? 'checklista_ansvarig' : undefined}
                       />
                     </TableCell>
                     <TableCell>

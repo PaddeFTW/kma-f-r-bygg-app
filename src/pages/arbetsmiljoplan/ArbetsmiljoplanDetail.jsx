@@ -12,12 +12,17 @@ import {
 } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VerticalLayout from '../../layouts/VerticalLayout'
+import NextStep from '../../components/NextStep'
 import { supabase } from '../../lib/supabase'
 import {
   emptyArbetsmiljoplanForm,
   arbetsmiljoplanFormToPayload,
   arbetsmiljoplanToForm,
 } from '../../lib/types'
+import {
+  buildAmpPrefillFromRisker,
+  rowsRequireAmp,
+} from '../../lib/sarskildaRisker'
 import ArbetsmiljoplanFormFields from './ArbetsmiljoplanFormFields'
 
 export default function ArbetsmiljoplanDetail() {
@@ -26,6 +31,7 @@ export default function ArbetsmiljoplanDetail() {
   const [item, setItem] = useState(null)
   const [project, setProject] = useState(null)
   const [form, setForm] = useState(emptyArbetsmiljoplanForm)
+  const [sarskildaRisker, setSarskildaRisker] = useState([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -54,8 +60,36 @@ export default function ArbetsmiljoplanDetail() {
         return
       }
 
+      const { data: riskRows } = await supabase
+        .from('project_sarskilda_risker')
+        .select('*')
+        .eq('project_id', data.project_id)
+        .order('sort_order', { ascending: true })
+
+      let nextForm = arbetsmiljoplanToForm(data)
+      const risks = riskRows || []
+      if (rowsRequireAmp(risks)) {
+        const prefill = buildAmpPrefillFromRisker(risks)
+        const current = (nextForm.riskbedomning_anteckningar || '').trim()
+        if (!current || current.startsWith('AMP krävs enligt AFS 2023:3')) {
+          nextForm = { ...nextForm, riskbedomning_anteckningar: prefill }
+          if (!current) {
+            await supabase
+              .from('arbetsmiljoplaner')
+              .update({
+                riskbedomning_anteckningar: prefill,
+                updated_at: new Date().toISOString(),
+              })
+              .eq('id', data.id)
+          }
+        }
+      }
+
+      if (!mounted) return
+
       setItem(data)
-      setForm(arbetsmiljoplanToForm(data))
+      setForm(nextForm)
+      setSarskildaRisker(risks)
 
       const { data: projectData, error: projectError } = await supabase
         .from('projects')
@@ -146,6 +180,7 @@ export default function ArbetsmiljoplanDetail() {
         ) : !item ? (
           <Alert severity="error">{error || 'Arbetsmiljöplanen hittades inte.'}</Alert>
         ) : (
+          <>
           <Card>
             <CardContent sx={{ p: 5, '&:last-child': { pb: 5 } }}>
               <Stack component="form" spacing={4} onSubmit={handleSave}>
@@ -178,6 +213,7 @@ export default function ArbetsmiljoplanDetail() {
                   form={form}
                   onChange={handleChange}
                   onCheckboxChange={handleCheckboxChange}
+                  sarskildaRisker={sarskildaRisker}
                 />
 
                 <Stack direction="row" spacing={1.5} justifyContent="space-between" flexWrap="wrap">
@@ -191,6 +227,12 @@ export default function ArbetsmiljoplanDetail() {
               </Stack>
             </CardContent>
           </Card>
+
+          {saved && (
+            <NextStep currentPath="/arbetsmiljoplan" projectId={item.project_id} />
+          )}
+
+        </>
         )}
       </Stack>
     </VerticalLayout>

@@ -1,26 +1,35 @@
-import { Grid, MenuItem, TextField, Typography } from '@mui/material'
+import { Grid, MenuItem, TextField } from '@mui/material'
 import { contractForms } from '../../lib/types'
-
-function SectionTitle({ children }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-    </Grid>
-  )
-}
+import { SectionHeader, GuidedTextField, SuggestionAutocomplete } from '../../components/forms'
+import { SUGGESTIONS } from '../../lib/formHelp'
+import { useContactList } from '../../context/ContactListContext'
 
 /**
  * Flik 1 – Projektbeskrivning.
  * Obligatoriska kontaktfält för huvudparter enligt underlaget.
  */
 export default function ProjectFormFields({ form, onChange }) {
+  const { nameSuggestions, contacts } = useContactList()
+
+  const applySiteContact = (name) => {
+    onChange('contact_name')({ target: { value: name } })
+    const match = (contacts || []).find((c) => c.name === name)
+    if (!match) return
+    if (match.email) onChange('email')({ target: { value: match.email } })
+    if (match.phone) onChange('phone')({ target: { value: match.phone } })
+  }
+
   return (
     <Grid container spacing={2}>
-      <SectionTitle>Fastighet</SectionTitle>
+      <SectionHeader
+        why="Fastighets- och kontaktuppgifter är underlag för AMP, kontroller och distribution."
+        showKbLink
+      >
+        Fastighet
+      </SectionHeader>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
+          helpKey="property_designation"
           label="Fastighetsbeteckning"
           value={form.property_designation}
           onChange={onChange('property_designation')}
@@ -53,14 +62,17 @@ export default function ProjectFormFields({ form, onChange }) {
         />
       </Grid>
 
-      <SectionTitle>Kontaktperson på byggplatsen</SectionTitle>
+      <SectionHeader why="Platsansvarig ska kunna nås vid nödläge och samordning.">
+        Kontaktperson på byggplatsen
+      </SectionHeader>
       <Grid item xs={12} md={4}>
-        <TextField
+        <SuggestionAutocomplete
+          helpKey="contact_name"
           label="Namn"
           value={form.contact_name}
-          onChange={onChange('contact_name')}
+          onChangeField={(e) => applySiteContact(e.target.value)}
+          options={[...new Set([...(nameSuggestions || []), ...SUGGESTIONS.kontaktroller])]}
           required
-          fullWidth
         />
       </Grid>
       <Grid item xs={12} md={4}>
@@ -87,9 +99,12 @@ export default function ProjectFormFields({ form, onChange }) {
         />
       </Grid>
 
-      <SectionTitle>Byggherre / beställare</SectionTitle>
+      <SectionHeader why="Byggherrens uppgifter behövs i organisation, kontrollplan och signering.">
+        Byggherre / beställare
+      </SectionHeader>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
+          helpKey="client_name"
           label="Företag / namn"
           value={form.client_name}
           onChange={onChange('client_name')}
@@ -163,7 +178,9 @@ export default function ProjectFormFields({ form, onChange }) {
         />
       </Grid>
 
-      <SectionTitle>Entreprenör</SectionTitle>
+      <SectionHeader why="Entreprenörens organisation styr roller, Bas-U och daglig samordning.">
+        Entreprenör
+      </SectionHeader>
       <Grid item xs={12} md={6}>
         <TextField
           label="Företag"
@@ -210,12 +227,13 @@ export default function ProjectFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <SuggestionAutocomplete
           label="Projektansvarig"
           value={form.contractor_project_manager}
-          onChange={onChange('contractor_project_manager')}
+          onChangeField={onChange('contractor_project_manager')}
+          options={SUGGESTIONS.kontaktroller}
           required
-          fullWidth
+          tooltip="Namn på projektansvarig. Du kan välja förslag eller skriva fritt."
         />
       </Grid>
       <Grid item xs={12} md={6}>
@@ -228,12 +246,12 @@ export default function ProjectFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <SuggestionAutocomplete
           label="Arbetsledare"
           value={form.contractor_site_manager}
-          onChange={onChange('contractor_site_manager')}
+          onChangeField={onChange('contractor_site_manager')}
+          options={SUGGESTIONS.kontaktroller}
           required
-          fullWidth
         />
       </Grid>
       <Grid item xs={12} md={6}>
@@ -246,8 +264,9 @@ export default function ProjectFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
           select
+          helpKey="contract_form"
           label="Entreprenadform"
           value={form.contract_form}
           onChange={onChange('contract_form')}
@@ -262,7 +281,7 @@ export default function ProjectFormFields({ form, onChange }) {
               {value}
             </MenuItem>
           ))}
-        </TextField>
+        </GuidedTextField>
       </Grid>
       <Grid item xs={12}>
         <TextField
@@ -275,7 +294,7 @@ export default function ProjectFormFields({ form, onChange }) {
         />
       </Grid>
 
-      <SectionTitle>Projektbeskrivning</SectionTitle>
+      <SectionHeader>Projektbeskrivning</SectionHeader>
       <Grid item xs={12}>
         <TextField
           label="Projektbeskrivning"

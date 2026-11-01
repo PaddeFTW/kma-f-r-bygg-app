@@ -1,13 +1,9 @@
-import { Grid, TextField, Typography } from '@mui/material'
+import { Grid, TextField } from '@mui/material'
+import { GuidedTextField, SectionHeader, SuggestionAutocomplete } from '../../components/forms'
+import { useContactList } from '../../context/ContactListContext'
 
-function SectionTitle({ children }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-    </Grid>
-  )
+function SectionTitle({ children, why }) {
+  return <SectionHeader why={why}>{children}</SectionHeader>
 }
 
 /**
@@ -20,11 +16,25 @@ export default function OrgContactFormFields({
   includePurchasing = false,
   requireContact = true,
 }) {
+  const { nameSuggestions, contacts } = useContactList()
+
+  const applyContactSuggestion = (name) => {
+    onChange('contact_name')({ target: { value: name } })
+    const match = (contacts || []).find((c) => c.name === name)
+    if (!match) return
+    if (match.email) onChange('email')({ target: { value: match.email } })
+    if (match.phone) onChange('phone')({ target: { value: match.phone } })
+  }
+
   return (
     <Grid container spacing={2}>
-      <SectionTitle>Kontaktuppgifter</SectionTitle>
+      <SectionTitle why="Kontaktuppgifter behövs för samordning, inbjudningar och distribution.">
+        Kontaktuppgifter
+      </SectionTitle>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
+          helpKey="contact_name"
+          tooltip="Ange VD eller motsvarande firmatecknare för organisationen."
           label="VD"
           value={form.ceo_name}
           onChange={onChange('ceo_name')}
@@ -33,12 +43,13 @@ export default function OrgContactFormFields({
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <SuggestionAutocomplete
+          helpKey="contact_name"
           label="Kontaktperson"
           value={form.contact_name}
-          onChange={onChange('contact_name')}
+          onChangeField={(e) => applyContactSuggestion(e.target.value)}
+          options={nameSuggestions}
           required={requireContact}
-          fullWidth
         />
       </Grid>
       <Grid item xs={12}>

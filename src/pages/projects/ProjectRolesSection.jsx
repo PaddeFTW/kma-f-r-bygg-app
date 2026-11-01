@@ -12,6 +12,7 @@ import {
   DialogTitle,
   Grid,
   IconButton,
+  Link,
   MenuItem,
   Stack,
   Table,
@@ -26,19 +27,27 @@ import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import {
+  competenceRoleTitles,
   emptyProjectRoleForm,
   projectRoleTitles,
   requiredProjectRoleTitles,
 } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
+import { useContactList } from '../../context/ContactListContext'
+import { KB_AFS_2023_3_URL } from '../../lib/sarskildaRisker'
+import useSaveToContactList from '../../hooks/useSaveToContactList'
+import { GuidedTextField, SectionHeader, SuggestionAutocomplete } from '../../components/forms'
 
 /**
- * Flik 2 – Roller och ansvar.
- * Samma person kan ha flera roller.
+ * Flik 2 – Roller och ansvar (inkl. Bas-P / Bas-U med kompetens & intyg).
  */
 export default function ProjectRolesSection({ projectId, companyId }) {
   const { user } = useAuth()
+  const { nameSuggestions, refresh: refreshContacts } = useContactList()
+  const { offerSave, dialog: contactDialog } = useSaveToContactList(companyId, {
+    onSaved: () => refreshContacts(),
+  })
   const [roles, setRoles] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -46,6 +55,7 @@ export default function ProjectRolesSection({ projectId, companyId }) {
   const [saving, setSaving] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [form, setForm] = useState(emptyProjectRoleForm)
+  const [certFile, setCertFile] = useState(null)
 
   const load = async () => {
     setLoading(true)
@@ -70,6 +80,8 @@ export default function ProjectRolesSection({ projectId, companyId }) {
     return requiredProjectRoleTitles.filter((title) => !present.has(title))
   }, [roles])
 
+  const showCompetence = competenceRoleTitles.includes(form.role_title)
+
   const handleChange = (field) => (event) => {
     setForm((prev) => ({ ...prev, [field]: event.target.value }))
   }
@@ -77,6 +89,7 @@ export default function ProjectRolesSection({ projectId, companyId }) {
   const openCreate = (presetTitle = '') => {
     setEditingId(null)
     setForm({ ...emptyProjectRoleForm, role_title: presetTitle })
+    setCertFile(null)
     setOpen(true)
   }
 
@@ -88,8 +101,30 @@ export default function ProjectRolesSection({ projectId, companyId }) {
       phone: role.phone || '',
       email: role.email || '',
       responsibility_area: role.responsibility_area || '',
+      competence: role.competence || '',
+      education: role.education || '',
+      cert_file_path: role.cert_file_path || '',
+      cert_file_name: role.cert_file_name || '',
     })
+    setCertFile(null)
     setOpen(true)
+  }
+
+  const uploadCert = async (roleId) => {
+    if (!certFile) return { path: form.cert_file_path || null, name: form.cert_file_name || null }
+
+    const safeName = certFile.name.replace(/[^\w.\-åäöÅÄÖ ]+/gi, '_')
+    const path = `${user.id}/${projectId}/${roleId}/${Date.now()}-${safeName}`
+    const { error: uploadError } = await supabase.storage
+      .from('kompetensbevis')
+      .upload(path, certFile, { upsert: false })
+    if (uploadError) throw new Error(uploadError.message)
+
+    if (form.cert_file_path) {
+      await supabase.storage.from('kompetensbevis').remove([form.cert_file_path])
+    }
+
+    return { path, name: certFile.name }
   }
 
   const handleSave = async (event) => {
@@ -99,50 +134,98 @@ export default function ProjectRolesSection({ projectId, companyId }) {
     setSaving(true)
     setError('')
 
-    const payload = {
-      role_title: form.role_title.trim(),
-      name: form.name.trim(),
-      phone: form.phone.trim() || null,
-      email: form.email.trim() || null,
-      responsibility_area: form.responsibility_area.trim() || null,
-      updated_at: new Date().toISOString(),
-    }
+    try {
+      const basePayload = {
+        role_title: form.role_title.trim(),
+        name: form.name.trim(),
+        phone: form.phone.trim() || null,
+        email: form.email.trim() || null,
+        responsibility_area: form.responsibility_area.trim() || null,
+        competence: form.competence.trim() || null,
+        education: form.education.trim() || null,
+        updated_at: new Date().toISOString(),
+      }
 
-    let saveError
-    if (editingId) {
-      const { error: updateError } = await supabase
-        .from('project_roles')
-        .update(payload)
-        .eq('id', editingId)
-      saveError = updateError
-    } else {
-      const { error: insertError } = await supabase.from('project_roles').insert({
-        ...payload,
-        user_id: user.id,
-        company_id: companyId,
-        project_id: projectId,
+      let roleId = editingId
+
+      if (editingId) {
+        const { error: updateError } = await supabase
+          .from('project_roles')
+          .update(basePayload)
+          .eq('id', editingId)
+        if (updateError) throw new Error(updateError.message)
+      } else {
+        const { data, error: insertError } = await supabase
+          .from('project_roles')
+          .insert({
+            ...basePayload,
+            user_id: user.id,
+            company_id: companyId,
+            project_id: projectId,
+          })
+          .select()
+          .single()
+        if (insertError) throw new Error(insertError.message)
+        roleId = data.id
+      }
+
+      if (certFile && roleId) {
+        const uploaded = await uploadCert(roleId)
+        const { error: certError } = await supabase
+          .from('project_roles')
+          .update({
+            cert_file_path: uploaded.path,
+            cert_file_name: uploaded.name,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', roleId)
+        if (certError) throw new Error(certError.message)
+      }
+
+      setOpen(false)
+      setForm({ ...emptyProjectRoleForm })
+      setEditingId(null)
+      setCertFile(null)
+      await load()
+
+      await offerSave({
+        name: basePayload.name,
+        email: basePayload.email,
+        phone: basePayload.phone,
+        role: basePayload.role_title,
+        company_name: null,
       })
-      saveError = insertError
+    } catch (err) {
+      setError(
+        err.message?.includes('competence') || err.message?.includes('cert_file')
+          ? 'Rollfält för kompetens saknas. Kör migration 032_bas_sarskilda_risker.sql.'
+          : err.message || 'Kunde inte spara rollen.',
+      )
+    } finally {
+      setSaving(false)
     }
-
-    setSaving(false)
-
-    if (saveError) {
-      setError(saveError.message)
-      return
-    }
-
-    setOpen(false)
-    setForm({ ...emptyProjectRoleForm })
-    setEditingId(null)
-    await load()
   }
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (role) => {
     setError('')
-    const { error: deleteError } = await supabase.from('project_roles').delete().eq('id', id)
+    if (role.cert_file_path) {
+      await supabase.storage.from('kompetensbevis').remove([role.cert_file_path])
+    }
+    const { error: deleteError } = await supabase.from('project_roles').delete().eq('id', role.id)
     if (deleteError) setError(deleteError.message)
-    else setRoles((prev) => prev.filter((r) => r.id !== id))
+    else setRoles((prev) => prev.filter((item) => item.id !== role.id))
+  }
+
+  const openCert = async (role) => {
+    if (!role.cert_file_path) return
+    const { data, error: signedError } = await supabase.storage
+      .from('kompetensbevis')
+      .createSignedUrl(role.cert_file_path, 3600)
+    if (signedError) {
+      setError(signedError.message)
+      return
+    }
+    window.open(data.signedUrl, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -154,9 +237,20 @@ export default function ProjectRolesSection({ projectId, companyId }) {
               <Typography variant="h5" sx={{ fontWeight: 600 }}>
                 Roller och ansvar
               </Typography>
-              <Typography color="text.secondary">
-                Flik 2 – Organisation. Samma person kan ha flera roller.
-              </Typography>
+              <SectionHeader
+                asGridItem={false}
+                helper={
+                  <>
+                    Bas-P och Bas-U är obligatoriska enligt AFS 2023:3.{' '}
+                    <Link href={KB_AFS_2023_3_URL} target="_blank" rel="noopener noreferrer">
+                      Knowledge base
+                    </Link>
+                  </>
+                }
+                why="Rollerna visar vem som ansvarar för KMA, arbetsmiljö och produktion enligt AFS."
+              >
+                Flik 2 – Organisation
+              </SectionHeader>
             </Box>
             <Button variant="contained" startIcon={<AddIcon />} onClick={() => openCreate()}>
               Lägg till roll
@@ -167,8 +261,7 @@ export default function ProjectRolesSection({ projectId, companyId }) {
 
           {missingRequired.length > 0 && (
             <Alert severity="info">
-              Saknas ännu: {missingRequired.join(', ')}. Lägg till minst dessa roller enligt
-              underlaget.
+              Saknas ännu: {missingRequired.join(', ')}. Lägg till minst dessa roller.
               <Box sx={{ mt: 1.5, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                 {missingRequired.map((title) => (
                   <Button key={title} size="small" variant="outlined" onClick={() => openCreate(title)}>
@@ -191,9 +284,10 @@ export default function ProjectRolesSection({ projectId, companyId }) {
                 <TableRow>
                   <TableCell>Roll</TableCell>
                   <TableCell>Namn</TableCell>
+                  <TableCell>Kompetens</TableCell>
+                  <TableCell>Intyg</TableCell>
                   <TableCell>Mobil</TableCell>
                   <TableCell>E-post</TableCell>
-                  <TableCell>Ansvarsområde</TableCell>
                   <TableCell align="right">Åtgärder</TableCell>
                 </TableRow>
               </TableHead>
@@ -204,9 +298,18 @@ export default function ProjectRolesSection({ projectId, companyId }) {
                       <Typography fontWeight={500}>{role.role_title}</Typography>
                     </TableCell>
                     <TableCell>{role.name}</TableCell>
+                    <TableCell>{role.competence || role.education || '—'}</TableCell>
+                    <TableCell>
+                      {role.cert_file_name ? (
+                        <Button size="small" onClick={() => openCert(role)}>
+                          {role.cert_file_name}
+                        </Button>
+                      ) : (
+                        '—'
+                      )}
+                    </TableCell>
                     <TableCell>{role.phone || '—'}</TableCell>
                     <TableCell>{role.email || '—'}</TableCell>
-                    <TableCell>{role.responsibility_area || '—'}</TableCell>
                     <TableCell align="right">
                       <IconButton aria-label="Redigera" size="small" onClick={() => openEdit(role)}>
                         <EditOutlinedIcon fontSize="small" />
@@ -215,7 +318,7 @@ export default function ProjectRolesSection({ projectId, companyId }) {
                         aria-label="Ta bort"
                         size="small"
                         color="error"
-                        onClick={() => handleDelete(role.id)}
+                        onClick={() => handleDelete(role)}
                       >
                         <DeleteOutlineIcon fontSize="small" />
                       </IconButton>
@@ -234,7 +337,8 @@ export default function ProjectRolesSection({ projectId, companyId }) {
           <DialogContent>
             <Grid container spacing={2} sx={{ pt: 1 }}>
               <Grid item xs={12}>
-                <TextField
+                <GuidedTextField
+                  helpKey="bas_roll"
                   select
                   label="Roll"
                   value={form.role_title}
@@ -250,16 +354,16 @@ export default function ProjectRolesSection({ projectId, companyId }) {
                       {title}
                     </MenuItem>
                   ))}
-                </TextField>
+                </GuidedTextField>
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                <SuggestionAutocomplete
                   label="Namn"
                   value={form.name}
-                  onChange={handleChange('name')}
+                  onChangeField={handleChange('name')}
+                  options={nameSuggestions}
                   required
-                  fullWidth
-                  autoFocus
+                  tooltip="Välj från kontaktlistan eller skriv nytt namn."
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -275,7 +379,8 @@ export default function ProjectRolesSection({ projectId, companyId }) {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                <GuidedTextField
+                  helpKey="role_competence"
                   label="Ansvarsområde"
                   value={form.responsibility_area}
                   onChange={handleChange('responsibility_area')}
@@ -284,6 +389,42 @@ export default function ProjectRolesSection({ projectId, companyId }) {
                   minRows={2}
                 />
               </Grid>
+
+              {showCompetence ? (
+                <>
+                  <Grid item xs={12} sm={6}>
+                    <GuidedTextField
+                      helpKey="role_competence"
+                      label="Kompetens"
+                      value={form.competence}
+                      onChange={handleChange('competence')}
+                      fullWidth
+                      placeholder="T.ex. Bas-P/U utbildning"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Utbildning"
+                      value={form.education}
+                      onChange={handleChange('education')}
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button variant="outlined" component="label">
+                      Bifoga intyg
+                      <input
+                        type="file"
+                        hidden
+                        onChange={(e) => setCertFile(e.target.files?.[0] || null)}
+                      />
+                    </Button>
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                      {certFile?.name || form.cert_file_name || 'Ingen fil vald'}
+                    </Typography>
+                  </Grid>
+                </>
+              ) : null}
             </Grid>
           </DialogContent>
           <DialogActions sx={{ px: 3, pb: 2 }}>
@@ -300,6 +441,7 @@ export default function ProjectRolesSection({ projectId, companyId }) {
           </DialogActions>
         </Box>
       </Dialog>
+      {contactDialog}
     </Card>
   )
 }
