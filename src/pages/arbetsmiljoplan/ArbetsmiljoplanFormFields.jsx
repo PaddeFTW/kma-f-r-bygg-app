@@ -129,14 +129,18 @@ export default function ArbetsmiljoplanFormFields({
         />
       </Grid>
 
-      <SectionTitle helper="Uppföljning sker via skyddsronder (Flik 21).">
+      <SectionTitle
+        helper="Uppföljning sker via skyddsronder (Flik 21)."
+        why="Skyddsronderna är beviset att AMP följs upp ute på plats."
+      >
         Uppföljning via skyddsronder
       </SectionTitle>
       <Grid item xs={12}>
         <Alert severity="info" sx={{ mb: 1 }}>
           Hänvisar till skyddsrond (Flik 21) när den finns.
         </Alert>
-        <TextField
+        <GuidedTextField
+          helpKey="skyddsrond"
           label="Uppföljning via skyddsronder"
           value={form.uppfoljning_skyddsronder}
           onChange={onChange('uppfoljning_skyddsronder')}
@@ -184,9 +188,13 @@ export default function ArbetsmiljoplanFormFields({
         />
       </Grid>
 
-      <SectionTitle>Samordning med underentreprenörer</SectionTitle>
+      <SectionTitle why="UE måste få samma AMP-krav och ordningsregler som egna anställda.">
+        Samordning med underentreprenörer
+      </SectionTitle>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          tooltip="Hur Bas-U samordnar UE kring AMP, ordningsregler och skyddsronder."
+          why="Samordningen minskar gränssnittsrisker mellan entreprenörer."
           label="Samordning med underentreprenörer"
           value={form.samordning_ue}
           onChange={onChange('samordning_ue')}

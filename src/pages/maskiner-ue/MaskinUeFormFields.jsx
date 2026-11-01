@@ -1,18 +1,9 @@
-import { Grid, TextField, Typography } from '@mui/material'
+import { Grid, TextField } from '@mui/material'
+import { SectionHeader, GuidedTextField, SuggestionAutocomplete } from '../../components/forms'
+import { SUGGESTIONS } from '../../lib/formHelp'
 
-function SectionTitle({ children, helper }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
-  )
+function SectionTitle({ children, helper, why }) {
+  return <SectionHeader helper={helper} why={why}>{children}</SectionHeader>
 }
 
 /**
@@ -22,11 +13,15 @@ function SectionTitle({ children, helper }) {
 export default function MaskinUeFormFields({ form, onChange }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Lista över maskiner/fordon från UE.">
+      <SectionTitle
+        helper="Lista över maskiner/fordon från UE."
+        why="Maskininventeringen ger kontroll över utrustning, miljörisker och arbetsmiljöansvar på plats."
+      >
         Inventering av maskiner för UE
       </SectionTitle>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
+          helpKey="ue_namn"
           label="Underleverantör"
           value={form.underleverantor}
           onChange={onChange('underleverantor')}
@@ -45,13 +40,12 @@ export default function MaskinUeFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12}>
-        <TextField
+        <SuggestionAutocomplete
+          helpKey="maskin_ue"
           label="Maskiner"
           value={form.maskiner}
-          onChange={onChange('maskiner')}
-          fullWidth
-          multiline
-          minRows={3}
+          onChangeField={onChange('maskiner')}
+          options={SUGGESTIONS.maskiner}
           placeholder="Maskiner och fordon från underleverantören"
         />
       </Grid>

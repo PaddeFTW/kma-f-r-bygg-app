@@ -1,5 +1,4 @@
 import {
-  Autocomplete,
   Box,
   Button,
   Grid,
@@ -19,7 +18,7 @@ import {
   RISKBEDOMNING_JA_NEJ_OPTIONS,
   RISKBEDOMNING_RISKNIVA_OPTIONS,
 } from '../../lib/types'
-import { SectionHeader, SuggestionAutocomplete } from '../../components/forms'
+import { SectionHeader, GuidedTextField, SuggestionAutocomplete } from '../../components/forms'
 import { SUGGESTIONS } from '../../lib/formHelp'
 
 function SectionTitle({ children, helper, why }) {
@@ -77,16 +76,18 @@ export default function RiskbedomningFormFields({
                   </TableCell>
                 </TableRow>
               ) : (
-                form.afs_rader.map((rad) => (
+                form.afs_rader.map((rad, index) => (
                   <TableRow key={rad._key}>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         value={rad.afs_nummer}
                         onChange={onAfsChange(rad._key, 'afs_nummer')}
                         size="small"
                         fullWidth
                         variant="standard"
                         placeholder="2023:1"
+                        compact
+                        helpKey={index === 0 ? 'risk_afs' : undefined}
                       />
                     </TableCell>
                     <TableCell>
@@ -116,13 +117,15 @@ export default function RiskbedomningFormFields({
                       </TextField>
                     </TableCell>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         select
                         value={rad.riskniva}
                         onChange={onAfsChange(rad._key, 'riskniva')}
                         size="small"
                         fullWidth
                         variant="standard"
+                        compact
+                        helpKey={index === 0 ? 'risk_niva' : undefined}
                       >
                         <MenuItem value="">—</MenuItem>
                         {RISKBEDOMNING_RISKNIVA_OPTIONS.map((opt) => (
@@ -130,7 +133,7 @@ export default function RiskbedomningFormFields({
                             {opt.label}
                           </MenuItem>
                         ))}
-                      </TextField>
+                      </GuidedTextField>
                     </TableCell>
                     <TableCell>
                       <TextField
@@ -223,21 +226,13 @@ export default function RiskbedomningFormFields({
                       />
                     </TableCell>
                     <TableCell>
-                      <Autocomplete
-                        freeSolo
+                      <SuggestionAutocomplete
+                        label="Åtgärd"
                         options={SUGGESTIONS.atgarder}
                         value={rad.atgard || ''}
-                        onChange={(_e, next) =>
-                          onPlanChange(rad._key, 'atgard')({ target: { value: next || '' } })
-                        }
-                        onInputChange={(_e, next, reason) => {
-                          if (reason === 'input' || reason === 'clear') {
-                            onPlanChange(rad._key, 'atgard')({ target: { value: next } })
-                          }
-                        }}
-                        renderInput={(params) => (
-                          <TextField {...params} size="small" variant="standard" placeholder="Åtgärd" />
-                        )}
+                        onChangeField={onPlanChange(rad._key, 'atgard')}
+                        tooltip="Välj en vanlig åtgärd eller skriv en egen."
+                        placeholder="Åtgärd"
                       />
                     </TableCell>
                     <TableCell>
@@ -281,29 +276,34 @@ export default function RiskbedomningFormFields({
         </Button>
       </Grid>
 
-      <SectionTitle>Signering</SectionTitle>
+      <SectionTitle why="Signering visar vem som ansvarar för riskbedömningen och att parterna tagit del av den.">
+        Signering
+      </SectionTitle>
       <Grid item xs={12} md={4}>
-        <TextField
+        <GuidedTextField
           label="Upprättare"
           value={form.upprattare}
           onChange={onChange('upprattare')}
           fullWidth
+          helpKey="risk_upprattare"
         />
       </Grid>
       <Grid item xs={12} md={4}>
-        <TextField
+        <GuidedTextField
           label="VD"
           value={form.vd}
           onChange={onChange('vd')}
           fullWidth
+          helpKey="contact_name"
         />
       </Grid>
       <Grid item xs={12} md={4}>
-        <TextField
+        <GuidedTextField
           label="Arbetstagarrepresentant"
           value={form.arbetstagarrepresentant}
           onChange={onChange('arbetstagarrepresentant')}
           fullWidth
+          helpKey="contact_name"
         />
       </Grid>
     </Grid>

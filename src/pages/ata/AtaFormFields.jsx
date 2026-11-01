@@ -1,18 +1,8 @@
-import { FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField, Typography } from '@mui/material'
+import { FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField } from '@mui/material'
+import { SectionHeader, GuidedTextField } from '../../components/forms'
 
-function SectionTitle({ children, helper }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
-  )
+function SectionTitle({ children, helper, why }) {
+  return <SectionHeader helper={helper} why={why}>{children}</SectionHeader>
 }
 
 /**
@@ -22,7 +12,9 @@ function SectionTitle({ children, helper }) {
 export default function AtaFormFields({ form, onChange }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle>ÄTA</SectionTitle>
+      <SectionTitle why="ÄTA-raden dokumenterar ändringar så att beställning, ansvar och ekonomi kan följas upp.">
+        ÄTA
+      </SectionTitle>
       <Grid item xs={12} md={4}>
         <TextField
           label="Ordernr"
@@ -40,7 +32,8 @@ export default function AtaFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          helpKey="ata_beskrivning"
           label="Beskrivning"
           value={form.beskrivning}
           onChange={onChange('beskrivning')}
@@ -50,7 +43,8 @@ export default function AtaFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
+          helpKey="contact_name"
           label="Rapportör"
           value={form.rapportor}
           onChange={onChange('rapportor')}
@@ -58,7 +52,8 @@ export default function AtaFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
+          helpKey="ata_orsak"
           label="Orsak"
           value={form.orsak}
           onChange={onChange('orsak')}

@@ -1,18 +1,8 @@
-import { Grid, TextField, Typography } from '@mui/material'
+import { Grid, TextField } from '@mui/material'
+import { SectionHeader, GuidedTextField } from '../../components/forms'
 
-function SectionTitle({ children, helper }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
-  )
+function SectionTitle({ children, helper, why }) {
+  return <SectionHeader helper={helper} why={why}>{children}</SectionHeader>
 }
 
 /**
@@ -22,11 +12,15 @@ function SectionTitle({ children, helper }) {
 export default function EgenkontrollUeFormFields({ form, onChange }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Lista över UE som lämnat egenkontroll.">
+      <SectionTitle
+        helper="Lista över UE som lämnat egenkontroll."
+        why="Egenkontrollen visar att underentreprenörens arbete är kontrollerat och kan följas upp."
+      >
         Egenkontroll från UE
       </SectionTitle>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
+          helpKey="ue_namn"
           label="Underleverantör"
           value={form.underleverantor}
           onChange={onChange('underleverantor')}
@@ -45,7 +39,8 @@ export default function EgenkontrollUeFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          helpKey="egenkontroll_ue"
           label="Egenkontroll"
           value={form.egenkontroll}
           onChange={onChange('egenkontroll')}

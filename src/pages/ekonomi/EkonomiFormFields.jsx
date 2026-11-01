@@ -4,11 +4,19 @@ import {
   Button,
   InputAdornment,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material'
 import AttachFileIcon from '@mui/icons-material/AttachFile'
 import LinkIcon from '@mui/icons-material/Link'
+import { SectionHeader, GuidedTextField } from '../../components/forms'
+
+function SectionTitle({ children, helper, why }) {
+  return (
+    <SectionHeader helper={helper} why={why} asGridItem={false}>
+      {children}
+    </SectionHeader>
+  )
+}
 
 /**
  * Flik 22 – Ekonomi, betalningsplan.
@@ -25,45 +33,48 @@ export default function EkonomiFormFields({
   return (
     <Stack spacing={3}>
       <Box>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5 }}>
+        <SectionTitle
+          helper="Placeholder för betalningsplan och övriga ekonomidokument."
+          why="Ekonomidokument samlar betalningsplan och underlag så att projektets ekonomi kan följas upp."
+        >
           Dokument
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          Placeholder för betalningsplan och övriga ekonomidokument.
-        </Typography>
+        </SectionTitle>
         <Stack spacing={2}>
-          <TextField
+          <GuidedTextField
             label="Namn"
             value={form.namn}
             onChange={onChange('namn')}
             required
             fullWidth
+            helpKey="ekonomi_dokument"
           />
-          <TextField
+          <GuidedTextField
             label="Beskrivning"
             value={form.beskrivning}
             onChange={onChange('beskrivning')}
             fullWidth
             multiline
             minRows={3}
+            helpKey="ekonomi_beskrivning"
           />
         </Stack>
       </Box>
 
       <Box>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5 }}>
+        <SectionTitle
+          helper="Ladda upp en fil till arkivet eller ange en extern länk."
+          why="Fil eller länk gör att dokumentet kan öppnas direkt från pärmen."
+        >
           Fil eller länk
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          Ladda upp en fil till arkivet eller ange en extern länk.
-        </Typography>
+        </SectionTitle>
         <Stack spacing={2}>
-          <TextField
+          <GuidedTextField
             label="Extern länk"
             value={form.file_url}
             onChange={onChange('file_url')}
             fullWidth
             placeholder="https://…"
+            tooltip="Länk till dokumentet om filen ligger i ett externt system."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

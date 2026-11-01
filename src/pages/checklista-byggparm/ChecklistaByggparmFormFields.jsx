@@ -15,7 +15,7 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { CHECKLISTA_BYGGPARM_JA_NEJ_OPTIONS } from '../../lib/types'
-import { SectionHeader } from '../../components/forms'
+import { SectionHeader, GuidedTextField } from '../../components/forms'
 
 function SectionTitle({ children, helper, why }) {
   return (
@@ -66,7 +66,7 @@ export default function ChecklistaByggparmFormFields({
                   </TableCell>
                 </TableRow>
               ) : (
-                form.rader.map((rad) => (
+                form.rader.map((rad, index) => (
                   <TableRow key={rad._key}>
                     <TableCell>
                       <TextField
@@ -89,13 +89,15 @@ export default function ChecklistaByggparmFormFields({
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         select
                         value={rad.klart}
                         onChange={onRadChange(rad._key, 'klart')}
                         size="small"
                         fullWidth
                         variant="standard"
+                        compact
+                        helpKey={index === 0 ? 'checklista_klart' : undefined}
                       >
                         <MenuItem value="">—</MenuItem>
                         {CHECKLISTA_BYGGPARM_JA_NEJ_OPTIONS.map((opt) => (
@@ -103,15 +105,17 @@ export default function ChecklistaByggparmFormFields({
                             {opt.label}
                           </MenuItem>
                         ))}
-                      </TextField>
+                      </GuidedTextField>
                     </TableCell>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         value={rad.ansvarig}
                         onChange={onRadChange(rad._key, 'ansvarig')}
                         size="small"
                         fullWidth
                         variant="standard"
+                        compact
+                        helpKey={index === 0 ? 'checklista_ansvarig' : undefined}
                       />
                     </TableCell>
                     <TableCell>

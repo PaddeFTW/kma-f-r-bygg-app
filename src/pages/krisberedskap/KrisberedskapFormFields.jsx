@@ -1,18 +1,9 @@
-import { Grid, TextField, Typography } from '@mui/material'
+import { Grid, TextField } from '@mui/material'
+import { SectionHeader, GuidedTextField, SuggestionAutocomplete } from '../../components/forms'
+import { SUGGESTIONS } from '../../lib/formHelp'
 
-function SectionTitle({ children, helper }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
-  )
+function SectionTitle({ children, helper, why }) {
+  return <SectionHeader helper={helper} why={why}>{children}</SectionHeader>
 }
 
 /**
@@ -22,11 +13,15 @@ function SectionTitle({ children, helper }) {
 export default function KrisberedskapFormFields({ form, onChange }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Exempel: olycka, våld, hot.">
+      <SectionTitle
+        helper="Exempel: olycka, våld, hot."
+        why="Tydliga scenarier gör det enklare att veta när krisplanen ska aktiveras."
+      >
         Exempel på händelser
       </SectionTitle>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          helpKey="kris_handelser"
           label="Exempel på händelser"
           value={form.exempel_handelser}
           onChange={onChange('exempel_handelser')}
@@ -37,24 +32,29 @@ export default function KrisberedskapFormFields({ form, onChange }) {
         />
       </Grid>
 
-      <SectionTitle helper="Rädda, larma 112, utrym.">
+      <SectionTitle
+        helper="Rädda, larma 112, utrym."
+        why="Åtgärderna ska vara kända innan något händer så att första minuterna används rätt."
+      >
         Omedelbara åtgärder
       </SectionTitle>
       <Grid item xs={12}>
-        <TextField
+        <SuggestionAutocomplete
+          helpKey="kris_atgarder"
           label="Omedelbara åtgärder"
           value={form.omedelbara_atgarder}
-          onChange={onChange('omedelbara_atgarder')}
-          fullWidth
-          multiline
-          minRows={3}
+          onChangeField={onChange('omedelbara_atgarder')}
+          options={SUGGESTIONS.atgarder}
           placeholder="Rädda, larma 112, utrym"
         />
       </Grid>
 
-      <SectionTitle>Krisgrupp</SectionTitle>
+      <SectionTitle why="Krisgruppen visar vilka som leder kommunikation, beslut och uppföljning vid kris.">
+        Krisgrupp
+      </SectionTitle>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          helpKey="contact_name"
           label="Krisgrupp"
           value={form.krisgrupp}
           onChange={onChange('krisgrupp')}
@@ -64,7 +64,9 @@ export default function KrisberedskapFormFields({ form, onChange }) {
         />
       </Grid>
 
-      <SectionTitle>Viktiga telefonnummer</SectionTitle>
+      <SectionTitle why="Samlade telefonnummer minskar söktid när ansvariga och myndigheter behöver nås snabbt.">
+        Viktiga telefonnummer
+      </SectionTitle>
       <Grid item xs={12}>
         <TextField
           label="Viktiga telefonnummer"
@@ -76,7 +78,9 @@ export default function KrisberedskapFormFields({ form, onChange }) {
         />
       </Grid>
 
-      <SectionTitle>Anmälan till Arbetsmiljöverket</SectionTitle>
+      <SectionTitle why="Vissa allvarliga händelser ska anmälas direkt och behöver därför ha en förberedd rutin.">
+        Anmälan till Arbetsmiljöverket
+      </SectionTitle>
       <Grid item xs={12}>
         <TextField
           label="Anmälan till Arbetsmiljöverket"
@@ -88,7 +92,9 @@ export default function KrisberedskapFormFields({ form, onChange }) {
         />
       </Grid>
 
-      <SectionTitle>Uppföljning</SectionTitle>
+      <SectionTitle why="Uppföljningen fångar lärdomar och säkerställer att beslutade åtgärder blir genomförda.">
+        Uppföljning
+      </SectionTitle>
       <Grid item xs={12}>
         <TextField
           label="Uppföljning"

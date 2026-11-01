@@ -37,7 +37,7 @@ import { useAuth } from '../../context/AuthContext'
 import { useContactList } from '../../context/ContactListContext'
 import { KB_AFS_2023_3_URL } from '../../lib/sarskildaRisker'
 import useSaveToContactList from '../../hooks/useSaveToContactList'
-import { SuggestionAutocomplete } from '../../components/forms'
+import { GuidedTextField, SectionHeader, SuggestionAutocomplete } from '../../components/forms'
 
 /**
  * Flik 2 – Roller och ansvar (inkl. Bas-P / Bas-U med kompetens & intyg).
@@ -237,12 +237,20 @@ export default function ProjectRolesSection({ projectId, companyId }) {
               <Typography variant="h5" sx={{ fontWeight: 600 }}>
                 Roller och ansvar
               </Typography>
-              <Typography color="text.secondary">
-                Flik 2 – Organisation. Bas-P och Bas-U är obligatoriska enligt AFS 2023:3.{' '}
-                <Link href={KB_AFS_2023_3_URL} target="_blank" rel="noopener noreferrer">
-                  Knowledge base
-                </Link>
-              </Typography>
+              <SectionHeader
+                asGridItem={false}
+                helper={
+                  <>
+                    Bas-P och Bas-U är obligatoriska enligt AFS 2023:3.{' '}
+                    <Link href={KB_AFS_2023_3_URL} target="_blank" rel="noopener noreferrer">
+                      Knowledge base
+                    </Link>
+                  </>
+                }
+                why="Rollerna visar vem som ansvarar för KMA, arbetsmiljö och produktion enligt AFS."
+              >
+                Flik 2 – Organisation
+              </SectionHeader>
             </Box>
             <Button variant="contained" startIcon={<AddIcon />} onClick={() => openCreate()}>
               Lägg till roll
@@ -329,7 +337,8 @@ export default function ProjectRolesSection({ projectId, companyId }) {
           <DialogContent>
             <Grid container spacing={2} sx={{ pt: 1 }}>
               <Grid item xs={12}>
-                <TextField
+                <GuidedTextField
+                  helpKey="bas_roll"
                   select
                   label="Roll"
                   value={form.role_title}
@@ -345,7 +354,7 @@ export default function ProjectRolesSection({ projectId, companyId }) {
                       {title}
                     </MenuItem>
                   ))}
-                </TextField>
+                </GuidedTextField>
               </Grid>
               <Grid item xs={12}>
                 <SuggestionAutocomplete
@@ -370,7 +379,8 @@ export default function ProjectRolesSection({ projectId, companyId }) {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                <GuidedTextField
+                  helpKey="role_competence"
                   label="Ansvarsområde"
                   value={form.responsibility_area}
                   onChange={handleChange('responsibility_area')}
@@ -383,7 +393,8 @@ export default function ProjectRolesSection({ projectId, companyId }) {
               {showCompetence ? (
                 <>
                   <Grid item xs={12} sm={6}>
-                    <TextField
+                    <GuidedTextField
+                      helpKey="role_competence"
                       label="Kompetens"
                       value={form.competence}
                       onChange={handleChange('competence')}

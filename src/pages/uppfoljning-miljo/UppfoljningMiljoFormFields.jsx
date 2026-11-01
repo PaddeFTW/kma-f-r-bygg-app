@@ -16,20 +16,10 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { UPPFOLJNING_MILJO_STATUS_OPTIONS } from '../../lib/types'
+import { SectionHeader, GuidedTextField } from '../../components/forms'
 
-function SectionTitle({ children, helper }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
-  )
+function SectionTitle({ children, helper, why }) {
+  return <SectionHeader helper={helper} why={why}>{children}</SectionHeader>
 }
 
 /**
@@ -44,7 +34,10 @@ export default function UppfoljningMiljoFormFields({
 }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Uppföljning av miljö.">
+      <SectionTitle
+        helper="Uppföljning av miljö."
+        why="Poängen visar om miljökraven följs och vilka områden som behöver styras om."
+      >
         Kontrollmoment
       </SectionTitle>
       <Grid item xs={12}>
@@ -70,25 +63,29 @@ export default function UppfoljningMiljoFormFields({
                   </TableCell>
                 </TableRow>
               ) : (
-                form.rader.map((rad) => (
+                form.rader.map((rad, index) => (
                   <TableRow key={rad._key}>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         value={rad.kontrollmoment}
                         onChange={onRadChange(rad._key, 'kontrollmoment')}
                         size="small"
                         fullWidth
                         variant="standard"
+                        compact
+                        helpKey={index === 0 ? 'kontrollmoment' : undefined}
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         select
                         value={rad.status}
                         onChange={onRadChange(rad._key, 'status')}
                         size="small"
                         fullWidth
                         variant="standard"
+                        compact
+                        helpKey={index === 0 ? 'uppfoljning_poang' : undefined}
                       >
                         <MenuItem value="">—</MenuItem>
                         {UPPFOLJNING_MILJO_STATUS_OPTIONS.map((opt) => (
@@ -96,7 +93,7 @@ export default function UppfoljningMiljoFormFields({
                             {opt.label}
                           </MenuItem>
                         ))}
-                      </TextField>
+                      </GuidedTextField>
                     </TableCell>
                     <TableCell align="right">
                       <IconButton

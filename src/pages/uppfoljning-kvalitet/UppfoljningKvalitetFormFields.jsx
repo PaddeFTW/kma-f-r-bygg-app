@@ -16,7 +16,7 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { UPPFOLJNING_KVALITET_STATUS_OPTIONS } from '../../lib/types'
-import { SectionHeader } from '../../components/forms'
+import { SectionHeader, GuidedTextField } from '../../components/forms'
 
 function SectionTitle({ children, helper, why }) {
   return (
@@ -67,25 +67,29 @@ export default function UppfoljningKvalitetFormFields({
                   </TableCell>
                 </TableRow>
               ) : (
-                form.rader.map((rad) => (
+                form.rader.map((rad, index) => (
                   <TableRow key={rad._key}>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         value={rad.kontrollmoment}
                         onChange={onRadChange(rad._key, 'kontrollmoment')}
                         size="small"
                         fullWidth
                         variant="standard"
+                        compact
+                        helpKey={index === 0 ? 'kontrollmoment' : undefined}
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField
+                      <GuidedTextField
                         select
                         value={rad.status}
                         onChange={onRadChange(rad._key, 'status')}
                         size="small"
                         fullWidth
                         variant="standard"
+                        compact
+                        helpKey={index === 0 ? 'uppfoljning_poang' : undefined}
                       >
                         <MenuItem value="">—</MenuItem>
                         {UPPFOLJNING_KVALITET_STATUS_OPTIONS.map((opt) => (
@@ -93,7 +97,7 @@ export default function UppfoljningKvalitetFormFields({
                             {opt.label}
                           </MenuItem>
                         ))}
-                      </TextField>
+                      </GuidedTextField>
                     </TableCell>
                     <TableCell align="right">
                       <IconButton

@@ -1,5 +1,5 @@
 import { Grid, TextField } from '@mui/material'
-import { SectionHeader, SuggestionAutocomplete } from '../../components/forms'
+import { GuidedTextField, SectionHeader, SuggestionAutocomplete } from '../../components/forms'
 import { useContactList } from '../../context/ContactListContext'
 
 function SectionTitle({ children, why }) {
@@ -32,7 +32,9 @@ export default function OrgContactFormFields({
         Kontaktuppgifter
       </SectionTitle>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
+          helpKey="contact_name"
+          tooltip="Ange VD eller motsvarande firmatecknare för organisationen."
           label="VD"
           value={form.ceo_name}
           onChange={onChange('ceo_name')}

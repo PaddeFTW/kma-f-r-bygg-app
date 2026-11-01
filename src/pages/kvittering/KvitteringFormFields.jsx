@@ -16,23 +16,13 @@ import {
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import { SectionHeader, GuidedTextField } from '../../components/forms'
 
-function SectionTitle({ children, helper }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
-  )
+function SectionTitle({ children, helper, why }) {
+  return <SectionHeader helper={helper} why={why}>{children}</SectionHeader>
 }
 
-function SignatureTable({ rows, onChange, onRemove, emptyLabel }) {
+function SignatureTable({ rows, onChange, onRemove, emptyLabel, showHelp = false }) {
   return (
     <Box sx={{ overflowX: 'auto', border: 1, borderColor: 'divider', borderRadius: 1 }}>
       <Table size="small" sx={{ minWidth: 560 }}>
@@ -54,15 +44,17 @@ function SignatureTable({ rows, onChange, onRemove, emptyLabel }) {
               </TableCell>
             </TableRow>
           ) : (
-            rows.map((rad) => (
+            rows.map((rad, index) => (
               <TableRow key={rad._key}>
                 <TableCell>
-                  <TextField
+                  <GuidedTextField
                     value={rad.namn}
                     onChange={onChange(rad._key, 'namn')}
                     size="small"
                     fullWidth
                     variant="standard"
+                    compact
+                    helpKey={showHelp && index === 0 ? 'kvittering_namn' : undefined}
                   />
                 </TableCell>
                 <TableCell>
@@ -77,12 +69,14 @@ function SignatureTable({ rows, onChange, onRemove, emptyLabel }) {
                   />
                 </TableCell>
                 <TableCell>
-                  <TextField
+                  <GuidedTextField
                     value={rad.signatur}
                     onChange={onChange(rad._key, 'signatur')}
                     size="small"
                     fullWidth
                     variant="standard"
+                    compact
+                    tooltip={showHelp && index === 0 ? 'Signatur eller initialer som bekräftar kvitteringen.' : undefined}
                   />
                 </TableCell>
                 <TableCell align="right">
@@ -120,7 +114,10 @@ export default function KvitteringFormFields({
 }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Bevis att personal och UE fått säkerhetsinformation.">
+      <SectionTitle
+        helper="Bevis att personal och UE fått säkerhetsinformation."
+        why="Valda dokument visar vilken information som ska kvitteras av personal och UE."
+      >
         Dokument
       </SectionTitle>
       <Grid item xs={12}>
@@ -155,26 +152,38 @@ export default function KvitteringFormFields({
         </FormGroup>
       </Grid>
 
-      <SectionTitle helper="Kvittering från anställda.">Anställda</SectionTitle>
+      <SectionTitle
+        helper="Kvittering från anställda."
+        why="Anställdas namn, datum och signatur visar att de tagit del av informationen."
+      >
+        Anställda
+      </SectionTitle>
       <Grid item xs={12}>
         <SignatureTable
           rows={form.anstallda}
           onChange={onAnstalldChange}
           onRemove={onRemoveAnstalld}
           emptyLabel="Inga anställda ännu. Lägg till en rad."
+          showHelp
         />
         <Button startIcon={<AddIcon />} onClick={onAddAnstalld} sx={{ mt: 1.5 }}>
           Lägg till anställd
         </Button>
       </Grid>
 
-      <SectionTitle helper="Kvittering från underentreprenörer.">UE</SectionTitle>
+      <SectionTitle
+        helper="Kvittering från underentreprenörer."
+        why="UE-kvittering gör det spårbart vilka externa aktörer som fått projektets regler."
+      >
+        UE
+      </SectionTitle>
       <Grid item xs={12}>
         <SignatureTable
           rows={form.ue}
           onChange={onUeChange}
           onRemove={onRemoveUe}
           emptyLabel="Inga UE ännu. Lägg till en rad."
+          showHelp
         />
         <Button startIcon={<AddIcon />} onClick={onAddUe} sx={{ mt: 1.5 }}>
           Lägg till UE

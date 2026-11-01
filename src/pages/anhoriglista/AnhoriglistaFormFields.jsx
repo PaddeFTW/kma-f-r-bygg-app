@@ -1,18 +1,8 @@
-import { Grid, TextField, Typography } from '@mui/material'
+import { Grid, TextField } from '@mui/material'
+import { SectionHeader, GuidedTextField } from '../../components/forms'
 
-function SectionTitle({ children, helper }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
-  )
+function SectionTitle({ children, helper, why }) {
+  return <SectionHeader helper={helper} why={why}>{children}</SectionHeader>
 }
 
 /**
@@ -22,11 +12,15 @@ function SectionTitle({ children, helper }) {
 export default function AnhoriglistaFormFields({ form, onChange }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="UE ska lämna egen lista eller till platschef.">
+      <SectionTitle
+        helper="UE ska lämna egen lista eller till platschef."
+        why="Kontaktuppgifter till anhöriga behövs för snabb och korrekt kontakt vid olycka eller sjukdom."
+      >
         Anhöriglista
       </SectionTitle>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
+          helpKey="anhorig_medarbetare"
           label="Medarbetare"
           value={form.medarbetare}
           onChange={onChange('medarbetare')}
@@ -35,7 +29,8 @@ export default function AnhoriglistaFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
+          helpKey="anhorig_kontakt"
           label="Närmaste anhörig"
           value={form.narmaste_anhorig}
           onChange={onChange('narmaste_anhorig')}
@@ -43,7 +38,8 @@ export default function AnhoriglistaFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
+          helpKey="anhorig_kontakt"
           label="Telefon/mobil"
           value={form.telefon_mobil}
           onChange={onChange('telefon_mobil')}

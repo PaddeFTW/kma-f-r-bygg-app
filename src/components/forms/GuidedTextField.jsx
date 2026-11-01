@@ -15,16 +15,18 @@ export default function GuidedTextField({
   InputProps,
   SelectProps,
   children,
+  /** Kompakt läge för tabellceller: bara “?” / title, ingen why-rad. */
+  compact = false,
   ...textFieldProps
 }) {
   const help = (helpKey && FORM_HELP[helpKey]) || {}
   const tip = [tooltip || help.tooltip, example || help.example].filter(Boolean).join(' ')
-  const whyText = why || help.why
+  const whyText = compact ? null : why || help.why
   const mergedHelper = helperText || null
   const isSelect = Boolean(textFieldProps.select)
 
   return (
-    <Stack spacing={0.5} sx={{ width: '100%' }}>
+    <Stack spacing={compact ? 0 : 0.5} sx={{ width: '100%' }}>
       <TextField
         {...textFieldProps}
         helperText={mergedHelper}
@@ -63,7 +65,7 @@ export default function GuidedTextField({
       >
         {children}
       </TextField>
-      {isSelect && tip ? (
+      {!compact && isSelect && tip ? (
         <Typography variant="caption" color="text.secondary" sx={{ px: 0.5 }}>
           {tip}
         </Typography>
