@@ -1063,3 +1063,665 @@ export function krisberedskapFormToPayload(form) {
     uppfoljning: t(form.uppfoljning) || null,
   }
 }
+
+/** Flik 21 – Skydds- och miljörond */
+export const SKYDDSROND_CHECKLISTA_DEFAULT = [
+  'Allmän ordning',
+  'Arbetsmiljöplan',
+  'Avstängningar',
+  'Belysning',
+  'Brandskydd',
+  'Buller',
+  'Byggelement',
+  'Damm',
+  'Drivmedel',
+  'Fallskydd',
+  'Farliga ämnen',
+  'Källsortering',
+  'Lyft',
+  'Maskiner',
+  'Trafik',
+  'Öppningar',
+]
+
+export const SKYDDSROND_STATUS_OPTIONS = [
+  { value: 'ja', label: 'Ja' },
+  { value: 'nej', label: 'Nej' },
+]
+
+export const emptySkyddsrondCheckRad = (punkt = '') => ({
+  _key: `chk-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  punkt,
+  status: '',
+})
+
+export const emptySkyddsrondHandlingsplanRad = () => ({
+  _key: `hp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  nr: '',
+  fel_brister: '',
+  atgardas_senast: '',
+  ansvarig: '',
+  atgardat_datum: '',
+})
+
+export function skyddsrondChecklistaDefaults() {
+  return SKYDDSROND_CHECKLISTA_DEFAULT.map((punkt) => emptySkyddsrondCheckRad(punkt))
+}
+
+export const emptySkyddsrondForm = {
+  platschef: '',
+  arbetsledare: '',
+  skyddsombud: '',
+  ue: '',
+  checklista: [],
+  handlingsplan: [],
+}
+
+export function skyddsrondToForm(row, checklista = [], handlingsplan = []) {
+  if (!row) return { ...emptySkyddsrondForm, checklista: [], handlingsplan: [] }
+  return {
+    platschef: row.platschef || '',
+    arbetsledare: row.arbetsledare || '',
+    skyddsombud: row.skyddsombud || '',
+    ue: row.ue || '',
+    checklista: (checklista || []).map((rad, index) => ({
+      _key: rad.id || `chk-${index}`,
+      punkt: rad.punkt || '',
+      status: rad.status || '',
+    })),
+    handlingsplan: (handlingsplan || []).map((rad, index) => ({
+      _key: rad.id || `hp-${index}`,
+      nr: rad.nr || '',
+      fel_brister: rad.fel_brister || '',
+      atgardas_senast: rad.atgardas_senast || '',
+      ansvarig: rad.ansvarig || '',
+      atgardat_datum: rad.atgardat_datum || '',
+    })),
+  }
+}
+
+export function skyddsrondFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    platschef: t(form.platschef) || null,
+    arbetsledare: t(form.arbetsledare) || null,
+    skyddsombud: t(form.skyddsombud) || null,
+    ue: t(form.ue) || null,
+  }
+}
+
+export function skyddsrondChecklistaToPayload(skyddsrondId, checklista) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (checklista || []).map((rad, index) => ({
+    skyddsrond_id: skyddsrondId,
+    sort_order: index,
+    punkt: t(rad.punkt) || null,
+    status: t(rad.status) || null,
+  }))
+}
+
+export function skyddsrondHandlingsplanToPayload(skyddsrondId, handlingsplan) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (handlingsplan || []).map((rad, index) => ({
+    skyddsrond_id: skyddsrondId,
+    sort_order: index,
+    nr: t(rad.nr) || null,
+    fel_brister: t(rad.fel_brister) || null,
+    atgardas_senast: t(rad.atgardas_senast) || null,
+    ansvarig: t(rad.ansvarig) || null,
+    atgardat_datum: t(rad.atgardat_datum) || null,
+  }))
+}
+
+/** Flik 22 – Ekonomi, betalningsplan (dokumentarkiv) */
+export const emptyEkonomiForm = {
+  namn: '',
+  beskrivning: '',
+  file_url: '',
+  file_name: '',
+}
+
+export function ekonomiToForm(row) {
+  if (!row) return { ...emptyEkonomiForm }
+  return {
+    namn: row.namn || '',
+    beskrivning: row.beskrivning || '',
+    file_url: row.file_url || '',
+    file_name: row.file_name || '',
+  }
+}
+
+/** Payload för insert/update – null för tomma fält (filmetadata sätts separat vid uppladdning) */
+export function ekonomiFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    namn: t(form.namn),
+    beskrivning: t(form.beskrivning) || null,
+    file_url: t(form.file_url) || null,
+  }
+}
+
+/** Flik 23 – Arbetsplatsbesiktning */
+export const ARBETSPLATSBESIKTNING_STATUS_OPTIONS = [
+  { value: '1', label: '1 – Kontrollerat och godkänt' },
+  { value: '2', label: '2 – Kontrollerat och ej godkänt' },
+  { value: '3', label: '3 – Ej kontrollerat' },
+]
+
+export const ARBETSPLATSBESIKTNING_MOMENTS = [
+  'Besiktat platsen',
+  'Riskbedömning gjord',
+  'AMP/miljöplan/kvalitetsplan gjorda',
+  'Lagar beaktade',
+  'UE informerade/deltagit',
+  'Brister åtgärdade',
+]
+
+export const emptyArbetsplatsbesiktningRad = (kontrollmoment = '') => ({
+  _key: `new-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  kontrollmoment,
+  status: '',
+})
+
+export function arbetsplatsbesiktningRaderDefaults() {
+  return ARBETSPLATSBESIKTNING_MOMENTS.map((m) => emptyArbetsplatsbesiktningRad(m))
+}
+
+export const emptyArbetsplatsbesiktningForm = {
+  rader: [],
+}
+
+export function arbetsplatsbesiktningToForm(row, rader = []) {
+  if (!row) return { ...emptyArbetsplatsbesiktningForm, rader: [] }
+  return {
+    rader: (rader || []).map((rad, index) => ({
+      _key: rad.id || `rad-${index}`,
+      kontrollmoment: rad.kontrollmoment || '',
+      status: rad.status || '',
+    })),
+  }
+}
+
+export function arbetsplatsbesiktningRaderToPayload(besiktningId, rader) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (rader || []).map((r, index) => ({
+    arbetsplatsbesiktning_id: besiktningId,
+    sort_order: index,
+    kontrollmoment: t(r.kontrollmoment) || null,
+    status: t(r.status) || null,
+  }))
+}
+
+/** Flik 24 – Slutbesiktningsprotokoll (dokumentarkiv) */
+export const emptySlutbesiktningForm = {
+  namn: '',
+  beskrivning: '',
+  file_url: '',
+  file_name: '',
+}
+
+export function slutbesiktningToForm(row) {
+  if (!row) return { ...emptySlutbesiktningForm }
+  return {
+    namn: row.namn || '',
+    beskrivning: row.beskrivning || '',
+    file_url: row.file_url || '',
+    file_name: row.file_name || '',
+  }
+}
+
+/** Payload för insert/update – null för tomma fält (filmetadata sätts separat vid uppladdning) */
+export function slutbesiktningFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    namn: t(form.namn),
+    beskrivning: t(form.beskrivning) || null,
+    file_url: t(form.file_url) || null,
+  }
+}
+
+/** Flik 25 – Uppföljning Arbetsmiljö */
+export const UPPFOLJNING_AM_STATUS_OPTIONS = [
+  { value: '1', label: '1 – Icke godkänt' },
+  { value: '2', label: '2 – Godkänt' },
+  { value: '3', label: '3 – Väl godkänt' },
+]
+
+export const UPPFOLJNING_AM_MOMENTS = [
+  'Skyddsronder genomförda',
+  'Tillbud/olyckor',
+  'Rapporterade',
+  'Skyddsutrustning använd',
+]
+
+export const emptyUppfoljningAmRad = (kontrollmoment = '') => ({
+  _key: `new-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  kontrollmoment,
+  status: '',
+})
+
+export function uppfoljningAmRaderDefaults() {
+  return UPPFOLJNING_AM_MOMENTS.map((m) => emptyUppfoljningAmRad(m))
+}
+
+export const emptyUppfoljningAmForm = {
+  rader: [],
+}
+
+export function uppfoljningAmToForm(row, rader = []) {
+  if (!row) return { ...emptyUppfoljningAmForm, rader: [] }
+  return {
+    rader: (rader || []).map((rad, index) => ({
+      _key: rad.id || `rad-${index}`,
+      kontrollmoment: rad.kontrollmoment || '',
+      status: rad.status || '',
+    })),
+  }
+}
+
+export function uppfoljningAmRaderToPayload(uppfoljningAmId, rader) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (rader || []).map((r, index) => ({
+    uppfoljning_am_id: uppfoljningAmId,
+    sort_order: index,
+    kontrollmoment: t(r.kontrollmoment) || null,
+    status: t(r.status) || null,
+  }))
+}
+
+/** Flik 26 – Uppföljning Kvalitet */
+export const UPPFOLJNING_KVALITET_STATUS_OPTIONS = [
+  { value: '1', label: '1 – Icke godkänt' },
+  { value: '2', label: '2 – Godkänt' },
+  { value: '3', label: '3 – Väl godkänt' },
+]
+
+export const UPPFOLJNING_KVALITET_MOMENTS = [
+  'Projektpärmar ok',
+  'Byggstartmöte',
+  'Handlingar på plats',
+  'Inköp',
+  'Tidplan',
+]
+
+export const emptyUppfoljningKvalitetRad = (kontrollmoment = '') => ({
+  _key: `new-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  kontrollmoment,
+  status: '',
+})
+
+export function uppfoljningKvalitetRaderDefaults() {
+  return UPPFOLJNING_KVALITET_MOMENTS.map((m) => emptyUppfoljningKvalitetRad(m))
+}
+
+export const emptyUppfoljningKvalitetForm = {
+  rader: [],
+}
+
+export function uppfoljningKvalitetToForm(row, rader = []) {
+  if (!row) return { ...emptyUppfoljningKvalitetForm, rader: [] }
+  return {
+    rader: (rader || []).map((rad, index) => ({
+      _key: rad.id || `rad-${index}`,
+      kontrollmoment: rad.kontrollmoment || '',
+      status: rad.status || '',
+    })),
+  }
+}
+
+export function uppfoljningKvalitetRaderToPayload(uppfoljningKvalitetId, rader) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (rader || []).map((r, index) => ({
+    uppfoljning_kvalitet_id: uppfoljningKvalitetId,
+    sort_order: index,
+    kontrollmoment: t(r.kontrollmoment) || null,
+    status: t(r.status) || null,
+  }))
+}
+
+/** Flik 27 – Uppföljning Miljö */
+export const UPPFOLJNING_MILJO_STATUS_OPTIONS = [
+  { value: '1', label: '1 – Icke godkänt' },
+  { value: '2', label: '2 – Godkänt' },
+  { value: '3', label: '3 – Väl godkänt' },
+]
+
+export const UPPFOLJNING_MILJO_MOMENTS = [
+  'Miljömaskiner',
+  'Tomgång',
+  'Miljöfarliga produkter',
+  'Spill',
+  'Källsortering',
+  'Upplag',
+]
+
+export const emptyUppfoljningMiljoRad = (kontrollmoment = '') => ({
+  _key: `new-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  kontrollmoment,
+  status: '',
+})
+
+export function uppfoljningMiljoRaderDefaults() {
+  return UPPFOLJNING_MILJO_MOMENTS.map((m) => emptyUppfoljningMiljoRad(m))
+}
+
+export const emptyUppfoljningMiljoForm = {
+  rader: [],
+}
+
+export function uppfoljningMiljoToForm(row, rader = []) {
+  if (!row) return { ...emptyUppfoljningMiljoForm, rader: [] }
+  return {
+    rader: (rader || []).map((rad, index) => ({
+      _key: rad.id || `rad-${index}`,
+      kontrollmoment: rad.kontrollmoment || '',
+      status: rad.status || '',
+    })),
+  }
+}
+
+export function uppfoljningMiljoRaderToPayload(uppfoljningMiljoId, rader) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (rader || []).map((r, index) => ({
+    uppfoljning_miljo_id: uppfoljningMiljoId,
+    sort_order: index,
+    kontrollmoment: t(r.kontrollmoment) || null,
+    status: t(r.status) || null,
+  }))
+}
+
+/** Flik 28 – Riskbedömning + Lagar */
+export const RISKBEDOMNING_JA_NEJ_OPTIONS = [
+  { value: 'ja', label: 'Ja' },
+  { value: 'nej', label: 'Nej' },
+]
+
+export const RISKBEDOMNING_RISKNIVA_OPTIONS = [
+  { value: 'lag', label: 'Låg' },
+  { value: 'medel', label: 'Medel' },
+  { value: 'hog', label: 'Hög' },
+]
+
+/** Exempel AFS från underlaget (m.fl. kan läggas till). */
+export const RISKBEDOMNING_AFS_DEFAULTS = [
+  '2023:1',
+  '2023:3',
+  '2023:10',
+  '2023:11',
+  '2023:13',
+]
+
+export const emptyRiskbedomningAfsRad = (afs_nummer = '') => ({
+  _key: `afs-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  afs_nummer,
+  titel: '',
+  tillamplig: '',
+  riskniva: '',
+  ansvarig: '',
+  handlingsplan_nr: '',
+  datum: '',
+})
+
+export const emptyRiskbedomningHandlingsplanRad = () => ({
+  _key: `hp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  fran_afs: '',
+  atgard: '',
+  ansvarig: '',
+  klart_datum: '',
+})
+
+export function riskbedomningAfsDefaults() {
+  return RISKBEDOMNING_AFS_DEFAULTS.map((nr) => emptyRiskbedomningAfsRad(nr))
+}
+
+export const emptyRiskbedomningForm = {
+  upprattare: '',
+  vd: '',
+  arbetstagarrepresentant: '',
+  afs_rader: [],
+  handlingsplan: [],
+}
+
+export function riskbedomningToForm(row, afsRader = [], handlingsplan = []) {
+  if (!row) return { ...emptyRiskbedomningForm, afs_rader: [], handlingsplan: [] }
+  return {
+    upprattare: row.upprattare || '',
+    vd: row.vd || '',
+    arbetstagarrepresentant: row.arbetstagarrepresentant || '',
+    afs_rader: (afsRader || []).map((rad, index) => ({
+      _key: rad.id || `afs-${index}`,
+      afs_nummer: rad.afs_nummer || '',
+      titel: rad.titel || '',
+      tillamplig: rad.tillamplig || '',
+      riskniva: rad.riskniva || '',
+      ansvarig: rad.ansvarig || '',
+      handlingsplan_nr: rad.handlingsplan_nr || '',
+      datum: rad.datum || '',
+    })),
+    handlingsplan: (handlingsplan || []).map((rad, index) => ({
+      _key: rad.id || `hp-${index}`,
+      fran_afs: rad.fran_afs || '',
+      atgard: rad.atgard || '',
+      ansvarig: rad.ansvarig || '',
+      klart_datum: rad.klart_datum || '',
+    })),
+  }
+}
+
+export function riskbedomningFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    upprattare: t(form.upprattare) || null,
+    vd: t(form.vd) || null,
+    arbetstagarrepresentant: t(form.arbetstagarrepresentant) || null,
+  }
+}
+
+export function riskbedomningAfsToPayload(riskbedomningId, afsRader) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (afsRader || []).map((rad, index) => ({
+    riskbedomning_id: riskbedomningId,
+    sort_order: index,
+    afs_nummer: t(rad.afs_nummer) || null,
+    titel: t(rad.titel) || null,
+    tillamplig: t(rad.tillamplig) || null,
+    riskniva: t(rad.riskniva) || null,
+    ansvarig: t(rad.ansvarig) || null,
+    handlingsplan_nr: t(rad.handlingsplan_nr) || null,
+    datum: t(rad.datum) || null,
+  }))
+}
+
+export function riskbedomningHandlingsplanToPayload(riskbedomningId, handlingsplan) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (handlingsplan || []).map((rad, index) => ({
+    riskbedomning_id: riskbedomningId,
+    sort_order: index,
+    fran_afs: t(rad.fran_afs) || null,
+    atgard: t(rad.atgard) || null,
+    ansvarig: t(rad.ansvarig) || null,
+    klart_datum: t(rad.klart_datum) || null,
+  }))
+}
+
+/** Flik 29 – Kvitteringslistor */
+export const emptyKvitteringRad = (kategori = 'anstalld') => ({
+  _key: `kv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  kategori,
+  namn: '',
+  datum: '',
+  signatur: '',
+})
+
+export const emptyKvitteringForm = {
+  dokument_amp: true,
+  dokument_riskbedomning: true,
+  dokument_ordningsregler: true,
+  anstallda: [],
+  ue: [],
+}
+
+export function kvitteringToForm(row, rader = []) {
+  if (!row) return { ...emptyKvitteringForm, anstallda: [], ue: [] }
+  const mapped = (rader || []).map((rad, index) => ({
+    _key: rad.id || `kv-${index}`,
+    kategori: rad.kategori || 'anstalld',
+    namn: rad.namn || '',
+    datum: rad.datum || '',
+    signatur: rad.signatur || '',
+  }))
+  return {
+    dokument_amp: Boolean(row.dokument_amp),
+    dokument_riskbedomning: Boolean(row.dokument_riskbedomning),
+    dokument_ordningsregler: Boolean(row.dokument_ordningsregler),
+    anstallda: mapped.filter((rad) => rad.kategori === 'anstalld'),
+    ue: mapped.filter((rad) => rad.kategori === 'ue'),
+  }
+}
+
+export function kvitteringFormToPayload(form) {
+  return {
+    dokument_amp: Boolean(form.dokument_amp),
+    dokument_riskbedomning: Boolean(form.dokument_riskbedomning),
+    dokument_ordningsregler: Boolean(form.dokument_ordningsregler),
+  }
+}
+
+export function kvitteringRaderToPayload(kvitteringId, form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  const anstallda = (form.anstallda || []).map((rad) => ({ ...rad, kategori: 'anstalld' }))
+  const ue = (form.ue || []).map((rad) => ({ ...rad, kategori: 'ue' }))
+  return [...anstallda, ...ue].map((rad, index) => ({
+    kvittering_id: kvitteringId,
+    sort_order: index,
+    kategori: rad.kategori,
+    namn: t(rad.namn) || null,
+    datum: t(rad.datum) || null,
+    signatur: t(rad.signatur) || null,
+  }))
+}
+
+/** Flik 30 – Checklista byggpärm (Flik 1–31) */
+export const CHECKLISTA_BYGGPARM_JA_NEJ_OPTIONS = [
+  { value: 'ja', label: 'Ja' },
+  { value: 'nej', label: 'Nej' },
+]
+
+export const CHECKLISTA_BYGGPARM_AVSNITT = [
+  { flik_nr: 1, avsnitt: 'Projektbeskrivning' },
+  { flik_nr: 2, avsnitt: 'Organisation' },
+  { flik_nr: 3, avsnitt: 'Beställarens organisation' },
+  { flik_nr: 4, avsnitt: 'Underleverantörer (organisation)' },
+  { flik_nr: 5, avsnitt: 'Kvalitetsplan' },
+  { flik_nr: 6, avsnitt: 'Miljöplan' },
+  { flik_nr: 7, avsnitt: 'Arbetsmiljöplan' },
+  { flik_nr: 8, avsnitt: 'Miljöanalys' },
+  { flik_nr: 9, avsnitt: 'Rivningsplan' },
+  { flik_nr: 10, avsnitt: 'Protokoll – byggmöte' },
+  { flik_nr: 11, avsnitt: 'Bygghandlingar / relationsritningar' },
+  { flik_nr: 12, avsnitt: 'Kontrollplan' },
+  { flik_nr: 13, avsnitt: 'Egenkontroller' },
+  { flik_nr: 14, avsnitt: 'Egenkontroller från UE' },
+  { flik_nr: 15, avsnitt: 'Inventering av maskiner för UE' },
+  { flik_nr: 16, avsnitt: 'ÄTA / Avvikelserapport / ÄTA-lista' },
+  { flik_nr: 17, avsnitt: 'Säkerhetsdatablad' },
+  { flik_nr: 18, avsnitt: 'Nödlägesberedskap' },
+  { flik_nr: 19, avsnitt: 'Anhöriglista' },
+  { flik_nr: 20, avsnitt: 'Krisberedskap' },
+  { flik_nr: 21, avsnitt: 'Skydds- och miljörond' },
+  { flik_nr: 22, avsnitt: 'Ekonomi, betalningsplan' },
+  { flik_nr: 23, avsnitt: 'Arbetsplatsbesiktning' },
+  { flik_nr: 24, avsnitt: 'Slutbesiktningsprotokoll' },
+  { flik_nr: 25, avsnitt: 'Uppföljning Arbetsmiljö' },
+  { flik_nr: 26, avsnitt: 'Uppföljning Kvalitet' },
+  { flik_nr: 27, avsnitt: 'Uppföljning Miljö' },
+  { flik_nr: 28, avsnitt: 'Riskbedömning + Lagar' },
+  { flik_nr: 29, avsnitt: 'Kvitteringslistor' },
+  { flik_nr: 30, avsnitt: 'Checklista byggpärm' },
+  { flik_nr: 31, avsnitt: 'Distribution och signering' },
+]
+
+export const emptyChecklistaByggparmRad = (flik_nr = null, avsnitt = '') => ({
+  _key: `cb-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  flik_nr,
+  avsnitt,
+  klart: '',
+  ansvarig: '',
+  datum: '',
+})
+
+export function checklistaByggparmDefaults() {
+  return CHECKLISTA_BYGGPARM_AVSNITT.map((item) =>
+    emptyChecklistaByggparmRad(item.flik_nr, item.avsnitt)
+  )
+}
+
+export const emptyChecklistaByggparmForm = {
+  rader: [],
+}
+
+export function checklistaByggparmToForm(_row, rader = []) {
+  return {
+    rader: (rader || []).map((rad, index) => ({
+      _key: rad.id || `cb-${index}`,
+      flik_nr: rad.flik_nr ?? null,
+      avsnitt: rad.avsnitt || '',
+      klart: rad.klart || '',
+      ansvarig: rad.ansvarig || '',
+      datum: rad.datum || '',
+    })),
+  }
+}
+
+export function checklistaByggparmRaderToPayload(checklistaId, rader) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return (rader || []).map((rad, index) => ({
+    checklista_id: checklistaId,
+    sort_order: index,
+    flik_nr: rad.flik_nr == null || rad.flik_nr === '' ? null : Number(rad.flik_nr),
+    avsnitt: t(rad.avsnitt) || null,
+    klart: t(rad.klart) || null,
+    ansvarig: t(rad.ansvarig) || null,
+    datum: t(rad.datum) || null,
+  }))
+}
+
+/** Flik 31 – Distribution och signering */
+export const emptyDistributionForm = {
+  parmstatus: '',
+  distributionslista: '',
+  bestallare: '',
+  bestallare_datum: '',
+  platschef: '',
+  platschef_datum: '',
+  bestallarens_ombud: '',
+  bestallarens_ombud_datum: '',
+}
+
+export function distributionToForm(row) {
+  if (!row) return { ...emptyDistributionForm }
+  return {
+    parmstatus: row.parmstatus || '',
+    distributionslista: row.distributionslista || '',
+    bestallare: row.bestallare || '',
+    bestallare_datum: row.bestallare_datum || '',
+    platschef: row.platschef || '',
+    platschef_datum: row.platschef_datum || '',
+    bestallarens_ombud: row.bestallarens_ombud || '',
+    bestallarens_ombud_datum: row.bestallarens_ombud_datum || '',
+  }
+}
+
+export function distributionFormToPayload(form) {
+  const t = (v) => (typeof v === 'string' ? v.trim() : '')
+  return {
+    parmstatus: t(form.parmstatus) || null,
+    distributionslista: t(form.distributionslista) || null,
+    bestallare: t(form.bestallare) || null,
+    bestallare_datum: t(form.bestallare_datum) || null,
+    platschef: t(form.platschef) || null,
+    platschef_datum: t(form.platschef_datum) || null,
+    bestallarens_ombud: t(form.bestallarens_ombud) || null,
+    bestallarens_ombud_datum: t(form.bestallarens_ombud_datum) || null,
+  }
+}

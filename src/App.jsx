@@ -44,6 +44,28 @@ import AnhoriglistaList from './pages/anhoriglista/AnhoriglistaList'
 import AnhoriglistaDetail from './pages/anhoriglista/AnhoriglistaDetail'
 import KrisberedskapList from './pages/krisberedskap/KrisberedskapList'
 import KrisberedskapDetail from './pages/krisberedskap/KrisberedskapDetail'
+import SkyddsrondList from './pages/skyddsrond/SkyddsrondList'
+import SkyddsrondDetail from './pages/skyddsrond/SkyddsrondDetail'
+import EkonomiList from './pages/ekonomi/EkonomiList'
+import EkonomiDetail from './pages/ekonomi/EkonomiDetail'
+import ArbetsplatsbesiktningList from './pages/arbetsplatsbesiktning/ArbetsplatsbesiktningList'
+import ArbetsplatsbesiktningDetail from './pages/arbetsplatsbesiktning/ArbetsplatsbesiktningDetail'
+import SlutbesiktningList from './pages/slutbesiktning/SlutbesiktningList'
+import SlutbesiktningDetail from './pages/slutbesiktning/SlutbesiktningDetail'
+import UppfoljningAmList from './pages/uppfoljning-am/UppfoljningAmList'
+import UppfoljningAmDetail from './pages/uppfoljning-am/UppfoljningAmDetail'
+import UppfoljningKvalitetList from './pages/uppfoljning-kvalitet/UppfoljningKvalitetList'
+import UppfoljningKvalitetDetail from './pages/uppfoljning-kvalitet/UppfoljningKvalitetDetail'
+import UppfoljningMiljoList from './pages/uppfoljning-miljo/UppfoljningMiljoList'
+import UppfoljningMiljoDetail from './pages/uppfoljning-miljo/UppfoljningMiljoDetail'
+import RiskbedomningList from './pages/riskbedomning/RiskbedomningList'
+import RiskbedomningDetail from './pages/riskbedomning/RiskbedomningDetail'
+import KvitteringList from './pages/kvittering/KvitteringList'
+import KvitteringDetail from './pages/kvittering/KvitteringDetail'
+import ChecklistaByggparmList from './pages/checklista-byggparm/ChecklistaByggparmList'
+import ChecklistaByggparmDetail from './pages/checklista-byggparm/ChecklistaByggparmDetail'
+import DistributionList from './pages/distribution/DistributionList'
+import DistributionDetail from './pages/distribution/DistributionDetail'
 
 export default function App() {
   return (
@@ -310,6 +332,182 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <KrisberedskapDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/skyddsrond"
+                element={
+                  <ProtectedRoute>
+                    <SkyddsrondList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/skyddsrond/:id"
+                element={
+                  <ProtectedRoute>
+                    <SkyddsrondDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ekonomi"
+                element={
+                  <ProtectedRoute>
+                    <EkonomiList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ekonomi/:id"
+                element={
+                  <ProtectedRoute>
+                    <EkonomiDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/arbetsplatsbesiktning"
+                element={
+                  <ProtectedRoute>
+                    <ArbetsplatsbesiktningList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/arbetsplatsbesiktning/:id"
+                element={
+                  <ProtectedRoute>
+                    <ArbetsplatsbesiktningDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/slutbesiktning"
+                element={
+                  <ProtectedRoute>
+                    <SlutbesiktningList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/slutbesiktning/:id"
+                element={
+                  <ProtectedRoute>
+                    <SlutbesiktningDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/uppfoljning-am"
+                element={
+                  <ProtectedRoute>
+                    <UppfoljningAmList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/uppfoljning-am/:id"
+                element={
+                  <ProtectedRoute>
+                    <UppfoljningAmDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/uppfoljning-kvalitet"
+                element={
+                  <ProtectedRoute>
+                    <UppfoljningKvalitetList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/uppfoljning-kvalitet/:id"
+                element={
+                  <ProtectedRoute>
+                    <UppfoljningKvalitetDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/uppfoljning-miljo"
+                element={
+                  <ProtectedRoute>
+                    <UppfoljningMiljoList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/uppfoljning-miljo/:id"
+                element={
+                  <ProtectedRoute>
+                    <UppfoljningMiljoDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/riskbedomning"
+                element={
+                  <ProtectedRoute>
+                    <RiskbedomningList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/riskbedomning/:id"
+                element={
+                  <ProtectedRoute>
+                    <RiskbedomningDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/kvittering"
+                element={
+                  <ProtectedRoute>
+                    <KvitteringList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/kvittering/:id"
+                element={
+                  <ProtectedRoute>
+                    <KvitteringDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/checklista-byggparm"
+                element={
+                  <ProtectedRoute>
+                    <ChecklistaByggparmList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/checklista-byggparm/:id"
+                element={
+                  <ProtectedRoute>
+                    <ChecklistaByggparmDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/distribution"
+                element={
+                  <ProtectedRoute>
+                    <DistributionList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/distribution/:id"
+                element={
+                  <ProtectedRoute>
+                    <DistributionDetail />
                   </ProtectedRoute>
                 }
               />

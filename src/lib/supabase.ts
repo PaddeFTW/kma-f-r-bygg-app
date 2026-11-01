@@ -434,3 +434,258 @@ export type Krisberedskap = {
   created_at: string
   updated_at: string
 }
+
+/** Flik 21 – Skydds- och miljörond */
+export type Skyddsrond = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  platschef: string | null
+  arbetsledare: string | null
+  skyddsombud: string | null
+  ue: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type SkyddsrondChecklista = {
+  id: string
+  skyddsrond_id: string
+  sort_order: number
+  punkt: string | null
+  status: 'ja' | 'nej' | string | null
+  created_at: string
+  updated_at: string
+}
+
+export type SkyddsrondHandlingsplan = {
+  id: string
+  skyddsrond_id: string
+  sort_order: number
+  nr: string | null
+  fel_brister: string | null
+  atgardas_senast: string | null
+  ansvarig: string | null
+  atgardat_datum: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 22 – Ekonomi, betalningsplan (dokumentarkiv) */
+export type Ekonomi = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  namn: string
+  beskrivning: string | null
+  file_url: string | null
+  file_path: string | null
+  file_name: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 23 – Arbetsplatsbesiktning */
+export type Arbetsplatsbesiktning = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  created_at: string
+  updated_at: string
+}
+
+export type ArbetsplatsbesiktningRad = {
+  id: string
+  arbetsplatsbesiktning_id: string
+  sort_order: number
+  kontrollmoment: string | null
+  status: '1' | '2' | '3' | string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 24 – Slutbesiktningsprotokoll (dokumentarkiv) */
+export type Slutbesiktning = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  namn: string
+  beskrivning: string | null
+  file_url: string | null
+  file_path: string | null
+  file_name: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 25 – Uppföljning Arbetsmiljö */
+export type UppfoljningAm = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  created_at: string
+  updated_at: string
+}
+
+export type UppfoljningAmRad = {
+  id: string
+  uppfoljning_am_id: string
+  sort_order: number
+  kontrollmoment: string | null
+  status: '1' | '2' | '3' | string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 26 – Uppföljning Kvalitet */
+export type UppfoljningKvalitet = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  created_at: string
+  updated_at: string
+}
+
+export type UppfoljningKvalitetRad = {
+  id: string
+  uppfoljning_kvalitet_id: string
+  sort_order: number
+  kontrollmoment: string | null
+  status: '1' | '2' | '3' | string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 27 – Uppföljning Miljö */
+export type UppfoljningMiljo = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  created_at: string
+  updated_at: string
+}
+
+export type UppfoljningMiljoRad = {
+  id: string
+  uppfoljning_miljo_id: string
+  sort_order: number
+  kontrollmoment: string | null
+  status: '1' | '2' | '3' | string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 28 – Riskbedömning + Lagar */
+export type Riskbedomning = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  upprattare: string | null
+  vd: string | null
+  arbetstagarrepresentant: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type RiskbedomningAfs = {
+  id: string
+  riskbedomning_id: string
+  sort_order: number
+  afs_nummer: string | null
+  titel: string | null
+  tillamplig: 'ja' | 'nej' | string | null
+  riskniva: 'lag' | 'medel' | 'hog' | string | null
+  ansvarig: string | null
+  handlingsplan_nr: string | null
+  datum: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type RiskbedomningHandlingsplan = {
+  id: string
+  riskbedomning_id: string
+  sort_order: number
+  fran_afs: string | null
+  atgard: string | null
+  ansvarig: string | null
+  klart_datum: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 29 – Kvitteringslistor */
+export type KvitteringKategori = 'anstalld' | 'ue'
+
+export type Kvitteringslista = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  dokument_amp: boolean
+  dokument_riskbedomning: boolean
+  dokument_ordningsregler: boolean
+  created_at: string
+  updated_at: string
+}
+
+export type KvitteringRad = {
+  id: string
+  kvittering_id: string
+  sort_order: number
+  kategori: KvitteringKategori | string
+  namn: string | null
+  datum: string | null
+  signatur: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 30 – Checklista byggpärm */
+export type ChecklistaByggparm = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  created_at: string
+  updated_at: string
+}
+
+export type ChecklistaByggparmRad = {
+  id: string
+  checklista_id: string
+  sort_order: number
+  flik_nr: number | null
+  avsnitt: string | null
+  klart: 'ja' | 'nej' | string | null
+  ansvarig: string | null
+  datum: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** Flik 31 – Distribution och signering */
+export type DistributionSignering = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  parmstatus: string | null
+  distributionslista: string | null
+  bestallare: string | null
+  bestallare_datum: string | null
+  platschef: string | null
+  platschef_datum: string | null
+  bestallarens_ombud: string | null
+  bestallarens_ombud_datum: string | null
+  created_at: string
+  updated_at: string
+}
