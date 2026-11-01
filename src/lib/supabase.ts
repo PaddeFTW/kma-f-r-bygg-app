@@ -78,11 +78,16 @@ export type Project = {
   description: string | null
   /** Reserved for future guided Q&A flow */
   guided_answers: Record<string, unknown>
+  bas_overlamning_gjord?: boolean
+  bas_overlamning_datum?: string | null
+  bas_overlamning_from?: string | null
+  bas_overlamning_to?: string | null
+  bas_overlamning_anteckning?: string | null
   created_at: string
   updated_at: string
 }
 
-/** Flik 2 – Roller och ansvar */
+/** Flik 2 – Roller och ansvar (inkl. Bas-P/Bas-U kompetens) */
 export type ProjectRole = {
   id: string
   user_id: string
@@ -93,6 +98,25 @@ export type ProjectRole = {
   phone: string | null
   email: string | null
   responsibility_area: string | null
+  competence?: string | null
+  education?: string | null
+  cert_file_path?: string | null
+  cert_file_name?: string | null
+  created_at: string
+  updated_at: string
+}
+
+/** AFS 2023:3 11 kap. 12 § – särskilda risker */
+export type ProjectSarskildRisk = {
+  id: string
+  user_id: string
+  company_id: string
+  project_id: string
+  sort_order: number
+  punkt_nr: number
+  benamning: string
+  svar: '' | 'ja' | 'nej'
+  atgard: string | null
   created_at: string
   updated_at: string
 }

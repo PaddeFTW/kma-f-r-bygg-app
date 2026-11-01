@@ -12,12 +12,12 @@ export const EGENKONTROLL_FLIKS = [12, 13, 14, 15]
  */
 export const FLIK_KB_HELPERS = {
   1: 'Projektstart och grunddata om fastighet, byggherre och entreprenör.',
-  2: 'Roller, kontakt och ansvar i entreprenörens organisation.',
+  2: 'Roller inkl. Bas-P/Bas-U, kontakt och ansvar. Särskilda risker enligt AFS 2023:3.',
   3: 'Beställarens / byggherrens organisation och kontakt.',
   4: 'Underleverantörer (UE) och inköpsansvar.',
   5: 'Kvalitetsstyrning enligt PBL och projektkrav.',
   6: 'Miljöarbete, miljöaspekter och källsortering.',
-  7: 'Arbetsmiljöplan (AMP) enligt AFS, ordnings- och skyddsregler.',
+  7: 'Arbetsmiljöplan (AMP) enligt AFS 2023:3, särskilda risker och ordningsregler.',
   8: 'Miljöanalys – aspekter och källsortering.',
   9: 'Rivningsplan och avfallshantering.',
   10: 'Protokoll från byggmöten och beslut.',

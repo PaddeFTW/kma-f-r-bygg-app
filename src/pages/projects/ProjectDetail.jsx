@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link as RouterLink, useLocation, useNavigate, useParams } from 'react-router-dom'
 import {
   Alert,
@@ -25,6 +25,8 @@ import ProjectFormFields from './ProjectFormFields'
 import ProjectRolesSection from './ProjectRolesSection'
 import ProjectClientSection from './ProjectClientSection'
 import ProjectSubcontractorsSection from './ProjectSubcontractorsSection'
+import ProjectSarskildaRiskerSection from './ProjectSarskildaRiskerSection'
+import ProjectBasHandoverSection from './ProjectBasHandoverSection'
 
 export default function ProjectDetail() {
   const { id } = useParams()
@@ -37,6 +39,8 @@ export default function ProjectDetail() {
   const [error, setError] = useState('')
   const [saved, setSaved] = useState(false)
   const [showNextStep, setShowNextStep] = useState(Boolean(location.state?.justCreated))
+  const [ampRequired, setAmpRequired] = useState(false)
+  const handleAmpRequiredChange = useCallback((value) => setAmpRequired(Boolean(value)), [])
 
   useEffect(() => {
     let mounted = true
@@ -170,6 +174,14 @@ export default function ProjectDetail() {
 
             <ProjectSubcontractorsSection projectId={item.id} companyId={item.company_id} />
 
+            <ProjectSarskildaRiskerSection
+              projectId={item.id}
+              companyId={item.company_id}
+              onAmpRequiredChange={handleAmpRequiredChange}
+            />
+
+            <ProjectBasHandoverSection projectId={item.id} project={item} />
+
             <Card>
               <CardContent sx={{ p: 4, '&:last-child': { pb: 4 } }}>
                 <Stack
@@ -202,8 +214,31 @@ export default function ProjectDetail() {
               <NextStep
                 currentPath="/projects"
                 projectId={item.id}
-                description="Projektet är sparat. Gå vidare till kvalitetsplan eller tillbaka till dashboard."
+                description={
+                  ampRequired
+                    ? 'Projektet är sparat. Särskilda risker kräver AMP – gå vidare i pärmen eller till dashboard.'
+                    : 'Projektet är sparat. Gå vidare till kvalitetsplan eller tillbaka till dashboard.'
+                }
               />
+            )}
+
+            {ampRequired && (
+              <Alert
+                severity="warning"
+                action={
+                  <Button
+                    component={RouterLink}
+                    to={`/arbetsmiljoplan?project=${item.id}`}
+                    color="inherit"
+                    size="small"
+                  >
+                    Till AMP
+                  </Button>
+                }
+              >
+                AMP krävs enligt AFS 2023:3 11 kap. 12 §. Fortsätt till arbetsmiljöplanen i guided
+                flödet.
+              </Alert>
             )}
           </>
         )}

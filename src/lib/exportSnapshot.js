@@ -31,9 +31,26 @@ export async function buildExportSnapshot(projectId, flikNrs) {
       case 1:
         records = [project]
         break
-      case 2:
-        records = await fetchByProject('project_roles', projectId)
+      case 2: {
+        const [roles, risker] = await Promise.all([
+          fetchByProject('project_roles', projectId),
+          fetchByProject('project_sarskilda_risker', projectId),
+        ])
+        records = [
+          {
+            roller: roles,
+            sarskilda_risker: risker,
+            bas_overlamning: {
+              gjord: project.bas_overlamning_gjord,
+              datum: project.bas_overlamning_datum,
+              from: project.bas_overlamning_from,
+              to: project.bas_overlamning_to,
+              anteckning: project.bas_overlamning_anteckning,
+            },
+          },
+        ]
         break
+      }
       case 3:
         records = await fetchByProject('project_clients', projectId)
         break
@@ -46,9 +63,17 @@ export async function buildExportSnapshot(projectId, flikNrs) {
       case 6:
         records = await fetchByProject('miljoplaner', projectId)
         break
-      case 7:
-        records = await fetchByProject('arbetsmiljoplaner', projectId)
+      case 7: {
+        const [amps, risker] = await Promise.all([
+          fetchByProject('arbetsmiljoplaner', projectId),
+          fetchByProject('project_sarskilda_risker', projectId),
+        ])
+        records = (amps.length ? amps : [{}]).map((amp) => ({
+          ...amp,
+          sarskilda_risker: risker,
+        }))
         break
+      }
       case 8:
         records = await fetchByProject('miljoanalyser', projectId)
         break

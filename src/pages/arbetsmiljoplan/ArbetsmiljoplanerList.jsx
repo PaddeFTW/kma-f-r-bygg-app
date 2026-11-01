@@ -27,6 +27,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import VerticalLayout from '../../layouts/VerticalLayout'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
+import { buildAmpPrefillFromRisker, rowsRequireAmp } from '../../lib/sarskildaRisker'
 
 export default function ArbetsmiljoplanerList() {
   const { user } = useAuth()
@@ -120,12 +121,23 @@ export default function ArbetsmiljoplanerList() {
     setSaving(true)
     setError('')
 
+    const { data: riskRows } = await supabase
+      .from('project_sarskilda_risker')
+      .select('*')
+      .eq('project_id', projectId)
+      .order('sort_order', { ascending: true })
+
+    const riskbedomning_anteckningar = rowsRequireAmp(riskRows || [])
+      ? buildAmpPrefillFromRisker(riskRows || [])
+      : null
+
     const { data, error: insertError } = await supabase
       .from('arbetsmiljoplaner')
       .insert({
         user_id: user.id,
         company_id: company.id,
         project_id: projectId,
+        riskbedomning_anteckningar,
       })
       .select()
       .single()
