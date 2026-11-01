@@ -17,7 +17,9 @@ import {
 } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
+import { useContactList } from '../../context/ContactListContext'
 import OrgContactFormFields from './OrgContactFormFields'
+import useSaveToContactList from '../../hooks/useSaveToContactList'
 
 /**
  * Flik 3 – Beställarens organisation.
@@ -25,6 +27,10 @@ import OrgContactFormFields from './OrgContactFormFields'
  */
 export default function ProjectClientSection({ projectId, companyId }) {
   const { user } = useAuth()
+  const { refresh: refreshContacts } = useContactList()
+  const { offerSave, dialog: contactDialog } = useSaveToContactList(companyId, {
+    onSaved: () => refreshContacts(),
+  })
   const [recordId, setRecordId] = useState(null)
   const [form, setForm] = useState(emptyProjectClientForm)
   const [loading, setLoading] = useState(true)
@@ -112,6 +118,14 @@ export default function ProjectClientSection({ projectId, companyId }) {
     setRecordId(result.data.id)
     setForm(projectClientToForm(result.data))
     setSaved(true)
+
+    await offerSave({
+      name: form.contact_name,
+      email: form.email,
+      phone: form.phone,
+      company_name: form.ceo_name ? `Beställare (VD: ${form.ceo_name})` : 'Beställare',
+      role: 'Beställare',
+    })
   }
 
   return (
@@ -149,6 +163,7 @@ export default function ProjectClientSection({ projectId, companyId }) {
           </Stack>
         )}
       </CardContent>
+      {contactDialog}
     </Card>
   )
 }

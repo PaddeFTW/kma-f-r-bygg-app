@@ -30,7 +30,9 @@ import {
 } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
+import { useContactList } from '../../context/ContactListContext'
 import OrgContactFormFields from './OrgContactFormFields'
+import useSaveToContactList from '../../hooks/useSaveToContactList'
 
 /**
  * Flik 4 – Underleverantörer.
@@ -38,6 +40,10 @@ import OrgContactFormFields from './OrgContactFormFields'
  */
 export default function ProjectSubcontractorsSection({ projectId, companyId }) {
   const { user } = useAuth()
+  const { refresh: refreshContacts } = useContactList()
+  const { offerSave, dialog: contactDialog } = useSaveToContactList(companyId, {
+    onSaved: () => refreshContacts(),
+  })
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -120,6 +126,15 @@ export default function ProjectSubcontractorsSection({ projectId, companyId }) {
     setForm({ ...emptyProjectSubcontractorForm })
     setEditingId(null)
     await load()
+
+    await offerSave({
+      name: form.contact_name,
+      email: form.email,
+      phone: form.phone,
+      company_name: form.ceo_name || null,
+      role: 'UE-kontakt',
+      notes: form.purchasing_manager ? `Inköpsansvarig: ${form.purchasing_manager}` : null,
+    })
   }
 
   const handleDelete = async (id) => {
@@ -240,6 +255,7 @@ export default function ProjectSubcontractorsSection({ projectId, companyId }) {
           </DialogActions>
         </Box>
       </Dialog>
+      {contactDialog}
     </Card>
   )
 }

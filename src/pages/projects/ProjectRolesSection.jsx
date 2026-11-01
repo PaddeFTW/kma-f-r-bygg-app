@@ -34,13 +34,20 @@ import {
 } from '../../lib/types'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
+import { useContactList } from '../../context/ContactListContext'
 import { KB_AFS_2023_3_URL } from '../../lib/sarskildaRisker'
+import useSaveToContactList from '../../hooks/useSaveToContactList'
+import { SuggestionAutocomplete } from '../../components/forms'
 
 /**
  * Flik 2 – Roller och ansvar (inkl. Bas-P / Bas-U med kompetens & intyg).
  */
 export default function ProjectRolesSection({ projectId, companyId }) {
   const { user } = useAuth()
+  const { nameSuggestions, refresh: refreshContacts } = useContactList()
+  const { offerSave, dialog: contactDialog } = useSaveToContactList(companyId, {
+    onSaved: () => refreshContacts(),
+  })
   const [roles, setRoles] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -180,6 +187,14 @@ export default function ProjectRolesSection({ projectId, companyId }) {
       setEditingId(null)
       setCertFile(null)
       await load()
+
+      await offerSave({
+        name: basePayload.name,
+        email: basePayload.email,
+        phone: basePayload.phone,
+        role: basePayload.role_title,
+        company_name: null,
+      })
     } catch (err) {
       setError(
         err.message?.includes('competence') || err.message?.includes('cert_file')
@@ -333,13 +348,13 @@ export default function ProjectRolesSection({ projectId, companyId }) {
                 </TextField>
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                <SuggestionAutocomplete
                   label="Namn"
                   value={form.name}
-                  onChange={handleChange('name')}
+                  onChangeField={handleChange('name')}
+                  options={nameSuggestions}
                   required
-                  fullWidth
-                  autoFocus
+                  tooltip="Välj från kontaktlistan eller skriv nytt namn."
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -415,6 +430,7 @@ export default function ProjectRolesSection({ projectId, companyId }) {
           </DialogActions>
         </Box>
       </Dialog>
+      {contactDialog}
     </Card>
   )
 }

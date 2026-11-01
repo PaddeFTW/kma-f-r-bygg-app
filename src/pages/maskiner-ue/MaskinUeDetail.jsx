@@ -13,6 +13,7 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VerticalLayout from '../../layouts/VerticalLayout'
 import NextStep from '../../components/NextStep'
+import useSaveToContactList from '../../hooks/useSaveToContactList'
 import { supabase } from '../../lib/supabase'
 import {
   emptyMaskinUeForm,
@@ -31,6 +32,7 @@ export default function MaskinUeDetail() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [saved, setSaved] = useState(false)
+  const { offerSave, dialog: contactDialog } = useSaveToContactList(item?.company_id)
 
   useEffect(() => {
     let mounted = true
@@ -113,6 +115,12 @@ export default function MaskinUeDetail() {
     setItem(data)
     setForm(maskinUeToForm(data))
     setSaved(true)
+
+    await offerSave({
+      name: form.underleverantor,
+      role: 'UE-kontakt',
+      company_name: form.underleverantor,
+    })
   }
 
   const handleDelete = async () => {
@@ -197,6 +205,7 @@ export default function MaskinUeDetail() {
         </>
         )}
       </Stack>
+      {contactDialog}
     </VerticalLayout>
   )
 }

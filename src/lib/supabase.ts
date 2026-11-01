@@ -106,6 +106,21 @@ export type ProjectRole = {
   updated_at: string
 }
 
+/** Företagets återanvändbara kontaktlista */
+export type CompanyContact = {
+  id: string
+  user_id: string
+  company_id: string
+  name: string
+  email: string | null
+  phone: string | null
+  company_name: string | null
+  role: string | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
+
 /** AFS 2023:3 11 kap. 12 § – särskilda risker */
 export type ProjectSarskildRisk = {
   id: string

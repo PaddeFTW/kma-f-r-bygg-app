@@ -14,6 +14,7 @@ import {
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined'
 import VerticalLayout from '../../layouts/VerticalLayout'
 import NextStep from '../../components/NextStep'
+import CompanyContactsSection from './CompanyContactsSection'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
 import { emptyCompanyForm } from '../../lib/types'
@@ -258,6 +259,8 @@ export default function CompanyPage() {
                 </Stack>
               </CardContent>
             </Card>
+
+            {company?.id ? <CompanyContactsSection companyId={company.id} /> : null}
 
             {saved && (
               <NextStep

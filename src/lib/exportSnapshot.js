@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
 import { EXPORT_FLIKS, flikLabel } from './exportFliks'
+import { contactsToInviteRows, loadCompanyContacts } from './companyContacts'
 
 async function fetchByProject(table, projectId, select = '*') {
   const { data, error } = await supabase.from(table).select(select).eq('project_id', projectId)
@@ -298,7 +299,7 @@ export async function buildExportSnapshot(projectId, flikNrs) {
   }
 }
 
-/** Hämtar kontakter från Flik 2–4 + projektfält för inbjudningar. */
+/** Hämtar kontakter från Flik 2–4 + projektfält + företagets kontaktlista. */
 export async function loadProjectContacts(projectId) {
   const project = await fetchProjectRoot(projectId)
   const [roles, clients, subcontractors] = await Promise.all([
@@ -307,7 +308,14 @@ export async function loadProjectContacts(projectId) {
     fetchByProject('project_subcontractors', projectId),
   ])
 
-  const contacts = []
+  let companyContacts = []
+  try {
+    companyContacts = contactsToInviteRows(await loadCompanyContacts(project.company_id))
+  } catch {
+    companyContacts = []
+  }
+
+  const contacts = [...companyContacts]
   const push = (name, email, source) => {
     const trimmed = (email || '').trim()
     if (!trimmed) return

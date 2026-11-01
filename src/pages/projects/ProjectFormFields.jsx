@@ -2,12 +2,23 @@ import { Grid, MenuItem, TextField } from '@mui/material'
 import { contractForms } from '../../lib/types'
 import { SectionHeader, GuidedTextField, SuggestionAutocomplete } from '../../components/forms'
 import { SUGGESTIONS } from '../../lib/formHelp'
+import { useContactList } from '../../context/ContactListContext'
 
 /**
  * Flik 1 – Projektbeskrivning.
  * Obligatoriska kontaktfält för huvudparter enligt underlaget.
  */
 export default function ProjectFormFields({ form, onChange }) {
+  const { nameSuggestions, contacts } = useContactList()
+
+  const applySiteContact = (name) => {
+    onChange('contact_name')({ target: { value: name } })
+    const match = (contacts || []).find((c) => c.name === name)
+    if (!match) return
+    if (match.email) onChange('email')({ target: { value: match.email } })
+    if (match.phone) onChange('phone')({ target: { value: match.phone } })
+  }
+
   return (
     <Grid container spacing={2}>
       <SectionHeader
@@ -55,13 +66,13 @@ export default function ProjectFormFields({ form, onChange }) {
         Kontaktperson på byggplatsen
       </SectionHeader>
       <Grid item xs={12} md={4}>
-        <GuidedTextField
+        <SuggestionAutocomplete
           helpKey="contact_name"
           label="Namn"
           value={form.contact_name}
-          onChange={onChange('contact_name')}
+          onChangeField={(e) => applySiteContact(e.target.value)}
+          options={[...new Set([...(nameSuggestions || []), ...SUGGESTIONS.kontaktroller])]}
           required
-          fullWidth
         />
       </Grid>
       <Grid item xs={12} md={4}>

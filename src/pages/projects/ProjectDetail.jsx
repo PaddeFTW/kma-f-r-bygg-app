@@ -14,6 +14,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined'
 import VerticalLayout from '../../layouts/VerticalLayout'
 import NextStep from '../../components/NextStep'
+import { ContactListProvider, useContactList } from '../../context/ContactListContext'
+import useSaveToContactList from '../../hooks/useSaveToContactList'
 import { supabase } from '../../lib/supabase'
 import {
   emptyProjectForm,
@@ -30,8 +32,31 @@ import ProjectBasHandoverSection from './ProjectBasHandoverSection'
 
 export default function ProjectDetail() {
   const { id } = useParams()
+  const [companyId, setCompanyId] = useState(null)
+
+  useEffect(() => {
+    let mounted = true
+    const loadCompany = async () => {
+      const { data } = await supabase.from('projects').select('company_id').eq('id', id).maybeSingle()
+      if (mounted) setCompanyId(data?.company_id || null)
+    }
+    if (id) loadCompany()
+    return () => {
+      mounted = false
+    }
+  }, [id])
+
+  return (
+    <ContactListProvider companyId={companyId}>
+      <ProjectDetailInner projectId={id} />
+    </ContactListProvider>
+  )
+}
+
+function ProjectDetailInner({ projectId }) {
   const navigate = useNavigate()
   const location = useLocation()
+  const { refresh: refreshContacts } = useContactList()
   const [item, setItem] = useState(null)
   const [form, setForm] = useState(emptyProjectForm)
   const [loading, setLoading] = useState(true)
@@ -42,13 +67,21 @@ export default function ProjectDetail() {
   const [ampRequired, setAmpRequired] = useState(false)
   const handleAmpRequiredChange = useCallback((value) => setAmpRequired(Boolean(value)), [])
 
+  const { offerSave, dialog: contactDialog } = useSaveToContactList(item?.company_id, {
+    onSaved: () => refreshContacts(),
+  })
+
   useEffect(() => {
     let mounted = true
 
     const load = async () => {
       setLoading(true)
       setError('')
-      const { data, error: fetchError } = await supabase.from('projects').select('*').eq('id', id).single()
+      const { data, error: fetchError } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('id', projectId)
+        .single()
 
       if (!mounted) return
 
@@ -66,7 +99,7 @@ export default function ProjectDetail() {
     return () => {
       mounted = false
     }
-  }, [id])
+  }, [projectId])
 
   const handleChange = (field) => (event) => {
     setForm((prev) => ({ ...prev, [field]: event.target.value }))
@@ -89,7 +122,7 @@ export default function ProjectDetail() {
         ...projectFormToPayload(form),
         updated_at: new Date().toISOString(),
       })
-      .eq('id', id)
+      .eq('id', projectId)
       .select()
       .single()
 
@@ -104,10 +137,18 @@ export default function ProjectDetail() {
     setForm(projectToForm(data))
     setSaved(true)
     setShowNextStep(true)
+
+    await offerSave({
+      name: form.contact_name,
+      email: form.email,
+      phone: form.phone,
+      company_name: form.contractor_name || null,
+      role: 'Kontakt byggplats',
+    })
   }
 
   const handleDelete = async () => {
-    const { error: deleteError } = await supabase.from('projects').delete().eq('id', id)
+    const { error: deleteError } = await supabase.from('projects').delete().eq('id', projectId)
     if (deleteError) {
       setError(deleteError.message)
       return
@@ -243,6 +284,7 @@ export default function ProjectDetail() {
           </>
         )}
       </Stack>
+      {contactDialog}
     </VerticalLayout>
   )
 }
