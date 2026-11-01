@@ -1,19 +1,6 @@
-import { Grid, TextField, Typography } from '@mui/material'
-
-function SectionTitle({ children, helper }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
-  )
-}
+import { Grid, TextField } from '@mui/material'
+import { SectionHeader, GuidedTextField, SuggestionAutocomplete } from '../../components/forms'
+import { SUGGESTIONS } from '../../lib/formHelp'
 
 /**
  * Flik 16 – Avvikelserapport.
@@ -22,14 +9,14 @@ function SectionTitle({ children, helper }) {
 export default function AvvikelseFormFields({ form, onChange }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle>Avvikelserapport</SectionTitle>
+      <SectionHeader
+        why="Avvikelser spåras till åtgärd, ÄTA och lärande i projektet."
+        showKbLink
+      >
+        Avvikelserapport
+      </SectionHeader>
       <Grid item xs={12} md={4}>
-        <TextField
-          label="Ordernr"
-          value={form.ordernr}
-          onChange={onChange('ordernr')}
-          fullWidth
-        />
+        <TextField label="Ordernr" value={form.ordernr} onChange={onChange('ordernr')} fullWidth />
       </Grid>
       <Grid item xs={12} md={4}>
         <TextField
@@ -42,15 +29,16 @@ export default function AvvikelseFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12} md={4}>
-        <TextField
+        <SuggestionAutocomplete
           label="Inlämnat av"
           value={form.inlamnat_av}
-          onChange={onChange('inlamnat_av')}
-          fullWidth
+          onChangeField={onChange('inlamnat_av')}
+          options={SUGGESTIONS.kontaktroller}
         />
       </Grid>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          helpKey="avvikelse"
           label="Beskrivning"
           value={form.beskrivning}
           onChange={onChange('beskrivning')}
@@ -60,13 +48,12 @@ export default function AvvikelseFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12}>
-        <TextField
+        <SuggestionAutocomplete
           label="Korrigerande åtgärd"
           value={form.korrigerande_atgard}
-          onChange={onChange('korrigerande_atgard')}
-          fullWidth
-          multiline
-          minRows={2}
+          onChangeField={onChange('korrigerande_atgard')}
+          options={SUGGESTIONS.atgarder}
+          helpKey="atgard"
         />
       </Grid>
       <Grid item xs={12} md={6}>
@@ -89,23 +76,19 @@ export default function AvvikelseFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12}>
-        <TextField
+        <SuggestionAutocomplete
           label="Förebyggande åtgärd"
           value={form.forebyggande_atgard}
-          onChange={onChange('forebyggande_atgard')}
-          fullWidth
-          multiline
-          minRows={2}
+          onChangeField={onChange('forebyggande_atgard')}
+          options={SUGGESTIONS.atgarder}
         />
       </Grid>
       <Grid item xs={12}>
-        <TextField
+        <SuggestionAutocomplete
           label="Uppföljning"
           value={form.uppfoljning}
-          onChange={onChange('uppfoljning')}
-          fullWidth
-          multiline
-          minRows={2}
+          onChangeField={onChange('uppfoljning')}
+          options={SUGGESTIONS.statusAnteckning}
         />
       </Grid>
     </Grid>

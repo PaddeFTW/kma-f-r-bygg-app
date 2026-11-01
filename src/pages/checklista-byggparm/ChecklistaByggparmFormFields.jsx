@@ -15,19 +15,13 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { CHECKLISTA_BYGGPARM_JA_NEJ_OPTIONS } from '../../lib/types'
+import { SectionHeader } from '../../components/forms'
 
-function SectionTitle({ children, helper }) {
+function SectionTitle({ children, helper, why }) {
   return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
+    <SectionHeader helper={helper} why={why}>
+      {children}
+    </SectionHeader>
   )
 }
 
@@ -43,7 +37,10 @@ export default function ChecklistaByggparmFormFields({
 }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Kontroll att alla flikar är klara.">
+      <SectionTitle
+        helper="Kontroll att alla flikar är klara. Ja/Nej + ansvarig/datum."
+        why="Ger snabb status över pärmen innan distribution och signering."
+      >
         Avsnitt (Flik 1–31)
       </SectionTitle>
       <Grid item xs={12}>

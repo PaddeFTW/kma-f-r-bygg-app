@@ -1,13 +1,8 @@
-import { Grid, TextField, Typography } from '@mui/material'
+import { Grid, TextField } from '@mui/material'
+import { SectionHeader, GuidedTextField } from '../../components/forms'
 
-function SectionTitle({ children }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-    </Grid>
-  )
+function SectionTitle({ children, why }) {
+  return <SectionHeader why={why}>{children}</SectionHeader>
 }
 
 /**
@@ -22,7 +17,9 @@ export default function OrgContactFormFields({
 }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle>Kontaktuppgifter</SectionTitle>
+      <SectionTitle why="Kontaktuppgifter behövs för samordning, inbjudningar och distribution.">
+        Kontaktuppgifter
+      </SectionTitle>
       <Grid item xs={12} md={6}>
         <TextField
           label="VD"
@@ -33,7 +30,8 @@ export default function OrgContactFormFields({
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
+          helpKey="contact_name"
           label="Kontaktperson"
           value={form.contact_name}
           onChange={onChange('contact_name')}

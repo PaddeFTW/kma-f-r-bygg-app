@@ -15,19 +15,13 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { SKYDDSROND_STATUS_OPTIONS } from '../../lib/types'
+import { SectionHeader } from '../../components/forms'
 
-function SectionTitle({ children, helper }) {
+function SectionTitle({ children, helper, why }) {
   return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
+    <SectionHeader helper={helper} why={why}>
+      {children}
+    </SectionHeader>
   )
 }
 
@@ -47,7 +41,10 @@ export default function SkyddsrondFormFields({
 }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Platschef, arbetsledare, skyddsombud och UE.">
+      <SectionTitle
+        helper="Platschef, arbetsledare, skyddsombud och UE."
+        why="Deltagare och status visar att skyddsronden genomförts enligt AMP."
+      >
         Deltagare
       </SectionTitle>
       <Grid item xs={12} md={6}>

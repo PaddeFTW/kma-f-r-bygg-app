@@ -1,44 +1,49 @@
-import { Grid, TextField, Typography } from '@mui/material'
+import { Grid, TextField } from '@mui/material'
+import { SectionHeader, GuidedTextField, SelectWithOther, SuggestionAutocomplete } from '../../components/forms'
+import { SUGGESTIONS } from '../../lib/formHelp'
 
-function SectionTitle({ children, helper }) {
-  return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
-  )
-}
+const PARMSTATUS_OPTIONS = [
+  { value: '', label: 'Välj…' },
+  { value: 'Under upprättande', label: 'Under upprättande' },
+  { value: 'Komplett', label: 'Komplett' },
+  { value: 'Distribuerad', label: 'Distribuerad' },
+  { value: 'Signerad', label: 'Signerad' },
+  { value: 'Arkiverad', label: 'Arkiverad' },
+]
 
 /**
  * Flik 31 – Distribution och signering.
- * Pärmstatus, distributionslista och signering enligt underlag.
  */
 export default function DistributionFormFields({ form, onChange }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Pärmstatus vid projektstart eller avslut.">
+      <SectionHeader
+        helper="Pärmstatus vid projektstart eller avslut."
+        why="Status visar om pärmen är klar för distribution och signering."
+        showKbLink
+      >
         Pärmstatus
-      </SectionTitle>
-      <Grid item xs={12}>
-        <TextField
+      </SectionHeader>
+      <Grid item xs={12} md={6}>
+        <SelectWithOther
           label="Pärmstatus"
           value={form.parmstatus}
           onChange={onChange('parmstatus')}
-          fullWidth
+          options={PARMSTATUS_OPTIONS}
+          helpKey="distribution"
+          otherLabel="Egen status (fritext)"
         />
       </Grid>
 
-      <SectionTitle helper="Vem som fått pärmen / dokumentationen.">
+      <SectionHeader
+        helper="Vem som fått pärmen / dokumentationen."
+        why="Distributionslistan ger spårbarhet innan godkännande."
+      >
         Distributionslista
-      </SectionTitle>
+      </SectionHeader>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          helpKey="distribution"
           label="Distributionslista"
           value={form.distributionslista}
           onChange={onChange('distributionslista')}
@@ -48,13 +53,15 @@ export default function DistributionFormFields({ form, onChange }) {
         />
       </Grid>
 
-      <SectionTitle helper="Godkännande med namn och datum.">Signering</SectionTitle>
+      <SectionHeader helper="Godkännande med namn och datum." why="Signering avslutar pärmen formellt.">
+        Signering
+      </SectionHeader>
       <Grid item xs={12} md={6}>
-        <TextField
+        <SuggestionAutocomplete
           label="Beställare"
           value={form.bestallare}
-          onChange={onChange('bestallare')}
-          fullWidth
+          onChangeField={onChange('bestallare')}
+          options={SUGGESTIONS.kontaktroller}
         />
       </Grid>
       <Grid item xs={12} md={6}>
@@ -68,11 +75,11 @@ export default function DistributionFormFields({ form, onChange }) {
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <TextField
+        <SuggestionAutocomplete
           label="Platschef"
           value={form.platschef}
-          onChange={onChange('platschef')}
-          fullWidth
+          onChangeField={onChange('platschef')}
+          options={SUGGESTIONS.kontaktroller}
         />
       </Grid>
       <Grid item xs={12} md={6}>

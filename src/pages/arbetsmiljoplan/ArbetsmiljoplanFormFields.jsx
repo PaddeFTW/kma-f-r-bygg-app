@@ -20,18 +20,13 @@ import {
   rowsRequireAmp,
 } from '../../lib/sarskildaRisker'
 
-function SectionTitle({ children, helper }) {
+import { SectionHeader, GuidedTextField } from '../../components/forms'
+
+function SectionTitle({ children, helper, why, showKbLink }) {
   return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
+    <SectionHeader helper={helper} why={why} showKbLink={showKbLink}>
+      {children}
+    </SectionHeader>
   )
 }
 
@@ -116,9 +111,15 @@ export default function ArbetsmiljoplanFormFields({
         </>
       ) : null}
 
-      <SectionTitle>Arbetsmiljöpolicy</SectionTitle>
+      <SectionTitle
+        why="Policyn är kärnan i AMP och visar Bas-P/Bas-U-ansvaret."
+        showKbLink
+      >
+        Arbetsmiljöpolicy
+      </SectionTitle>
       <Grid item xs={12}>
-        <TextField
+        <GuidedTextField
+          helpKey="arbetsmiljopolicy"
           label="Arbetsmiljöpolicy"
           value={form.arbetsmiljopolicy}
           onChange={onChange('arbetsmiljopolicy')}

@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Box,
   Button,
   Grid,
@@ -18,19 +19,14 @@ import {
   RISKBEDOMNING_JA_NEJ_OPTIONS,
   RISKBEDOMNING_RISKNIVA_OPTIONS,
 } from '../../lib/types'
+import { SectionHeader, SuggestionAutocomplete } from '../../components/forms'
+import { SUGGESTIONS } from '../../lib/formHelp'
 
-function SectionTitle({ children, helper }) {
+function SectionTitle({ children, helper, why }) {
   return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
+    <SectionHeader helper={helper} why={why} showKbLink>
+      {children}
+    </SectionHeader>
   )
 }
 
@@ -50,7 +46,10 @@ export default function RiskbedomningFormFields({
 }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Riskbedömning baserad på AFS. Anslås på arbetsplatsen.">
+      <SectionTitle
+        helper="Riskbedömning baserad på AFS. Anslås på arbetsplatsen."
+        why="Matrisen prioriterar åtgärder och kopplas till AMP och skyddsronder."
+      >
         Riskmatris (AFS)
       </SectionTitle>
       <Grid item xs={12}>
@@ -183,7 +182,10 @@ export default function RiskbedomningFormFields({
         </Button>
       </Grid>
 
-      <SectionTitle helper="Härleds från risk AFS, åtgärd, ansvarig, klart datum.">
+      <SectionTitle
+        helper="Härleds från risk AFS, åtgärd, ansvarig, klart datum. Åtgärd kan väljas från förslag eller fritext."
+        why="Handlingsplanen omsätter riskbedömningen till konkreta åtgärder."
+      >
         Handlingsplan
       </SectionTitle>
       <Grid item xs={12}>
@@ -221,12 +223,21 @@ export default function RiskbedomningFormFields({
                       />
                     </TableCell>
                     <TableCell>
-                      <TextField
-                        value={rad.atgard}
-                        onChange={onPlanChange(rad._key, 'atgard')}
-                        size="small"
-                        fullWidth
-                        variant="standard"
+                      <Autocomplete
+                        freeSolo
+                        options={SUGGESTIONS.atgarder}
+                        value={rad.atgard || ''}
+                        onChange={(_e, next) =>
+                          onPlanChange(rad._key, 'atgard')({ target: { value: next || '' } })
+                        }
+                        onInputChange={(_e, next, reason) => {
+                          if (reason === 'input' || reason === 'clear') {
+                            onPlanChange(rad._key, 'atgard')({ target: { value: next } })
+                          }
+                        }}
+                        renderInput={(params) => (
+                          <TextField {...params} size="small" variant="standard" placeholder="Åtgärd" />
+                        )}
                       />
                     </TableCell>
                     <TableCell>

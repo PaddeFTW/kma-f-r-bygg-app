@@ -19,19 +19,14 @@ import {
   EGENKONTROLL_STATUS_OPTIONS,
   EGENKONTROLL_TYP_OPTIONS,
 } from '../../lib/types'
+import { SectionHeader, GuidedTextField, SuggestionAutocomplete } from '../../components/forms'
+import { SUGGESTIONS } from '../../lib/formHelp'
 
-function SectionTitle({ children, helper }) {
+function SectionTitle({ children, helper, why }) {
   return (
-    <Grid item xs={12}>
-      <Typography variant="h6" sx={{ fontWeight: 600, mt: 1 }}>
-        {children}
-      </Typography>
-      {helper && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          {helper}
-        </Typography>
-      )}
-    </Grid>
+    <SectionHeader helper={helper} why={why}>
+      {children}
+    </SectionHeader>
   )
 }
 
@@ -49,12 +44,16 @@ export default function EgenkontrollFormFields({
 }) {
   return (
     <Grid container spacing={2}>
-      <SectionTitle helper="Välj typ för att ladda kontrollmoment från underlaget.">
+      <SectionTitle
+        helper="Välj typ för att ladda kontrollmoment från underlaget."
+        why="Rätt mall ger enhetliga bevis och statuskoder i pärmen."
+      >
         Typ
       </SectionTitle>
       <Grid item xs={12} md={6}>
-        <TextField
+        <GuidedTextField
           select
+          helpKey="egenkontroll_typ"
           label="Typ"
           value={form.typ}
           onChange={onTypChange}
@@ -67,7 +66,7 @@ export default function EgenkontrollFormFields({
               {opt.label}
             </MenuItem>
           ))}
-        </TextField>
+        </GuidedTextField>
       </Grid>
 
       <SectionTitle>Generell mall</SectionTitle>
@@ -112,12 +111,16 @@ export default function EgenkontrollFormFields({
         />
       </Grid>
 
-      <SectionTitle helper="1 = Kontrollerat och godkänt, 2 = Kontrollerat och ej godkänt, 3 = Ej kontrollerat.">
+      <SectionTitle
+        helper="1 = Kontrollerat och godkänt, 2 = Kontrollerat och ej godkänt, 3 = Ej kontrollerat."
+        why="Status 1/2/3 är beviset som följs upp i kvalitetsarbetet."
+      >
         Kontrollmoment
       </SectionTitle>
       <Grid item xs={12}>
         <Alert severity="info" sx={{ mb: 1.5 }}>
-          1 = Kontrollerat och godkänt · 2 = Kontrollerat och ej godkänt · 3 = Ej kontrollerat
+          1 = Kontrollerat och godkänt · 2 = Kontrollerat och ej godkänt · 3 = Ej kontrollerat.
+          Välj status i listan; komplettera gärna med åtgärdsförslag i fritext där det behövs.
         </Alert>
         <Box sx={{ overflowX: 'auto', border: 1, borderColor: 'divider', borderRadius: 1 }}>
           <Table size="small" sx={{ minWidth: 720 }}>
@@ -209,15 +212,17 @@ export default function EgenkontrollFormFields({
         </Button>
       </Grid>
 
-      <SectionTitle>Övrigt</SectionTitle>
+      <SectionTitle why="Anteckningar kompletterar statusvalet när något behöver förklaras.">
+        Övrigt
+      </SectionTitle>
       <Grid item xs={12}>
-        <TextField
-          label="Övriga anteckningar"
+        <SuggestionAutocomplete
+          label="Övriga anteckningar / fritext"
           value={form.ovriga_anteckningar}
-          onChange={onChange('ovriga_anteckningar')}
-          fullWidth
-          multiline
-          minRows={3}
+          onChangeField={onChange('ovriga_anteckningar')}
+          options={SUGGESTIONS.statusAnteckning}
+          helpKey="egenkontroll_status"
+          placeholder="Välj förslag eller skriv fritext"
         />
       </Grid>
       <Grid item xs={12} md={6}>
