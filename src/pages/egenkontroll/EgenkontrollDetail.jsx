@@ -12,6 +12,7 @@ import {
 } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VerticalLayout from '../../layouts/VerticalLayout'
+import NextStep from '../../components/NextStep'
 import { supabase } from '../../lib/supabase'
 import {
   emptyEgenkontrollForm,
@@ -216,6 +217,7 @@ export default function EgenkontrollDetail() {
         ) : !item ? (
           <Alert severity="error">{error || 'Egenkontrollen hittades inte.'}</Alert>
         ) : (
+          <>
           <Card>
             <CardContent sx={{ p: 5, '&:last-child': { pb: 5 } }}>
               <Stack component="form" spacing={4} onSubmit={handleSave}>
@@ -264,6 +266,12 @@ export default function EgenkontrollDetail() {
               </Stack>
             </CardContent>
           </Card>
+
+          {saved && (
+            <NextStep currentPath="/egenkontroll" projectId={item.project_id} />
+          )}
+
+        </>
         )}
       </Stack>
     </VerticalLayout>

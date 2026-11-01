@@ -121,7 +121,7 @@ export default function ProjectsList() {
 
     setOpen(false)
     setForm({ ...emptyProjectForm })
-    navigate(`/projects/${data.id}`)
+    navigate(`/projects/${data.id}`, { state: { justCreated: true } })
   }
 
   const handleDelete = async (id) => {

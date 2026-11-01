@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom'
+import { Link as RouterLink, useLocation, useNavigate, useParams } from 'react-router-dom'
 import {
   Alert,
   Box,
@@ -12,6 +12,7 @@ import {
 } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VerticalLayout from '../../layouts/VerticalLayout'
+import NextStep from '../../components/NextStep'
 import { supabase } from '../../lib/supabase'
 import {
   emptyProjectForm,
@@ -27,12 +28,14 @@ import ProjectSubcontractorsSection from './ProjectSubcontractorsSection'
 export default function ProjectDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
   const [item, setItem] = useState(null)
   const [form, setForm] = useState(emptyProjectForm)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [saved, setSaved] = useState(false)
+  const [showNextStep, setShowNextStep] = useState(Boolean(location.state?.justCreated))
 
   useEffect(() => {
     let mounted = true
@@ -63,6 +66,7 @@ export default function ProjectDetail() {
   const handleChange = (field) => (event) => {
     setForm((prev) => ({ ...prev, [field]: event.target.value }))
     setSaved(false)
+    setShowNextStep(false)
   }
 
   const handleSave = async (event) => {
@@ -72,6 +76,7 @@ export default function ProjectDetail() {
     setSaving(true)
     setError('')
     setSaved(false)
+    setShowNextStep(false)
 
     const { data, error: updateError } = await supabase
       .from('projects')
@@ -93,6 +98,7 @@ export default function ProjectDetail() {
     setItem(data)
     setForm(projectToForm(data))
     setSaved(true)
+    setShowNextStep(true)
   }
 
   const handleDelete = async () => {
@@ -162,6 +168,14 @@ export default function ProjectDetail() {
             <ProjectClientSection projectId={item.id} companyId={item.company_id} />
 
             <ProjectSubcontractorsSection projectId={item.id} companyId={item.company_id} />
+
+            {showNextStep && (
+              <NextStep
+                currentPath="/projects"
+                projectId={item.id}
+                description="Projektet är sparat. Gå vidare till kvalitetsplan eller tillbaka till dashboard."
+              />
+            )}
           </>
         )}
       </Stack>

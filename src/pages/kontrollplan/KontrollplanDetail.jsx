@@ -12,6 +12,7 @@ import {
 } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VerticalLayout from '../../layouts/VerticalLayout'
+import NextStep from '../../components/NextStep'
 import { supabase } from '../../lib/supabase'
 import {
   emptyKontrollplanForm,
@@ -205,6 +206,7 @@ export default function KontrollplanDetail() {
         ) : !item ? (
           <Alert severity="error">{error || 'Kontrollplanen hittades inte.'}</Alert>
         ) : (
+          <>
           <Card>
             <CardContent sx={{ p: 5, '&:last-child': { pb: 5 } }}>
               <Stack component="form" spacing={4} onSubmit={handleSave}>
@@ -252,6 +254,12 @@ export default function KontrollplanDetail() {
               </Stack>
             </CardContent>
           </Card>
+
+          {saved && (
+            <NextStep currentPath="/kontrollplan" projectId={item.project_id} />
+          )}
+
+        </>
         )}
       </Stack>
     </VerticalLayout>

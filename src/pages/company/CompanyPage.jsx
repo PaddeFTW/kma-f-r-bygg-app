@@ -13,6 +13,7 @@ import {
 } from '@mui/material'
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined'
 import VerticalLayout from '../../layouts/VerticalLayout'
+import NextStep from '../../components/NextStep'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
 import { emptyCompanyForm } from '../../lib/types'
@@ -145,117 +146,126 @@ export default function CompanyPage() {
             <CircularProgress />
           </Box>
         ) : (
-          <Card>
-            <CardContent sx={{ p: 5, '&:last-child': { pb: 5 } }}>
-              <Stack component="form" spacing={4} onSubmit={handleSave}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Box
-                    sx={{
-                      width: 42,
-                      height: 42,
-                      borderRadius: 1.5,
-                      display: 'grid',
-                      placeItems: 'center',
-                      bgcolor: 'primary.main',
-                      color: '#fff',
-                      opacity: 0.9,
-                    }}
-                  >
-                    <BusinessOutlinedIcon />
+          <>
+            <Card>
+              <CardContent sx={{ p: 5, '&:last-child': { pb: 5 } }}>
+                <Stack component="form" spacing={4} onSubmit={handleSave}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box
+                      sx={{
+                        width: 42,
+                        height: 42,
+                        borderRadius: 1.5,
+                        display: 'grid',
+                        placeItems: 'center',
+                        bgcolor: 'primary.main',
+                        color: '#fff',
+                        opacity: 0.9,
+                      }}
+                    >
+                      <BusinessOutlinedIcon />
+                    </Box>
+                    <Box>
+                      <Typography variant="h5">
+                        {company ? 'Redigera företag' : 'Skapa företagskonto'}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Fält enligt Flik 2 – företagsinformation
+                      </Typography>
+                    </Box>
                   </Box>
-                  <Box>
-                    <Typography variant="h5">
-                      {company ? 'Redigera företag' : 'Skapa företagskonto'}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Fält enligt Flik 2 – företagsinformation
-                    </Typography>
+
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={8}>
+                      <TextField
+                        label="Företagsnamn"
+                        value={form.name}
+                        onChange={handleChange('name')}
+                        required
+                        fullWidth
+                        autoFocus={!company}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      <TextField
+                        label="Org.nr"
+                        value={form.org_number}
+                        onChange={handleChange('org_number')}
+                        fullWidth
+                        placeholder="XXXXXX-XXXX"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Adress"
+                        value={form.address}
+                        onChange={handleChange('address')}
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        label="Postnr"
+                        value={form.postal_code}
+                        onChange={handleChange('postal_code')}
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={8}>
+                      <TextField label="Ort" value={form.city} onChange={handleChange('city')} fullWidth />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        label="VD-namn"
+                        value={form.ceo_name}
+                        onChange={handleChange('ceo_name')}
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        label="Mobil"
+                        value={form.phone}
+                        onChange={handleChange('phone')}
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        label="E-post"
+                        type="email"
+                        value={form.email}
+                        onChange={handleChange('email')}
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        label="Hemsida"
+                        value={form.website}
+                        onChange={handleChange('website')}
+                        fullWidth
+                        placeholder="https://"
+                      />
+                    </Grid>
+                  </Grid>
+
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button type="submit" variant="contained" disabled={saving || !form.name.trim()}>
+                      {saving ? <CircularProgress size={20} color="inherit" /> : company ? 'Spara' : 'Skapa företag'}
+                    </Button>
                   </Box>
-                </Box>
+                </Stack>
+              </CardContent>
+            </Card>
 
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={8}>
-                    <TextField
-                      label="Företagsnamn"
-                      value={form.name}
-                      onChange={handleChange('name')}
-                      required
-                      fullWidth
-                      autoFocus={!company}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextField
-                      label="Org.nr"
-                      value={form.org_number}
-                      onChange={handleChange('org_number')}
-                      fullWidth
-                      placeholder="XXXXXX-XXXX"
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Adress"
-                      value={form.address}
-                      onChange={handleChange('address')}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <TextField
-                      label="Postnr"
-                      value={form.postal_code}
-                      onChange={handleChange('postal_code')}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={8}>
-                    <TextField label="Ort" value={form.city} onChange={handleChange('city')} fullWidth />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      label="VD-namn"
-                      value={form.ceo_name}
-                      onChange={handleChange('ceo_name')}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      label="Mobil"
-                      value={form.phone}
-                      onChange={handleChange('phone')}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      label="E-post"
-                      type="email"
-                      value={form.email}
-                      onChange={handleChange('email')}
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      label="Hemsida"
-                      value={form.website}
-                      onChange={handleChange('website')}
-                      fullWidth
-                      placeholder="https://"
-                    />
-                  </Grid>
-                </Grid>
-
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button type="submit" variant="contained" disabled={saving || !form.name.trim()}>
-                    {saving ? <CircularProgress size={20} color="inherit" /> : company ? 'Spara' : 'Skapa företag'}
-                  </Button>
-                </Box>
-              </Stack>
-            </CardContent>
-          </Card>
+            {saved && (
+              <NextStep
+                currentPath="/company"
+                description="Företaget är sparat. Vill du skapa ett projekt nu, eller gå till dashboard?"
+              />
+            )}
+          </>
         )}
       </Stack>
     </VerticalLayout>
