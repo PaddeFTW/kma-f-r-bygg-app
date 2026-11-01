@@ -20,6 +20,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined'
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
+import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined'
 import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined'
 import RecyclingOutlinedIcon from '@mui/icons-material/RecyclingOutlined'
 import HealthAndSafetyOutlinedIcon from '@mui/icons-material/HealthAndSafetyOutlined'
@@ -58,6 +59,7 @@ const menuItems = [
   { text: 'Dashboard', path: '/', icon: <DashboardOutlinedIcon /> },
   { text: 'Företag', path: '/company', icon: <BusinessOutlinedIcon /> },
   { text: 'Projekt', path: '/projects', icon: <FolderOutlinedIcon /> },
+  { text: 'Mallar', path: '/templates', icon: <BookmarkBorderOutlinedIcon /> },
   { text: 'Kvalitetsplan', path: '/kvalitetsplan', icon: <VerifiedOutlinedIcon /> },
   { text: 'Miljöplan', path: '/miljoplan', icon: <RecyclingOutlinedIcon /> },
   { text: 'Arbetsmiljöplan', path: '/arbetsmiljoplan', icon: <HealthAndSafetyOutlinedIcon /> },

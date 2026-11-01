@@ -16,6 +16,7 @@ import UppgiftDetail from './pages/uppgifter/UppgiftDetail'
 import CompanyPage from './pages/company/CompanyPage'
 import ProjectsList from './pages/projects/ProjectsList'
 import ProjectDetail from './pages/projects/ProjectDetail'
+import TemplatesList from './pages/templates/TemplatesList'
 import KvalitetsplanerList from './pages/kvalitetsplan/KvalitetsplanerList'
 import KvalitetsplanDetail from './pages/kvalitetsplan/KvalitetsplanDetail'
 import MiljoplanerList from './pages/miljoplan/MiljoplanerList'
@@ -103,6 +104,14 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <ProjectsList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/templates"
+                element={
+                  <ProtectedRoute>
+                    <TemplatesList />
                   </ProtectedRoute>
                 }
               />

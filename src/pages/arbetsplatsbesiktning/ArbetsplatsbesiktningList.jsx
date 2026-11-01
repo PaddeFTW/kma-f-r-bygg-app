@@ -25,6 +25,8 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import VerticalLayout from '../../layouts/VerticalLayout'
+import FlikTemplateSelect from '../../components/templates/FlikTemplateSelect'
+import { applyFlikTemplate, listTemplates } from '../../lib/projectTemplates'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
 import {
@@ -46,6 +48,7 @@ export default function ArbetsplatsbesiktningList() {
   const [open, setOpen] = useState(false)
   const [projectId, setProjectId] = useState('')
   const [saving, setSaving] = useState(false)
+  const [templateId, setTemplateId] = useState('')
 
   const projectLabel = useMemo(() => {
     const map = new Map(projects.map((p) => [p.id, p.property_designation]))
@@ -124,6 +127,30 @@ export default function ArbetsplatsbesiktningList() {
     setSaving(true)
     setError('')
 
+    if (templateId) {
+      try {
+        const templates = await listTemplates(company.id, { scope: 'flik', flikNr: 23 })
+        const template = templates.find((t) => t.id === templateId)
+        if (!template) throw new Error('Mallen hittades inte.')
+        const result = await applyFlikTemplate(template, {
+          userId: user.id,
+          companyId: company.id,
+          projectId,
+        })
+        setOpen(false)
+        setProjectId('')
+        setTemplateId('')
+        if (result.firstId) navigate(`/arbetsplatsbesiktning/${result.firstId}`)
+        else navigate('/arbetsplatsbesiktning')
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setSaving(false)
+      }
+      return
+    }
+
+
     const { data, error: insertError } = await supabase
       .from('arbetsplatsbesiktningar')
       .insert({
@@ -175,6 +202,7 @@ export default function ArbetsplatsbesiktningList() {
 
   const openCreate = () => {
     setProjectId(filterProjectId || '')
+    setTemplateId('')
     setOpen(true)
   }
 
@@ -327,6 +355,13 @@ export default function ArbetsplatsbesiktningList() {
                   </MenuItem>
                 ))}
               </TextField>
+              <FlikTemplateSelect
+                companyId={company?.id}
+                flikNr={23}
+                value={templateId}
+                onChange={setTemplateId}
+                disabled={saving}
+              />
               <Typography variant="body2" color="text.secondary">
                 Kontrollmoment enligt underlaget skapas automatiskt. Status fylls i på nästa sida.
               </Typography>

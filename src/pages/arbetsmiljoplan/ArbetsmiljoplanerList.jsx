@@ -25,6 +25,8 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import VerticalLayout from '../../layouts/VerticalLayout'
+import FlikTemplateSelect from '../../components/templates/FlikTemplateSelect'
+import { applyFlikTemplate, listTemplates } from '../../lib/projectTemplates'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
 import { buildAmpPrefillFromRisker, rowsRequireAmp } from '../../lib/sarskildaRisker'
@@ -43,6 +45,7 @@ export default function ArbetsmiljoplanerList() {
   const [open, setOpen] = useState(false)
   const [projectId, setProjectId] = useState('')
   const [saving, setSaving] = useState(false)
+  const [templateId, setTemplateId] = useState('')
 
   const projectLabel = useMemo(() => {
     const map = new Map(projects.map((p) => [p.id, p.property_designation]))
@@ -121,6 +124,30 @@ export default function ArbetsmiljoplanerList() {
     setSaving(true)
     setError('')
 
+    if (templateId) {
+      try {
+        const templates = await listTemplates(company.id, { scope: 'flik', flikNr: 7 })
+        const template = templates.find((t) => t.id === templateId)
+        if (!template) throw new Error('Mallen hittades inte.')
+        const result = await applyFlikTemplate(template, {
+          userId: user.id,
+          companyId: company.id,
+          projectId,
+        })
+        setOpen(false)
+        setProjectId('')
+        setTemplateId('')
+        if (result.firstId) navigate(`/arbetsmiljoplan/${result.firstId}`)
+        else navigate('/arbetsmiljoplan')
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setSaving(false)
+      }
+      return
+    }
+
+
     const { data: riskRows } = await supabase
       .from('project_sarskilda_risker')
       .select('*')
@@ -163,6 +190,7 @@ export default function ArbetsmiljoplanerList() {
 
   const openCreate = () => {
     setProjectId(filterProjectId || '')
+    setTemplateId('')
     setOpen(true)
   }
 
@@ -308,6 +336,13 @@ export default function ArbetsmiljoplanerList() {
                   </MenuItem>
                 ))}
               </TextField>
+              <FlikTemplateSelect
+                companyId={company?.id}
+                flikNr={7}
+                value={templateId}
+                onChange={setTemplateId}
+                disabled={saving}
+              />
               <Typography variant="body2" color="text.secondary">
                 Avsnitten fylls i på nästa sida (policy, ordningsregler, samordning m.m.).
               </Typography>

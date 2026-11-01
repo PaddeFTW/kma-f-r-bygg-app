@@ -12,6 +12,7 @@ import {
 } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import VerticalLayout from '../../layouts/VerticalLayout'
+import SaveFlikAsTemplateButton from '../../components/templates/SaveFlikAsTemplateButton'
 import NextStep from '../../components/NextStep'
 import { supabase } from '../../lib/supabase'
 import {
@@ -178,9 +179,18 @@ export default function KvalitetsplanDetail() {
                 />
 
                 <Stack direction="row" spacing={1.5} justifyContent="space-between" flexWrap="wrap">
-                  <Button color="error" variant="outlined" onClick={handleDelete} disabled={saving}>
-                    Ta bort
-                  </Button>
+                  <Stack direction="row" spacing={1.5} flexWrap="wrap">
+                    <Button color="error" variant="outlined" onClick={handleDelete} disabled={saving}>
+                      Ta bort
+                    </Button>
+                    <SaveFlikAsTemplateButton
+                      companyId={item.company_id}
+                      projectId={item.project_id}
+                      projectLabel={project?.property_designation}
+                      flikNr={5}
+                      disabled={saving}
+                    />
+                  </Stack>
                   <Button type="submit" variant="contained" disabled={saving}>
                     {saving ? <CircularProgress size={20} color="inherit" /> : 'Spara'}
                   </Button>

@@ -121,6 +121,22 @@ export type CompanyContact = {
   updated_at: string
 }
 
+/** Företagets återanvändbara projekt-/flikmallar */
+export type ProjectTemplate = {
+  id: string
+  user_id: string
+  company_id: string
+  name: string
+  description: string | null
+  scope: 'project' | 'flik'
+  flik_nr: number | null
+  flik_nrs: number[]
+  payload: Record<string, unknown>
+  source_project_id: string | null
+  created_at: string
+  updated_at: string
+}
+
 /** AFS 2023:3 11 kap. 12 § – särskilda risker */
 export type ProjectSarskildRisk = {
   id: string
